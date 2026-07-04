@@ -34,11 +34,12 @@ while ($true) {
     Write-Host "  [13] Run MSP One-Click Client Health Report Generator" -ForegroundColor Green
     Write-Host "  [14] Run Complete Self-Hosted MSP Monitoring & Reporting Platform" -ForegroundColor Magenta
     Write-Host "  [15] Run WinRE Recovery Assistant (Boot Repair & Diagnostics)" -ForegroundColor Red
+    Write-Host "  [16] Run Cloud Software & Utility Deployer (Ninite Style)" -ForegroundColor Cyan
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "  [Q] Exit Toolkit" -ForegroundColor DarkRed
     Write-Host "==========================================================================" -ForegroundColor Magenta
     
-    $Choice = Read-Host "Select a tool to execute [1-15, Q]"
+    $Choice = Read-Host "Select a tool to execute [1-16, Q]"
     
     switch ($Choice) {
         "1" {
@@ -146,12 +147,19 @@ while ($true) {
             if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
+        "16" {
+            Clear-Host
+            Write-Host "Executing Cloud Software & Utility Deployer (Ninite Style)..." -ForegroundColor Cyan
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "software_deployer\deploy_software.ps1"
+            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
         { $_ -eq "Q" -or $_ -eq "q" } {
             Write-Host "`nExiting IT Toolkit. Have a productive day!" -ForegroundColor Cyan
             exit
         }
         default {
-            Write-Host "`nInvalid choice. Please enter 1-15, or Q." -ForegroundColor Red
+            Write-Host "`nInvalid choice. Please enter 1-16, or Q." -ForegroundColor Red
             Start-Sleep -Seconds 1
         }
     }

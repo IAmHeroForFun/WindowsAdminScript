@@ -1,6 +1,6 @@
 # 🌐 OmviHub IT Toolkit - Web Bootstrapper & AWS Lightsail Deployment Guide
 
-This guide explains how to deploy your 15-module Windows IT Toolkit to GitHub and AWS Lightsail (Nginx) so any administrator can launch it globally using the Massgrave-style one-liner:
+This guide explains how to deploy your 16-module Windows IT Toolkit to GitHub and AWS Lightsail (Nginx) so any administrator can launch it globally using the Massgrave-style one-liner:
 
 ```powershell
 irm https://toolkit.omvihub.in | iex
@@ -38,12 +38,13 @@ Windows-IT-Toolkit/
 ├── uptime_monitor/
 ├── msp_platform/
 ├── winre_recovery_assistant/
-└── ... (all 15 tool folders)
+├── software_deployer/
+└── ... (all 16 tool folders)
 ```
 
 ### 2. Verify your ZIP Download URL
 In your public repo, your default download URL will be:
-`https://github.com/omvihub/Windows-IT-Toolkit/archive/refs/heads/main.zip`
+`https://github.com/IAmHeroForFun/WindowsAdminScript/archive/refs/heads/master.zip`
 
 *(Note: If your GitHub username or repository name is different, open `install.ps1` and update line 15: `$DownloadUrl = "https://..."`).*
 
@@ -138,6 +139,6 @@ irm https://toolkit.omvihub.in | iex
 
 ### What you will see:
 1. **UAC Elevation**: If not running as Admin, it prompts for elevation.
-2. **Silent Download & Extraction**: Downloads `main.zip` and extracts to `C:\OmviHub_Toolkit\`.
+2. **Silent Download & Extraction**: Downloads `master.zip` and extracts to `C:\OmviHub_Toolkit\`.
 3. **Data Preservation**: Preserves all existing `reports\`, `backups\`, and `.csv` files.
-4. **Master Console**: Instantly launches the 15-module interactive command center!
+4. **Master Console**: Instantly launches the 16-module interactive command center!

@@ -13,7 +13,7 @@ D:\projects\script\
 ├── WEB_BOOTSTRAP_GUIDE.md             # 🌐 Guide for deploying via AWS Lightsail Nginx & GitHub
 ├── install.ps1                        # 🌟 Massgrave-style 2-Stage Web Bootstrapper (irm | iex)
 ├── Windows_IT_Toolkit.bat             # 🌟 Master Interactive Menu Launcher (Double-Click)
-├── windows_it_toolkit.ps1             # Central menu interface connecting all 15 suites
+├── windows_it_toolkit.ps1             # Central menu interface connecting all 16 suites
 │
 └── inventory/                         # 💻 Windows Hardware & Software Inventory Tool
     ├── README.md                      # Detailed suite documentation
@@ -97,6 +97,12 @@ D:\projects\script\
     ├── run_winre_recovery_assistant.bat # Launch interactive boot repair & offline diagnostic assistant
     ├── winre_recovery_assistant.ps1   # 14 diagnostic modules with strict Y/N repair approval protocols
     └── reports/                       # 6 CSV sheets, recovery.log & dark-mode HTML recovery command center
+
+└── software_deployer/                 # ⚡ Cloud Software & Utility Deployer (Ninite Style) [Option 16]
+    ├── README.md                      # Hybrid CDN application deployment & offline caching documentation
+    ├── run_software_deployer.bat      # Launch interactive Ninite-style package deployer
+    ├── deploy_software.ps1            # Multi-select Winget/Choco CDN engine with Out-GridView & CLI support
+    └── reports/                       # Itemized CSV audit logs & dark-mode HTML deployment command center
 ```
 
 ---
