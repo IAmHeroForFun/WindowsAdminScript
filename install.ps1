@@ -70,7 +70,7 @@ Write-Host "Target Installation Directory : $InstallDir" -ForegroundColor Cyan
 Write-Host "Source Archive URL            : $DownloadUrl" -ForegroundColor DarkGray
 Write-Host "Host System                   : $env:COMPUTERNAME ($($env:OS))" -ForegroundColor DarkGray
 Write-Host "==========================================================================" -ForegroundColor Magenta
-echo.
+Write-Host ""
 
 # ---------------------------------------------------------
 # 3. PREPARE STAGING & INSTALLATION DIRECTORIES
