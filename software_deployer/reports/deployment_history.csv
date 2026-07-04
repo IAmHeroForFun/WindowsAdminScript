@@ -1,0 +1,2 @@
+"Timestamp","Category","Name","PackageID","Status","DurationSec","ErrorMessage"
+"2026-07-04 23:17:07","File Utilities & Compression","7-Zip","7zip.7zip","Failed","0.6","Winget exit code -1978335230"
