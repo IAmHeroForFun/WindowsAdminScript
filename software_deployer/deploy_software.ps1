@@ -1,14 +1,15 @@
 <#
 .SYNOPSIS
-    OmviHub Cloud Software Deployer - 100% Genuine Ninite-Style Graphical Application
+    OmviHub Cloud Software Deployer - 100% Genuine Ninite-Style Graphical Application (102 Master Catalog)
 .DESCRIPTION
     A complete, standalone graphical application engineered in native PowerShell (Windows Forms) that replicates
-    the authentic Ninite experience:
+    and surpasses the authentic Ninite experience:
     
-    1. Selection Screen: 4-Column checkbox layout categorized by software type (Web Browsers, IT Admin Tools, Network & Security, Utilities & Dev Tools).
+    1. Selection Screen: 4-Column checkbox layout categorized across 12 authentic Ninite software categories (102 Applications).
     2. Live Installation Progress Screen: Transitions smoothly to an in-window graphical installation monitor with real-time status updates ("[..] Waiting", "[>>] Downloading & Installing...", "[OK] Installed"), itemized table, and a live green progress bar.
     3. Zero AWS Bandwidth Used: Uses native Microsoft Winget and Chocolatey to download directly from official vendor CDNs at gigabit edge speeds.
     4. Forensic Reporting: Automatically generates itemized CSV audit logs and dark-mode HTML dashboards upon completion.
+    5. Robust Architecture: Strict integer type casting prevents any array math or Object[] subtraction errors.
 #>
 
 [CmdletBinding()]
@@ -51,7 +52,7 @@ if (-not (Test-IsAdmin)) {
 }
 
 Clear-Host
-Write-Host "Initializing OmviHub Ninite-Style Cloud Software Deployer..." -ForegroundColor Cyan
+Write-Host "Initializing OmviHub Ninite-Style Cloud Software Deployer (102 Master Catalog)..." -ForegroundColor Cyan
 
 # ---------------------------------------------------------
 # 2. PACKAGE MANAGER ENGINE BOOTSTRAPPER
@@ -81,58 +82,150 @@ if (Get-Command winget -ErrorAction SilentlyContinue) {
 }
 
 # ---------------------------------------------------------
-# 3. MASTER SOFTWARE CATALOG (32 ENTERPRISE APPLICATIONS)
+# 3. MASTER SOFTWARE CATALOG (102 ENTERPRISE & POPULAR APPLICATIONS)
 # ---------------------------------------------------------
 $Catalog = @(
-    # Web Browsers & Messaging (Col 1)
+    # ================= COLUMN 0 =================
+    # Web Browsers (Col 0)
     [PSCustomObject]@{ Id = 1;  Category = "Web Browsers"; Name = "Google Chrome"; WingetID = "Google.Chrome"; ChocoID = "googlechrome"; Description = "Fast, secure web browser by Google"; Col = 0 },
     [PSCustomObject]@{ Id = 2;  Category = "Web Browsers"; Name = "Mozilla Firefox"; WingetID = "Mozilla.Firefox"; ChocoID = "firefox"; Description = "Open-source privacy-focused web browser"; Col = 0 },
     [PSCustomObject]@{ Id = 3;  Category = "Web Browsers"; Name = "Microsoft Edge"; WingetID = "Microsoft.Edge"; ChocoID = "microsoft-edge"; Description = "Chromium-based enterprise web browser"; Col = 0 },
     [PSCustomObject]@{ Id = 4;  Category = "Web Browsers"; Name = "Brave Browser"; WingetID = "Brave.Brave"; ChocoID = "brave"; Description = "Privacy-first ad-blocking web browser"; Col = 0 },
-    [PSCustomObject]@{ Id = 5;  Category = "Messaging & Media"; Name = "Zoom Workplace"; WingetID = "Zoom.Zoom"; ChocoID = "zoom"; Description = "Video conferencing and enterprise meetings"; Col = 0 },
-    [PSCustomObject]@{ Id = 6;  Category = "Messaging & Media"; Name = "Microsoft Teams"; WingetID = "Microsoft.Teams"; ChocoID = "microsoft-teams"; Description = "Enterprise messaging and collaboration"; Col = 0 },
-    [PSCustomObject]@{ Id = 7;  Category = "Messaging & Media"; Name = "Discord"; WingetID = "Discord.Discord"; ChocoID = "discord"; Description = "Voice, video, and text communication"; Col = 0 },
-    [PSCustomObject]@{ Id = 8;  Category = "Messaging & Media"; Name = "VLC Media Player"; WingetID = "VideoLAN.VLC"; ChocoID = "vlc"; Description = "Universal multimedia video and audio player"; Col = 0 },
+    [PSCustomObject]@{ Id = 5;  Category = "Web Browsers"; Name = "Opera Browser"; WingetID = "Opera.Opera"; ChocoID = "opera"; Description = "Fast web browser with built-in VPN and ad blocker"; Col = 0 },
+    [PSCustomObject]@{ Id = 6;  Category = "Web Browsers"; Name = "Vivaldi Browser"; WingetID = "VivaldiTechnologies.Vivaldi"; ChocoID = "vivaldi"; Description = "Highly customizable web browser for power users"; Col = 0 },
+    [PSCustomObject]@{ Id = 7;  Category = "Web Browsers"; Name = "Tor Browser"; WingetID = "TheTorProject.TorBrowser"; ChocoID = "tor-browser"; Description = "Anonymous browsing network for absolute privacy"; Col = 0 },
 
+    # Messaging & Communication (Col 0)
+    [PSCustomObject]@{ Id = 8;  Category = "Messaging & Communication"; Name = "Zoom Workplace"; WingetID = "Zoom.Zoom"; ChocoID = "zoom"; Description = "Video conferencing and enterprise meetings"; Col = 0 },
+    [PSCustomObject]@{ Id = 9;  Category = "Messaging & Communication"; Name = "Microsoft Teams"; WingetID = "Microsoft.Teams"; ChocoID = "microsoft-teams"; Description = "Enterprise messaging and collaboration"; Col = 0 },
+    [PSCustomObject]@{ Id = 10; Category = "Messaging & Communication"; Name = "Discord"; WingetID = "Discord.Discord"; ChocoID = "discord"; Description = "Voice, video, and text communication"; Col = 0 },
+    [PSCustomObject]@{ Id = 11; Category = "Messaging & Communication"; Name = "Slack"; WingetID = "SlackTechnologies.Slack"; ChocoID = "slack"; Description = "Team communication and workflow collaboration"; Col = 0 },
+    [PSCustomObject]@{ Id = 12; Category = "Messaging & Communication"; Name = "Telegram Desktop"; WingetID = "Telegram.TelegramDesktop"; ChocoID = "telegram"; Description = "Fast and secure cloud-based messaging"; Col = 0 },
+    [PSCustomObject]@{ Id = 13; Category = "Messaging & Communication"; Name = "WhatsApp Desktop"; WingetID = "WhatsApp.WhatsApp"; ChocoID = "whatsapp"; Description = "Desktop messaging client for WhatsApp"; Col = 0 },
+    [PSCustomObject]@{ Id = 14; Category = "Messaging & Communication"; Name = "Skype"; WingetID = "Microsoft.Skype"; ChocoID = "skype"; Description = "Video and voice calling platform"; Col = 0 },
+    [PSCustomObject]@{ Id = 15; Category = "Messaging & Communication"; Name = "Thunderbird Email"; WingetID = "Mozilla.Thunderbird"; ChocoID = "thunderbird"; Description = "Open-source email, newsfeed, and chat client"; Col = 0 },
+
+    # Cloud Storage & Backup (Col 0)
+    [PSCustomObject]@{ Id = 16; Category = "Cloud Storage & Backup"; Name = "Google Drive"; WingetID = "Google.GoogleDrive"; ChocoID = "googledrive"; Description = "Cloud storage sync and backup client"; Col = 0 },
+    [PSCustomObject]@{ Id = 17; Category = "Cloud Storage & Backup"; Name = "Microsoft OneDrive"; WingetID = "Microsoft.OneDrive"; ChocoID = "onedrive"; Description = "Microsoft cloud storage and file sync"; Col = 0 },
+    [PSCustomObject]@{ Id = 18; Category = "Cloud Storage & Backup"; Name = "Dropbox"; WingetID = "Dropbox.Dropbox"; ChocoID = "dropbox"; Description = "Popular cloud workspace and file synchronization"; Col = 0 },
+    [PSCustomObject]@{ Id = 19; Category = "Cloud Storage & Backup"; Name = "Nextcloud Desktop"; WingetID = "Nextcloud.NextcloudDesktop"; ChocoID = "nextcloud-client"; Description = "Self-hosted private cloud storage synchronization"; Col = 0 },
+    [PSCustomObject]@{ Id = 20; Category = "Cloud Storage & Backup"; Name = "Duplicati Backup"; WingetID = "Duplicati.Duplicati"; ChocoID = "duplicati"; Description = "Encrypted bandwidth-efficient cloud backup"; Col = 0 },
+
+    # ================= COLUMN 1 =================
+    # Media & Audio Players (Col 1)
+    [PSCustomObject]@{ Id = 21; Category = "Media & Audio Players"; Name = "VLC Media Player"; WingetID = "VideoLAN.VLC"; ChocoID = "vlc"; Description = "Universal multimedia video and audio player"; Col = 1 },
+    [PSCustomObject]@{ Id = 22; Category = "Media & Audio Players"; Name = "Spotify"; WingetID = "Spotify.Spotify"; ChocoID = "spotify"; Description = "Music and podcast streaming service"; Col = 1 },
+    [PSCustomObject]@{ Id = 23; Category = "Media & Audio Players"; Name = "OBS Studio"; WingetID = "OBSProject.OBSStudio"; ChocoID = "obs-studio"; Description = "Free and open source software for video recording and live streaming"; Col = 1 },
+    [PSCustomObject]@{ Id = 24; Category = "Media & Audio Players"; Name = "Audacity Audio Editor"; WingetID = "Audacity.Audacity"; ChocoID = "audacity"; Description = "Multi-track audio recorder and editor"; Col = 1 },
+    [PSCustomObject]@{ Id = 25; Category = "Media & Audio Players"; Name = "HandBrake"; WingetID = "HandBrake.HandBrake"; ChocoID = "handbrake"; Description = "Open-source video transcoder and converter"; Col = 1 },
+    [PSCustomObject]@{ Id = 26; Category = "Media & Audio Players"; Name = "K-Lite Codec Pack Full"; WingetID = "CodecGuide.K-LiteCodecPackFull"; ChocoID = "k-litecodecpackfull"; Description = "Comprehensive audio and video codec collection"; Col = 1 },
+    [PSCustomObject]@{ Id = 27; Category = "Media & Audio Players"; Name = "foobar2000"; WingetID = "PeterPawlowski.foobar2000"; ChocoID = "foobar2000"; Description = "Advanced audio player for the Windows platform"; Col = 1 },
+    [PSCustomObject]@{ Id = 28; Category = "Media & Audio Players"; Name = "AIMP Audio Player"; WingetID = "AIMP.AIMP"; ChocoID = "aimp"; Description = "Lightweight audio player and music organizer"; Col = 1 },
+    [PSCustomObject]@{ Id = 29; Category = "Media & Audio Players"; Name = "iTunes"; WingetID = "Apple.iTunes"; ChocoID = "itunes"; Description = "Apple music and iOS device management suite"; Col = 1 },
+    [PSCustomObject]@{ Id = 30; Category = "Media & Audio Players"; Name = "GOM Player"; WingetID = "GOMLab.GOMPlayer"; ChocoID = "gomplayer"; Description = "Video player with built-in support for all popular codecs"; Col = 1 },
+
+    # Imaging & Graphic Design (Col 1)
+    [PSCustomObject]@{ Id = 31; Category = "Imaging & Graphic Design"; Name = "ShareX"; WingetID = "ShareX.ShareX"; ChocoID = "sharex"; Description = "Screen capture, file sharing and productivity tool"; Col = 1 },
+    [PSCustomObject]@{ Id = 32; Category = "Imaging & Graphic Design"; Name = "Greenshot"; WingetID = "Greenshot.Greenshot"; ChocoID = "greenshot"; Description = "Lightweight screenshot software for Windows"; Col = 1 },
+    [PSCustomObject]@{ Id = 33; Category = "Imaging & Graphic Design"; Name = "Paint.NET"; WingetID = "dotPDNLLC.paintdotnet"; ChocoID = "paint.net"; Description = "Simple and powerful raster image and photo editor"; Col = 1 },
+    [PSCustomObject]@{ Id = 34; Category = "Imaging & Graphic Design"; Name = "GIMP Photo Editor"; WingetID = "GIMP.GIMP"; ChocoID = "gimp"; Description = "GNU Image Manipulation Program for professional photo retouching"; Col = 1 },
+    [PSCustomObject]@{ Id = 35; Category = "Imaging & Graphic Design"; Name = "Inkscape"; WingetID = "Inkscape.Inkscape"; ChocoID = "inkscape"; Description = "Professional vector graphics editor"; Col = 1 },
+    [PSCustomObject]@{ Id = 36; Category = "Imaging & Graphic Design"; Name = "IrfanView"; WingetID = "IrfanSkiljan.IrfanView"; ChocoID = "irfanview"; Description = "Fast and compact graphic viewer and converter"; Col = 1 },
+    [PSCustomObject]@{ Id = 37; Category = "Imaging & Graphic Design"; Name = "FastStone Image Viewer"; WingetID = "FastStone.ImageViewer"; ChocoID = "faststoneimageviewer"; Description = "Fast, stable, user-friendly image browser and editor"; Col = 1 },
+    [PSCustomObject]@{ Id = 38; Category = "Imaging & Graphic Design"; Name = "Blender 3D"; WingetID = "BlenderFoundation.Blender"; ChocoID = "blender"; Description = "Free and open source 3D creation suite"; Col = 1 },
+    [PSCustomObject]@{ Id = 39; Category = "Imaging & Graphic Design"; Name = "Krita"; WingetID = "KDE.Krita"; ChocoID = "krita"; Description = "Professional free and open source painting program"; Col = 1 },
+
+    # Documents & Productivity (Col 1)
+    [PSCustomObject]@{ Id = 40; Category = "Documents & Productivity"; Name = "LibreOffice Suite"; WingetID = "TheDocumentFoundation.LibreOffice"; ChocoID = "libreoffice-fresh"; Description = "Powerful open source office productivity suite"; Col = 1 },
+    [PSCustomObject]@{ Id = 41; Category = "Documents & Productivity"; Name = "Adobe Acrobat Reader"; WingetID = "Adobe.Acrobat.Reader.64-bit"; ChocoID = "adobereader"; Description = "Industry standard PDF viewing and printing software"; Col = 1 },
+    [PSCustomObject]@{ Id = 42; Category = "Documents & Productivity"; Name = "Foxit PDF Reader"; WingetID = "Foxit.FoxitReader"; ChocoID = "foxitreader"; Description = "Fast, affordable, and secure PDF viewer"; Col = 1 },
+    [PSCustomObject]@{ Id = 43; Category = "Documents & Productivity"; Name = "SumatraPDF"; WingetID = "SumatraPDF.SumatraPDF"; ChocoID = "sumatrapdf"; Description = "Lightweight PDF, eBook, XPS, DjVu, CHM, Comic Book reader"; Col = 1 },
+    [PSCustomObject]@{ Id = 44; Category = "Documents & Productivity"; Name = "PDFCreator"; WingetID = "pdfforge.PDFCreator"; ChocoID = "pdfcreator"; Description = "Convert any printable document to PDF"; Col = 1 },
+    [PSCustomObject]@{ Id = 45; Category = "Documents & Productivity"; Name = "Notion"; WingetID = "Notion.Notion"; ChocoID = "notion"; Description = "All-in-one workspace for notes, docs, and project collaboration"; Col = 1 },
+    [PSCustomObject]@{ Id = 46; Category = "Documents & Productivity"; Name = "Obsidian"; WingetID = "Obsidian.Obsidian"; ChocoID = "obsidian"; Description = "Powerful knowledge base that works on local Markdown files"; Col = 1 },
+    [PSCustomObject]@{ Id = 47; Category = "Documents & Productivity"; Name = "Joplin Note Taking"; WingetID = "Joplin.Joplin"; ChocoID = "joplin"; Description = "Open source note taking and to-do application with encryption"; Col = 1 },
+    [PSCustomObject]@{ Id = 48; Category = "Documents & Productivity"; Name = "Evernote"; WingetID = "Evernote.Evernote"; ChocoID = "evernote"; Description = "Cross-platform note taking and task organization"; Col = 1 },
+
+    # ================= COLUMN 2 =================
     # IT Admin & System Tools (Col 2)
-    [PSCustomObject]@{ Id = 9;  Category = "IT Admin Tools"; Name = "Sysinternals Suite"; WingetID = "Microsoft.SysinternalsSuite"; ChocoID = "sysinternals"; Description = "Advanced Windows system administration utilities"; Col = 1 },
-    [PSCustomObject]@{ Id = 10; Category = "IT Admin Tools"; Name = "PuTTY (SSH Client)"; WingetID = "PuTTY.PuTTY"; ChocoID = "putty"; Description = "Telnet and SSH terminal client"; Col = 1 },
-    [PSCustomObject]@{ Id = 11; Category = "IT Admin Tools"; Name = "WinSCP (SFTP/SCP)"; WingetID = "WinSCP.WinSCP"; ChocoID = "winscp"; Description = "SFTP, SCP, and FTP client for remote transfer"; Col = 1 },
-    [PSCustomObject]@{ Id = 12; Category = "IT Admin Tools"; Name = "Notepad++"; WingetID = "Notepad++.Notepad++"; ChocoID = "notepadplusplus"; Description = "Advanced source code and configuration editor"; Col = 1 },
-    [PSCustomObject]@{ Id = 13; Category = "IT Admin Tools"; Name = "TreeSize Free"; WingetID = "JAM Software.TreeSize.Free"; ChocoID = "treesizefree"; Description = "Disk space analyzer and folder hierarchy manager"; Col = 1 },
-    [PSCustomObject]@{ Id = 14; Category = "IT Admin Tools"; Name = "PowerToys"; WingetID = "Microsoft.PowerToys"; ChocoID = "powertoys"; Description = "Microsoft system tuning and productivity utilities"; Col = 1 },
-    [PSCustomObject]@{ Id = 15; Category = "IT Admin Tools"; Name = "Windows Terminal"; WingetID = "Microsoft.WindowsTerminal"; ChocoID = "microsoft-windows-terminal"; Description = "Modern tabbed command-line console"; Col = 1 },
+    [PSCustomObject]@{ Id = 49; Category = "IT Admin & System Tools"; Name = "Sysinternals Suite"; WingetID = "Microsoft.SysinternalsSuite"; ChocoID = "sysinternals"; Description = "Advanced Windows system administration utilities"; Col = 2 },
+    [PSCustomObject]@{ Id = 50; Category = "IT Admin & System Tools"; Name = "PuTTY (SSH Client)"; WingetID = "PuTTY.PuTTY"; ChocoID = "putty"; Description = "Telnet and SSH terminal client"; Col = 2 },
+    [PSCustomObject]@{ Id = 51; Category = "IT Admin & System Tools"; Name = "WinSCP (SFTP/SCP)"; WingetID = "WinSCP.WinSCP"; ChocoID = "winscp"; Description = "SFTP, SCP, and FTP client for remote transfer"; Col = 2 },
+    [PSCustomObject]@{ Id = 52; Category = "IT Admin & System Tools"; Name = "Notepad++"; WingetID = "Notepad++.Notepad++"; ChocoID = "notepadplusplus"; Description = "Advanced source code and configuration editor"; Col = 2 },
+    [PSCustomObject]@{ Id = 53; Category = "IT Admin & System Tools"; Name = "TreeSize Free"; WingetID = "JAM Software.TreeSize.Free"; ChocoID = "treesizefree"; Description = "Disk space analyzer and folder hierarchy manager"; Col = 2 },
+    [PSCustomObject]@{ Id = 54; Category = "IT Admin & System Tools"; Name = "PowerToys"; WingetID = "Microsoft.PowerToys"; ChocoID = "powertoys"; Description = "Microsoft system tuning and productivity utilities"; Col = 2 },
+    [PSCustomObject]@{ Id = 55; Category = "IT Admin & System Tools"; Name = "Windows Terminal"; WingetID = "Microsoft.WindowsTerminal"; ChocoID = "microsoft-windows-terminal"; Description = "Modern tabbed command-line console"; Col = 2 },
+    [PSCustomObject]@{ Id = 56; Category = "IT Admin & System Tools"; Name = "HWiNFO64 Monitor"; WingetID = "REALiX.HWiNFO"; ChocoID = "hwinfo"; Description = "Comprehensive hardware analysis, monitoring and reporting"; Col = 2 },
+    [PSCustomObject]@{ Id = 57; Category = "IT Admin & System Tools"; Name = "CPU-Z Hardware Info"; WingetID = "CPUID.CPU-Z"; ChocoID = "cpu-z"; Description = "System information software detailing CPU, RAM, and Motherboard"; Col = 2 },
+    [PSCustomObject]@{ Id = 58; Category = "IT Admin & System Tools"; Name = "GPU-Z Graphics Info"; WingetID = "TechPowerUp.GPU-Z"; ChocoID = "gpu-z"; Description = "Video card and GPU hardware information utility"; Col = 2 },
+    [PSCustomObject]@{ Id = 59; Category = "IT Admin & System Tools"; Name = "CrystalDiskInfo"; WingetID = "CrystalDewWorld.CrystalDiskInfo"; ChocoID = "crystaldiskinfo"; Description = "HDD/SSD health monitoring utility displaying SMART data"; Col = 2 },
+    [PSCustomObject]@{ Id = 60; Category = "IT Admin & System Tools"; Name = "CrystalDiskMark"; WingetID = "CrystalDewWorld.CrystalDiskMark"; ChocoID = "crystaldiskmark"; Description = "Disk drive read/write performance benchmarking tool"; Col = 2 },
+    [PSCustomObject]@{ Id = 61; Category = "IT Admin & System Tools"; Name = "Speccy System Spec"; WingetID = "Piriform.Speccy"; ChocoID = "speccy"; Description = "Fast, lightweight system information tool for PC hardware"; Col = 2 },
+    [PSCustomObject]@{ Id = 62; Category = "IT Admin & System Tools"; Name = "Revo Uninstaller Free"; WingetID = "RevoUninstaller.RevoUninstaller"; ChocoID = "revo-uninstaller"; Description = "Thorough application uninstaller and registry cleanup tool"; Col = 2 },
+    [PSCustomObject]@{ Id = 63; Category = "IT Admin & System Tools"; Name = "BleachBit Disk Cleaner"; WingetID = "BleachBit.BleachBit"; ChocoID = "bleachbit"; Description = "Free system cleaner to free disk space and guard privacy"; Col = 2 },
+    [PSCustomObject]@{ Id = 64; Category = "IT Admin & System Tools"; Name = "Rufus USB Boot Maker"; WingetID = "Rufus.Rufus"; ChocoID = "rufus"; Description = "Create bootable USB drives easily from ISOs"; Col = 2 },
+    [PSCustomObject]@{ Id = 65; Category = "IT Admin & System Tools"; Name = "Ventoy Multiboot USB"; WingetID = "Ventoy.Ventoy"; ChocoID = "ventoy"; Description = "Open source tool to create multiboot USB drive for ISO files"; Col = 2 },
+    [PSCustomObject]@{ Id = 66; Category = "IT Admin & System Tools"; Name = "ImgBurn CD/DVD Burner"; WingetID = "LIGHTNINGUK.ImgBurn"; ChocoID = "imgburn"; Description = "Lightweight CD / DVD / HD DVD / Blu-ray burning application"; Col = 2 },
+    [PSCustomObject]@{ Id = 67; Category = "IT Admin & System Tools"; Name = "TeraCopy File Transfer"; WingetID = "CodeSector.TeraCopy"; ChocoID = "teracopy"; Description = "Utility designed to copy and move files at maximum speed"; Col = 2 },
+    [PSCustomObject]@{ Id = 68; Category = "IT Admin & System Tools"; Name = "AutoHotkey Scripting"; WingetID = "AutoHotkey.AutoHotkey"; ChocoID = "autohotkey"; Description = "Powerful macro-creation and hotkey scripting language"; Col = 2 },
 
-    # Network & Remote Support (Col 3)
-    [PSCustomObject]@{ Id = 16; Category = "Network & Security"; Name = "Wireshark"; WingetID = "WiresharkFoundation.Wireshark"; ChocoID = "wireshark"; Description = "Network protocol analyzer and packet sniffer"; Col = 2 },
-    [PSCustomObject]@{ Id = 17; Category = "Network & Security"; Name = "Advanced IP Scanner"; WingetID = "Famatech.AdvancedIPScanner"; ChocoID = "advanced-ip-scanner"; Description = "Fast LAN subnet scanner with remote control"; Col = 2 },
-    [PSCustomObject]@{ Id = 18; Category = "Network & Security"; Name = "Nmap"; WingetID = "Insecure.Nmap"; ChocoID = "nmap"; Description = "Security scanner and network exploration tool"; Col = 2 },
-    [PSCustomObject]@{ Id = 19; Category = "Network & Security"; Name = "OpenVPN Client"; WingetID = "OpenVPNTechnologies.OpenVPN"; ChocoID = "openvpn"; Description = "Enterprise SSL VPN tunneling client"; Col = 2 },
-    [PSCustomObject]@{ Id = 20; Category = "Remote Support"; Name = "RustDesk"; WingetID = "RustDesk.RustDesk"; ChocoID = "rustdesk"; Description = "Open-source remote desktop and RMM software"; Col = 2 },
-    [PSCustomObject]@{ Id = 21; Category = "Remote Support"; Name = "AnyDesk"; WingetID = "AnyDeskSoftwareGmbH.AnyDesk"; ChocoID = "anydesk"; Description = "Fast remote desktop assistance application"; Col = 2 },
-    [PSCustomObject]@{ Id = 22; Category = "Remote Support"; Name = "TeamViewer"; WingetID = "TeamViewer.TeamViewer"; ChocoID = "teamviewer"; Description = "Enterprise remote support and collaboration"; Col = 2 },
+    # File Utilities & Compression (Col 2)
+    [PSCustomObject]@{ Id = 69; Category = "File Utilities & Compression"; Name = "7-Zip"; WingetID = "7zip.7zip"; ChocoID = "7zip"; Description = "High-compression file archiving utility"; Col = 2 },
+    [PSCustomObject]@{ Id = 70; Category = "File Utilities & Compression"; Name = "WinRAR"; WingetID = "RARLab.WinRAR"; ChocoID = "winrar"; Description = "Popular archive and compression tool"; Col = 2 },
+    [PSCustomObject]@{ Id = 71; Category = "File Utilities & Compression"; Name = "PeaZip"; WingetID = "PeaZip.PeaZip"; ChocoID = "peazip"; Description = "Free file archiver utility supporting over 200 archive types"; Col = 2 },
+    [PSCustomObject]@{ Id = 72; Category = "File Utilities & Compression"; Name = "Everything Search"; WingetID = "voidtools.Everything"; ChocoID = "everything"; Description = "Instant real-time filename search engine"; Col = 2 },
+    [PSCustomObject]@{ Id = 73; Category = "File Utilities & Compression"; Name = "OpenHashTab Checksum"; WingetID = "namazso.OpenHashTab"; ChocoID = "openhashtab"; Description = "File checksum verification tab in explorer"; Col = 2 },
+    [PSCustomObject]@{ Id = 74; Category = "File Utilities & Compression"; Name = "WizTree Disk Analyzer"; WingetID = "AntibodySoftware.WizTree"; ChocoID = "wiztree"; Description = "The world's fastest disk space analyzer utility"; Col = 2 },
 
-    # File Utilities & Dev Tools (Col 4)
-    [PSCustomObject]@{ Id = 23; Category = "File Utilities"; Name = "7-Zip"; WingetID = "7zip.7zip"; ChocoID = "7zip"; Description = "High-compression file archiving utility"; Col = 3 },
-    [PSCustomObject]@{ Id = 24; Category = "File Utilities"; Name = "WinRAR"; WingetID = "RARLab.WinRAR"; ChocoID = "winrar"; Description = "Popular archive and compression tool"; Col = 3 },
-    [PSCustomObject]@{ Id = 25; Category = "File Utilities"; Name = "Everything Search"; WingetID = "voidtools.Everything"; ChocoID = "everything"; Description = "Instant real-time filename search engine"; Col = 3 },
-    [PSCustomObject]@{ Id = 26; Category = "File Utilities"; Name = "OpenHashTab"; WingetID = "namazso.OpenHashTab"; ChocoID = "openhashtab"; Description = "File checksum verification tab in explorer"; Col = 3 },
-    [PSCustomObject]@{ Id = 27; Category = "Developer Tools"; Name = "Visual Studio Code"; WingetID = "Microsoft.VisualStudioCode"; ChocoID = "vscode"; Description = "Lightweight source code editor by Microsoft"; Col = 3 },
-    [PSCustomObject]@{ Id = 28; Category = "Developer Tools"; Name = "Git for Windows"; WingetID = "Git.Git"; ChocoID = "git"; Description = "Distributed version control system and bash"; Col = 3 },
-    [PSCustomObject]@{ Id = 29; Category = "Developer Tools"; Name = "Python 3"; WingetID = "Python.Python.3"; ChocoID = "python3"; Description = "Python programming language runtime"; Col = 3 },
-    [PSCustomObject]@{ Id = 30; Category = "Developer Tools"; Name = "PowerShell 7"; WingetID = "Microsoft.PowerShell"; ChocoID = "powershell-core"; Description = "Modern cross-platform PowerShell engine"; Col = 3 }
+    # Remote Support & Access (Col 2)
+    [PSCustomObject]@{ Id = 75; Category = "Remote Support & Access"; Name = "RustDesk"; WingetID = "RustDesk.RustDesk"; ChocoID = "rustdesk"; Description = "Open-source remote desktop and RMM software"; Col = 2 },
+    [PSCustomObject]@{ Id = 76; Category = "Remote Support & Access"; Name = "AnyDesk"; WingetID = "AnyDeskSoftwareGmbH.AnyDesk"; ChocoID = "anydesk"; Description = "Fast remote desktop assistance application"; Col = 2 },
+    [PSCustomObject]@{ Id = 77; Category = "Remote Support & Access"; Name = "TeamViewer"; WingetID = "TeamViewer.TeamViewer"; ChocoID = "teamviewer"; Description = "Enterprise remote support and collaboration"; Col = 2 },
+    [PSCustomObject]@{ Id = 78; Category = "Remote Support & Access"; Name = "RealVNC Viewer"; WingetID = "RealVNC.VNCViewer"; ChocoID = "realvnc-viewer"; Description = "Remote desktop access software for VNC servers"; Col = 2 },
+    [PSCustomObject]@{ Id = 79; Category = "Remote Support & Access"; Name = "mRemoteNG Multi-Remote"; WingetID = "mRemoteNG.mRemoteNG"; ChocoID = "mremoteng"; Description = "Open source tabbed, multi-protocol remote connections manager"; Col = 2 },
+
+    # ================= COLUMN 3 =================
+    # Security & Privacy (Col 3)
+    [PSCustomObject]@{ Id = 80; Category = "Security & Privacy"; Name = "Bitwarden Password Mgr"; WingetID = "Bitwarden.Bitwarden"; ChocoID = "bitwarden"; Description = "Open source password manager for all devices"; Col = 3 },
+    [PSCustomObject]@{ Id = 81; Category = "Security & Privacy"; Name = "KeePassXC Password Safe"; WingetID = "KeePassXCTeam.KeePassXC"; ChocoID = "keepassxc"; Description = "Cross-platform community edition of KeePass password manager"; Col = 3 },
+    [PSCustomObject]@{ Id = 82; Category = "Security & Privacy"; Name = "VeraCrypt Encryption"; WingetID = "IDRIX.VeraCrypt"; ChocoID = "veracrypt"; Description = "Free open source disk encryption software"; Col = 3 },
+    [PSCustomObject]@{ Id = 83; Category = "Security & Privacy"; Name = "Malwarebytes Anti-Malware"; WingetID = "Malwarebytes.Malwarebytes"; ChocoID = "malwarebytes"; Description = "Advanced malware protection and remediation scanner"; Col = 3 },
+    [PSCustomObject]@{ Id = 84; Category = "Security & Privacy"; Name = "Avast Free Antivirus"; WingetID = "Avast.AvastFreeAntivirus"; ChocoID = "avastfreeantivirus"; Description = "Popular free antivirus and threat defense solution"; Col = 3 },
+    [PSCustomObject]@{ Id = 85; Category = "Security & Privacy"; Name = "Spybot Search & Destroy"; WingetID = "SaferNetworking.Spybot"; ChocoID = "spybot"; Description = "Detect and remove spyware, adware and tracking software"; Col = 3 },
+
+    # Network & Forensics (Col 3)
+    [PSCustomObject]@{ Id = 86; Category = "Network & Forensics"; Name = "Wireshark"; WingetID = "WiresharkFoundation.Wireshark"; ChocoID = "wireshark"; Description = "Network protocol analyzer and packet sniffer"; Col = 3 },
+    [PSCustomObject]@{ Id = 87; Category = "Network & Forensics"; Name = "Advanced IP Scanner"; WingetID = "Famatech.AdvancedIPScanner"; ChocoID = "advanced-ip-scanner"; Description = "Fast LAN subnet scanner with remote control"; Col = 3 },
+    [PSCustomObject]@{ Id = 88; Category = "Network & Forensics"; Name = "Nmap Security Scanner"; WingetID = "Insecure.Nmap"; ChocoID = "nmap"; Description = "Security scanner and network exploration tool"; Col = 3 },
+    [PSCustomObject]@{ Id = 89; Category = "Network & Forensics"; Name = "OpenVPN Client"; WingetID = "OpenVPNTechnologies.OpenVPN"; ChocoID = "openvpn"; Description = "Enterprise SSL VPN tunneling client"; Col = 3 },
+    [PSCustomObject]@{ Id = 90; Category = "Network & Forensics"; Name = "WireGuard VPN"; WingetID = "WireGuard.WireGuard"; ChocoID = "wireguard"; Description = "Extremely simple yet fast modern VPN tunnel"; Col = 3 },
+    [PSCustomObject]@{ Id = 91; Category = "Network & Forensics"; Name = "Tailscale Zero-Trust VPN"; WingetID = "Tailscale.Tailscale"; ChocoID = "tailscale"; Description = "Zero-config mesh VPN based on WireGuard"; Col = 3 },
+    [PSCustomObject]@{ Id = 92; Category = "Network & Forensics"; Name = "Netcat / Ncat"; WingetID = "Insecure.Ncat"; ChocoID = "netcat"; Description = "Feature-packed networking utility which reads and writes data across networks"; Col = 3 },
+
+    # Developer Tools & Runtimes (Col 3)
+    [PSCustomObject]@{ Id = 93;  Category = "Developer Tools & Runtimes"; Name = "Visual Studio Code"; WingetID = "Microsoft.VisualStudioCode"; ChocoID = "vscode"; Description = "Lightweight source code editor by Microsoft"; Col = 3 },
+    [PSCustomObject]@{ Id = 94;  Category = "Developer Tools & Runtimes"; Name = "Git for Windows"; WingetID = "Git.Git"; ChocoID = "git"; Description = "Distributed version control system and bash"; Col = 3 },
+    [PSCustomObject]@{ Id = 95;  Category = "Developer Tools & Runtimes"; Name = "Python 3 Runtime"; WingetID = "Python.Python.3"; ChocoID = "python3"; Description = "Python programming language runtime"; Col = 3 },
+    [PSCustomObject]@{ Id = 96;  Category = "Developer Tools & Runtimes"; Name = "PowerShell 7 Core"; WingetID = "Microsoft.PowerShell"; ChocoID = "powershell-core"; Description = "Modern cross-platform PowerShell engine"; Col = 3 },
+    [PSCustomObject]@{ Id = 97;  Category = "Developer Tools & Runtimes"; Name = "Node.js LTS Runtime"; WingetID = "OpenJS.NodeJS.LTS"; ChocoID = "nodejs-lts"; Description = "JavaScript runtime built on Chrome's V8 JavaScript engine"; Col = 3 },
+    [PSCustomObject]@{ Id = 98;  Category = "Developer Tools & Runtimes"; Name = "Docker Desktop"; WingetID = "Docker.DockerDesktop"; ChocoID = "docker-desktop"; Description = "Containerization platform for building and sharing applications"; Col = 3 },
+    [PSCustomObject]@{ Id = 99;  Category = "Developer Tools & Runtimes"; Name = "Sublime Text Editor"; WingetID = "SublimeHQ.SublimeText.4"; ChocoID = "sublimetext4"; Description = "Sophisticated text editor for code, markup and prose"; Col = 3 },
+    [PSCustomObject]@{ Id = 100; Category = "Developer Tools & Runtimes"; Name = "Postman API Client"; WingetID = "Postman.Postman"; ChocoID = "postman"; Description = "API platform for building and using APIs"; Col = 3 },
+    [PSCustomObject]@{ Id = 101; Category = "Developer Tools & Runtimes"; Name = ".NET Desktop Runtime 8"; WingetID = "Microsoft.DotNet.DesktopRuntime.8"; ChocoID = "dotnet-desktopruntime"; Description = "Microsoft .NET 8 Runtime required for desktop applications"; Col = 3 },
+    [PSCustomObject]@{ Id = 102; Category = "Developer Tools & Runtimes"; Name = "Oracle Java Runtime (JRE)"; WingetID = "Oracle.JavaRuntimeEnvironment"; ChocoID = "jre8"; Description = "Oracle Java Runtime Environment for legacy enterprise Java apps"; Col = 3 }
 )
 
 # ---------------------------------------------------------
 # 4. PRE-CONFIGURED ENTERPRISE BUNDLES
 # ---------------------------------------------------------
 $Bundles = @{
-    "ALL_ADMIN"      = @(9, 10, 11, 12, 13, 14, 15, 16, 17, 23, 25, 30)
-    "ALL_BROWSERS"   = @(1, 2, 3, 4)
-    "ALL_NETWORK"    = @(10, 11, 16, 17, 18, 19)
-    "ALL_REMOTE"     = @(20, 21, 22)
-    "ALL_DEV"        = @(12, 15, 27, 28, 29, 30)
-    "ALL_ESSENTIALS" = @(1, 5, 8, 12, 23, 25)
+    "ALL_ADMIN"      = @(49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 72, 74, 86, 87, 88, 96)
+    "ALL_BROWSERS"   = @(1, 2, 3, 4, 5, 6, 7)
+    "ALL_MEDIA"      = @(21, 22, 23, 24, 25, 26, 31, 32, 33, 34, 38)
+    "ALL_NETWORK"    = @(50, 51, 75, 76, 77, 86, 87, 88, 89, 90, 91, 92)
+    "ALL_DEV"        = @(52, 55, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102)
+    "ALL_ESSENTIALS" = @(1, 8, 9, 21, 31, 40, 41, 52, 69, 72)
 }
 
 # ---------------------------------------------------------
@@ -158,10 +251,10 @@ if ($Packages.Count -gt 0) {
             Add-Type -AssemblyName System.Windows.Forms
             Add-Type -AssemblyName System.Drawing
 
-            # Create Main Form
+            # Create Main Form (Expanded Width for 102 Apps across 4 wide columns!)
             $Form = New-Object System.Windows.Forms.Form
-            $Form.Text = "OmviHub Ninite Software Deployer"
-            $Form.Size = New-Object System.Drawing.Size(1020, 720)
+            $Form.Text = "OmviHub Ninite Software Deployer (102 Enterprise Catalog)"
+            $Form.Size = New-Object System.Drawing.Size([int]1180, [int]800)
             $Form.StartPosition = "CenterScreen"
             $Form.BackColor = [System.Drawing.Color]::FromArgb(18, 24, 38) # Deep Dark Navy #121826
             $Form.ForeColor = [System.Drawing.Color]::White
@@ -171,7 +264,7 @@ if ($Packages.Count -gt 0) {
 
             # Header Panel
             $HeaderPanel = New-Object System.Windows.Forms.Panel
-            $HeaderPanel.Size = New-Object System.Drawing.Size(1020, 80)
+            $HeaderPanel.Size = New-Object System.Drawing.Size([int]1180, [int]80)
             $HeaderPanel.Dock = [System.Windows.Forms.DockStyle]::Top
             $HeaderPanel.BackColor = [System.Drawing.Color]::FromArgb(26, 35, 50)
             $Form.Controls.Add($HeaderPanel)
@@ -181,14 +274,14 @@ if ($Packages.Count -gt 0) {
             $TitleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 16, [System.Drawing.FontStyle]::Bold)
             $TitleLabel.ForeColor = [System.Drawing.Color]::FromArgb(56, 189, 248) # Bright Cyan
             $TitleLabel.Location = New-Object System.Drawing.Point(20, 15)
-            $TitleLabel.Size = New-Object System.Drawing.Size(600, 32)
+            $TitleLabel.Size = New-Object System.Drawing.Size([int]600, [int]32)
             $HeaderPanel.Controls.Add($TitleLabel)
 
             $SubTitle = New-Object System.Windows.Forms.Label
-            $SubTitle.Text = "Check the apps you want to install and click Install. Downloads directly from official vendor CDNs via $PackageManager."
+            $SubTitle.Text = "Check the apps you want to install and click Install. 102 applications across 12 categories downloaded via $PackageManager."
             $SubTitle.ForeColor = [System.Drawing.Color]::FromArgb(148, 163, 184) # Muted Slate
             $SubTitle.Location = New-Object System.Drawing.Point(22, 48)
-            $SubTitle.Size = New-Object System.Drawing.Size(850, 22)
+            $SubTitle.Size = New-Object System.Drawing.Size([int]1000, [int]22)
             $HeaderPanel.Controls.Add($SubTitle)
 
             # =========================================================
@@ -201,7 +294,7 @@ if ($Packages.Count -gt 0) {
 
             # Bottom Action Bar for Selection Panel
             $BottomBar = New-Object System.Windows.Forms.Panel
-            $BottomBar.Size = New-Object System.Drawing.Size(1020, 85)
+            $BottomBar.Size = New-Object System.Drawing.Size([int]1180, [int]85)
             $BottomBar.Dock = [System.Windows.Forms.DockStyle]::Bottom
             $BottomBar.BackColor = [System.Drawing.Color]::FromArgb(26, 35, 50)
             $SelectionPanel.Controls.Add($BottomBar)
@@ -213,8 +306,8 @@ if ($Packages.Count -gt 0) {
             $InstallBtn.ForeColor = [System.Drawing.Color]::White
             $InstallBtn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
             $InstallBtn.FlatAppearance.BorderSize = 0
-            $InstallBtn.Size = New-Object System.Drawing.Size(380, 45)
-            $InstallBtn.Location = New-Object System.Drawing.Point(600, 20)
+            $InstallBtn.Size = New-Object System.Drawing.Size([int]380, [int]45)
+            $InstallBtn.Location = New-Object System.Drawing.Point([int]750, [int]20)
             $InstallBtn.Cursor = [System.Windows.Forms.Cursors]::Hand
             $BottomBar.Controls.Add($InstallBtn)
 
@@ -223,8 +316,8 @@ if ($Packages.Count -gt 0) {
             $SelectAllBtn.BackColor = [System.Drawing.Color]::FromArgb(51, 65, 85)
             $SelectAllBtn.ForeColor = [System.Drawing.Color]::White
             $SelectAllBtn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-            $SelectAllBtn.Size = New-Object System.Drawing.Size(100, 35)
-            $SelectAllBtn.Location = New-Object System.Drawing.Point(20, 25)
+            $SelectAllBtn.Size = New-Object System.Drawing.Size([int]100, [int]35)
+            $SelectAllBtn.Location = New-Object System.Drawing.Point([int]20, [int]25)
             $BottomBar.Controls.Add($SelectAllBtn)
 
             $ClearAllBtn = New-Object System.Windows.Forms.Button
@@ -232,8 +325,8 @@ if ($Packages.Count -gt 0) {
             $ClearAllBtn.BackColor = [System.Drawing.Color]::FromArgb(51, 65, 85)
             $ClearAllBtn.ForeColor = [System.Drawing.Color]::White
             $ClearAllBtn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-            $ClearAllBtn.Size = New-Object System.Drawing.Size(100, 35)
-            $ClearAllBtn.Location = New-Object System.Drawing.Point(130, 25)
+            $ClearAllBtn.Size = New-Object System.Drawing.Size([int]100, [int]35)
+            $ClearAllBtn.Location = New-Object System.Drawing.Point([int]130, [int]25)
             $BottomBar.Controls.Add($ClearAllBtn)
 
             $AdminPresetBtn = New-Object System.Windows.Forms.Button
@@ -242,8 +335,8 @@ if ($Packages.Count -gt 0) {
             $AdminPresetBtn.ForeColor = [System.Drawing.Color]::White
             $AdminPresetBtn.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
             $AdminPresetBtn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-            $AdminPresetBtn.Size = New-Object System.Drawing.Size(150, 35)
-            $AdminPresetBtn.Location = New-Object System.Drawing.Point(250, 25)
+            $AdminPresetBtn.Size = New-Object System.Drawing.Size([int]150, [int]35)
+            $AdminPresetBtn.Location = New-Object System.Drawing.Point([int]250, [int]25)
             $BottomBar.Controls.Add($AdminPresetBtn)
 
             $WorkerPresetBtn = New-Object System.Windows.Forms.Button
@@ -252,9 +345,19 @@ if ($Packages.Count -gt 0) {
             $WorkerPresetBtn.ForeColor = [System.Drawing.Color]::White
             $WorkerPresetBtn.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
             $WorkerPresetBtn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-            $WorkerPresetBtn.Size = New-Object System.Drawing.Size(150, 35)
-            $WorkerPresetBtn.Location = New-Object System.Drawing.Point(410, 25)
+            $WorkerPresetBtn.Size = New-Object System.Drawing.Size([int]150, [int]35)
+            $WorkerPresetBtn.Location = New-Object System.Drawing.Point([int]410, [int]25)
             $BottomBar.Controls.Add($WorkerPresetBtn)
+
+            $DevPresetBtn = New-Object System.Windows.Forms.Button
+            $DevPresetBtn.Text = "Developer Pack"
+            $DevPresetBtn.BackColor = [System.Drawing.Color]::FromArgb(234, 88, 12) # Orange
+            $DevPresetBtn.ForeColor = [System.Drawing.Color]::White
+            $DevPresetBtn.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
+            $DevPresetBtn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+            $DevPresetBtn.Size = New-Object System.Drawing.Size([int]150, [int]35)
+            $DevPresetBtn.Location = New-Object System.Drawing.Point([int]570, [int]25)
+            $BottomBar.Controls.Add($DevPresetBtn)
 
             # Checkbox Columns Area
             $ColumnsArea = New-Object System.Windows.Forms.Panel
@@ -263,8 +366,9 @@ if ($Packages.Count -gt 0) {
             $ColumnsArea.Padding = New-Object System.Windows.Forms.Padding(15)
             $SelectionPanel.Controls.Add($ColumnsArea)
 
-            [int]$ColWidth = 230
-            [int[]]$ColX = @(20, 265, 510, 755)
+            # 4 Wide Columns for 102 Applications!
+            [int]$ColWidth = 265
+            [int[]]$ColX = @(20, 300, 580, 860)
             [int[]]$ColY = @(15, 15, 15, 15)
 
             $CheckBoxes = @()
@@ -273,25 +377,25 @@ if ($Packages.Count -gt 0) {
             foreach ($Cat in $UniqueCats) {
                 $CatApps = $Catalog | Where-Object { $_.Category -eq $Cat }
                 [int]$ColIndex = [int]$CatApps[0].Col
-                [int]$BoxHeight = 35 + ([int]$CatApps.Count * 28)
+                [int]$BoxHeight = 35 + ([int]$CatApps.Count * 26)
 
                 $GroupBox = New-Object System.Windows.Forms.GroupBox
                 $GroupBox.Text = "  $Cat  "
-                $GroupBox.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+                $GroupBox.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
                 $GroupBox.ForeColor = [System.Drawing.Color]::FromArgb(56, 189, 248)
                 $GroupBox.Location = New-Object System.Drawing.Point($ColX[$ColIndex], $ColY[$ColIndex])
                 $GroupBox.Size = New-Object System.Drawing.Size([int]$ColWidth, [int]$BoxHeight)
                 $ColumnsArea.Controls.Add($GroupBox)
 
-                [int]$AppY = 28
+                [int]$AppY = 26
                 foreach ($App in $CatApps) {
                     $CB = New-Object System.Windows.Forms.CheckBox
                     $CB.Text = $App.Name
-                    $CB.Font = New-Object System.Drawing.Font("Segoe UI", 9.5)
+                    $CB.Font = New-Object System.Drawing.Font("Segoe UI", 9)
                     $CB.ForeColor = [System.Drawing.Color]::White
                     $CB.Location = New-Object System.Drawing.Point(15, [int]$AppY)
                     [int]$CBWidth = [int]$ColWidth - 25
-                    $CB.Size = New-Object System.Drawing.Size([int]$CBWidth, 22)
+                    $CB.Size = New-Object System.Drawing.Size([int]$CBWidth, [int]22)
                     $CB.Tag = $App
                     $CB.Cursor = [System.Windows.Forms.Cursors]::Hand
                     
@@ -310,7 +414,7 @@ if ($Packages.Count -gt 0) {
 
                     $GroupBox.Controls.Add($CB)
                     $CheckBoxes += $CB
-                    $AppY += 26
+                    $AppY += 24
                 }
 
                 $ColY[$ColIndex] += $BoxHeight + 15
@@ -326,14 +430,14 @@ if ($Packages.Count -gt 0) {
 
             # Bottom Bar for Progress Panel
             $ProgBottomBar = New-Object System.Windows.Forms.Panel
-            $ProgBottomBar.Size = New-Object System.Drawing.Size(1020, 95)
+            $ProgBottomBar.Size = New-Object System.Drawing.Size([int]1180, [int]95)
             $ProgBottomBar.Dock = [System.Windows.Forms.DockStyle]::Bottom
             $ProgBottomBar.BackColor = [System.Drawing.Color]::FromArgb(26, 35, 50)
             $ProgressPanel.Controls.Add($ProgBottomBar)
 
             $ProgressBar = New-Object System.Windows.Forms.ProgressBar
-            $ProgressBar.Location = New-Object System.Drawing.Point(20, 20)
-            $ProgressBar.Size = New-Object System.Drawing.Size(960, 25)
+            $ProgressBar.Location = New-Object System.Drawing.Point([int]20, [int]20)
+            $ProgressBar.Size = New-Object System.Drawing.Size([int]1120, [int]25)
             $ProgressBar.Style = [System.Windows.Forms.ProgressBarStyle]::Continuous
             $ProgBottomBar.Controls.Add($ProgressBar)
 
@@ -341,8 +445,8 @@ if ($Packages.Count -gt 0) {
             $ProgressStatusLabel.Text = "Overall Progress: 0 of 0 completed (0%)"
             $ProgressStatusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
             $ProgressStatusLabel.ForeColor = [System.Drawing.Color]::FromArgb(248, 250, 252)
-            $ProgressStatusLabel.Location = New-Object System.Drawing.Point(20, 55)
-            $ProgressStatusLabel.Size = New-Object System.Drawing.Size(550, 25)
+            $ProgressStatusLabel.Location = New-Object System.Drawing.Point([int]20, [int]55)
+            $ProgressStatusLabel.Size = New-Object System.Drawing.Size([int]650, [int]25)
             $ProgBottomBar.Controls.Add($ProgressStatusLabel)
 
             $CloseReportBtn = New-Object System.Windows.Forms.Button
@@ -351,8 +455,8 @@ if ($Packages.Count -gt 0) {
             $CloseReportBtn.BackColor = [System.Drawing.Color]::FromArgb(56, 189, 248) # Cyan
             $CloseReportBtn.ForeColor = [System.Drawing.Color]::FromArgb(15, 23, 42)
             $CloseReportBtn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-            $CloseReportBtn.Size = New-Object System.Drawing.Size(260, 35)
-            $CloseReportBtn.Location = New-Object System.Drawing.Point(720, 50)
+            $CloseReportBtn.Size = New-Object System.Drawing.Size([int]280, [int]35)
+            $CloseReportBtn.Location = New-Object System.Drawing.Point([int]860, [int]50)
             $CloseReportBtn.Visible = $false
             $CloseReportBtn.Cursor = [System.Windows.Forms.Cursors]::Hand
             $ProgBottomBar.Controls.Add($CloseReportBtn)
@@ -408,6 +512,11 @@ if ($Packages.Count -gt 0) {
                 foreach ($CB in $CheckBoxes) { if ($CB.Tag.Id -in $WorkerIds) { $CB.Checked = $true } else { $CB.Checked = $false } }
             })
 
+            $DevPresetBtn.Add_Click({
+                $DevIds = $Bundles["ALL_DEV"]
+                foreach ($CB in $CheckBoxes) { if ($CB.Tag.Id -in $DevIds) { $CB.Checked = $true } else { $CB.Checked = $false } }
+            })
+
             $InstallBtn.Add_Click({
                 $Checked = $CheckBoxes | Where-Object { $_.Checked }
                 if ($Checked.Count -eq 0) {
@@ -427,7 +536,7 @@ if ($Packages.Count -gt 0) {
                 $Grid.Rows.Clear()
                 foreach ($App in $SelectedApps) {
                     $PkgId = if ($PackageManager -eq "Winget") { $App.WingetID } else { $App.ChocoID }
-                    $RowIdx = $Grid.Rows.Add($App.Name, $App.Category, $PkgId, "[..] Waiting in queue...")
+                    [int]$RowIdx = [int]$Grid.Rows.Add($App.Name, $App.Category, $PkgId, "[..] Waiting in queue...")
                     $Grid.Rows[$RowIdx].Cells[3].Style.ForeColor = [System.Drawing.Color]::FromArgb(148, 163, 184)
                 }
 
@@ -440,10 +549,10 @@ if ($Packages.Count -gt 0) {
                 $ReportsDir = Join-Path $PSScriptRoot "reports"
                 if (-not (Test-Path $ReportsDir)) { New-Item -ItemType Directory -Path $ReportsDir -Force | Out-Null }
                 $script:DeploymentResults = @()
-                $TotalApps = $SelectedApps.Count
-                $CurrentIdx = 0
+                [int]$TotalApps = [int]$SelectedApps.Count
+                [int]$CurrentIdx = 0
 
-                for ($i = 0; $i -lt $TotalApps; $i++) {
+                for ([int]$i = 0; $i -lt $TotalApps; $i++) {
                     $App = $SelectedApps[$i]
                     $CurrentIdx++
 
@@ -455,7 +564,7 @@ if ($Packages.Count -gt 0) {
                     [System.Windows.Forms.Application]::DoEvents()
                     $Form.Refresh()
 
-                    $StartTime = Get-Date
+                    [datetime]$StartTime = Get-Date
                     $Status = "Failed"
                     $ErrorMsg = "None"
 
@@ -498,7 +607,7 @@ if ($Packages.Count -gt 0) {
                         $ErrorMsg = $_.Exception.Message
                     }
 
-                    $Duration = ((Get-Date) - $StartTime).TotalSeconds
+                    [double]$Duration = ((Get-Date) - $StartTime).TotalSeconds
                     $script:DeploymentResults += [PSCustomObject]@{
                         Timestamp    = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
                         Category     = $App.Category
@@ -555,7 +664,7 @@ if ($Packages.Count -gt 0) {
     # Console Fallback
     if (-not $GUISuccess) {
         Write-Host "`n==========================================================================" -ForegroundColor Cyan
-        Write-Host "         OMVIHUB CONSOLE SOFTWARE CATALOG [SELECT BY NUMBER]" -ForegroundColor White
+        Write-Host "     OMVIHUB CONSOLE SOFTWARE CATALOG (102 APPS) [SELECT BY NUMBER]" -ForegroundColor White
         Write-Host "==========================================================================" -ForegroundColor Cyan
         
         $Categories = $Catalog | Select-Object -ExpandProperty Category -Unique
@@ -569,14 +678,15 @@ if ($Packages.Count -gt 0) {
         }
         
         Write-Host "`n-- PRE-CONFIGURED ENTERPRISE BUNDLES --" -ForegroundColor Green
-        Write-Host "  [ALL_ADMIN]      IT Admin Suite (Sysinternals, Putty, WinSCP, Notepad++, TreeSize)" -ForegroundColor White
-        Write-Host "  [ALL_BROWSERS]   All Web Browsers (Chrome, Firefox, Edge, Brave)" -ForegroundColor White
-        Write-Host "  [ALL_NETWORK]    Network & Forensics (Wireshark, IP Scanner, Nmap, OpenVPN)" -ForegroundColor White
-        Write-Host "  [ALL_DEV]        Developer Pack (VS Code, Git, Python 3, PowerShell 7)" -ForegroundColor White
-        Write-Host "  [ALL_ESSENTIALS] Standard Worker Essentials (Chrome, 7-Zip, Notepad++, VLC, Zoom)" -ForegroundColor White
+        Write-Host "  [ALL_ADMIN]      IT Admin Suite (Sysinternals, Putty, WinSCP, Notepad++, TreeSize, PowerToys, etc.)" -ForegroundColor White
+        Write-Host "  [ALL_BROWSERS]   All Web Browsers (Chrome, Firefox, Edge, Brave, Opera, Vivaldi, Tor)" -ForegroundColor White
+        Write-Host "  [ALL_MEDIA]      Media & Design (VLC, Spotify, OBS, ShareX, Greenshot, GIMP, Blender)" -ForegroundColor White
+        Write-Host "  [ALL_NETWORK]    Network & Forensics (Wireshark, IP Scanner, Nmap, OpenVPN, WireGuard, Tailscale)" -ForegroundColor White
+        Write-Host "  [ALL_DEV]        Developer Pack (VS Code, Git, Python 3, PowerShell 7, Docker, Node.js, .NET 8)" -ForegroundColor White
+        Write-Host "  [ALL_ESSENTIALS] Standard Worker Essentials (Chrome, Zoom, VLC, ShareX, LibreOffice, Notepad++)" -ForegroundColor White
         Write-Host "==========================================================================" -ForegroundColor Cyan
         
-        $InputStr = Read-Host "`nEnter application numbers separated by commas (e.g. 1, 5, 8, 12, 16) or BUNDLE name"
+        $InputStr = Read-Host "`nEnter application numbers separated by commas (e.g. 1, 8, 21, 49, 86) or BUNDLE name"
         if (-not $InputStr -or $InputStr.Trim() -eq "") { exit }
         
         $CleanInput = $InputStr.Trim().ToUpper()
@@ -594,13 +704,13 @@ if ($Packages.Count -gt 0) {
         $ReportsDir = Join-Path $PSScriptRoot "reports"
         if (-not (Test-Path $ReportsDir)) { New-Item -ItemType Directory -Path $ReportsDir -Force | Out-Null }
         $script:DeploymentResults = @()
-        $TotalApps = $SelectedApps.Count
-        $CurrentIdx = 0
+        [int]$TotalApps = [int]$SelectedApps.Count
+        [int]$CurrentIdx = 0
 
         foreach ($App in $SelectedApps) {
             $CurrentIdx++
             Write-Host "[${CurrentIdx}/${TotalApps}] Installing $($App.Name)..." -ForegroundColor Yellow -NoNewline
-            $StartTime = Get-Date; $Status = "Failed"; $ErrorMsg = "None"
+            [datetime]$StartTime = Get-Date; $Status = "Failed"; $ErrorMsg = "None"
             try {
                 if ($PackageManager -eq "Winget") {
                     $InstallCmd = "winget install --id $($App.WingetID) --silent --accept-package-agreements --accept-source-agreements"
@@ -626,7 +736,7 @@ if ($Packages.Count -gt 0) {
                 }
             } catch { $Status = "Error"; $ErrorMsg = $_.Exception.Message; Write-Host " [ERROR: $ErrorMsg]" -ForegroundColor Red }
             
-            $Duration = ((Get-Date) - $StartTime).TotalSeconds
+            [double]$Duration = ((Get-Date) - $StartTime).TotalSeconds
             $script:DeploymentResults += [PSCustomObject]@{
                 Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss"); Category = $App.Category; Name = $App.Name
                 PackageID = if ($PackageManager -eq "Winget") { $App.WingetID } else { $App.ChocoID }
@@ -726,7 +836,7 @@ $HtmlContent = @"
         <div class="header">
             <div>
                 <h1>OmviHub Cloud Software Deployment Report</h1>
-                <p>Ninite-Style Hybrid CDN Package Deployment Command Center</p>
+                <p>Ninite-Style Hybrid CDN Package Deployment Command Center (102 Catalog)</p>
             </div>
             <div style="text-align: right;">
                 <p style="color: var(--text-main); font-weight: 600;">$env:COMPUTERNAME</p>
