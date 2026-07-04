@@ -18,7 +18,7 @@
 [CmdletBinding()]
 param (
     [string]$DownloadUrl = "https://github.com/IAmHeroForFun/WindowsAdminScript/archive/refs/heads/master.zip",
-    [string]$InstallDir = "C:\OmviHub_Toolkit",
+    [string]$InstallDir = "C:\SysMaster",
     [switch]$ForceOverwriteAll
 )
 

@@ -17,7 +17,7 @@ irm https://toolkit.omvihub.in/install.ps1 | iex
    * Requests **Administrator UAC elevation** if not already elevated.
    * Enforces **TLS 1.2 / 1.3** security protocols.
    * Downloads the latest toolkit release archive (`main.zip`) from GitHub (or directly from AWS Lightsail).
-   * Silently installs or synchronizes the modules directly into **`C:\OmviHub_Toolkit\`**.
+   * Silently installs or synchronizes the modules directly into **`C:\SysMaster\`**.
    * **Intelligent Preservation**: Updates all script logic while strictly protecting and preserving 100% of existing historical reports (`history.json`), inventories (`inventory.csv`), and HTML dashboards!
    * Unblocks all files and launches the interactive Master Menu console!
 
@@ -139,6 +139,6 @@ irm https://toolkit.omvihub.in | iex
 
 ### What you will see:
 1. **UAC Elevation**: If not running as Admin, it prompts for elevation.
-2. **Silent Download & Extraction**: Downloads `master.zip` and extracts to `C:\OmviHub_Toolkit\`.
+2. **Silent Download & Extraction**: Downloads `master.zip` and extracts to `C:\SysMaster\`.
 3. **Data Preservation**: Preserves all existing `reports\`, `backups\`, and `.csv` files.
 4. **Master Console**: Instantly launches the 16-module interactive command center!
