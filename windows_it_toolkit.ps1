@@ -29,11 +29,15 @@ while ($true) {
     Write-Host "  [8] Run Server Crash, Reboot & Error Detective (Live Web Lookup)" -ForegroundColor Red
     Write-Host "  [9] Run Deep Infrastructure & Security Scan (AD, SSL, SMBv1, Ports)" -ForegroundColor Cyan
     Write-Host "  [10] Run Enterprise Security, Compliance & Recovery Auditor" -ForegroundColor Magenta
+    Write-Host "  [11] Run Advanced Network Mapper & Topology Discovery Tool" -ForegroundColor Cyan
+    Write-Host "  [12] Run NOC Uptime & Availability Monitoring Platform" -ForegroundColor Yellow
+    Write-Host "  [13] Run MSP One-Click Client Health Report Generator" -ForegroundColor Green
+    Write-Host "  [14] Run Complete Self-Hosted MSP Monitoring & Reporting Platform" -ForegroundColor Magenta
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "  [Q] Exit Toolkit" -ForegroundColor DarkRed
     Write-Host "==========================================================================" -ForegroundColor Magenta
     
-    $Choice = Read-Host "Select a tool to execute [1-10, Q]"
+    $Choice = Read-Host "Select a tool to execute [1-14, Q]"
     
     switch ($Choice) {
         "1" {
@@ -106,12 +110,40 @@ while ($true) {
             if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
+        "11" {
+            Clear-Host
+            Write-Host "Executing Advanced Network Mapper & Topology Discovery Tool..." -ForegroundColor Cyan
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "network_mapper\network_mapper.ps1"
+            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        "12" {
+            Clear-Host
+            Write-Host "Executing NOC Uptime & Availability Monitoring Platform..." -ForegroundColor Yellow
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "uptime_monitor\uptime_monitor.ps1"
+            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        "13" {
+            Clear-Host
+            Write-Host "Executing MSP One-Click Client Health Report Generator..." -ForegroundColor Green
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "client_health_report\generate_report.ps1"
+            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        "14" {
+            Clear-Host
+            Write-Host "Executing Complete Self-Hosted MSP Monitoring & Reporting Platform..." -ForegroundColor Magenta
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "msp_platform\msp_platform.ps1"
+            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
         { $_ -eq "Q" -or $_ -eq "q" } {
             Write-Host "`nExiting IT Toolkit. Have a productive day!" -ForegroundColor Cyan
             exit
         }
         default {
-            Write-Host "`nInvalid choice. Please enter 1-10, or Q." -ForegroundColor Red
+            Write-Host "`nInvalid choice. Please enter 1-14, or Q." -ForegroundColor Red
             Start-Sleep -Seconds 1
         }
     }

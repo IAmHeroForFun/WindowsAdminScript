@@ -65,6 +65,30 @@ D:\projects\script\
     ├── run_enterprise_security_auditor.bat # Run comprehensive audit scan
     ├── enterprise_security_auditor.ps1# 360-degree security, patch, backup, disk & network scoring engine
     └── reports/                       # 6 CSV data sheets, audit.log & dark-mode HTML executive dashboard
+
+└── network_mapper/                    # 🌐 Advanced Network Mapper & Topology Discovery Tool [Option 11]
+    ├── README.md                      # SolarWinds & PRTG-inspired topology scanner documentation
+    ├── run_network_mapper.bat         # Launch multi-threaded subnet discovery scan
+    ├── network_mapper.ps1             # Async ICMP sweep, MAC OUI vendor lookup, OS fingerprinting & port scanner
+    └── reports/                       # CSV spreadsheet, JSON topology & interactive HTML visual network diagram
+
+└── uptime_monitor/                    # ⏱️ NOC Uptime & Availability Monitoring Platform [Option 12]
+    ├── README.md                      # Uptime Kuma & PRTG-style SLA monitor documentation
+    ├── run_uptime_monitor.bat         # Execute real-time availability check
+    ├── uptime_monitor.ps1             # Monitors Internet, Gateway, DNS, DCs, SMB, Web & VPN with latency/loss tracking
+    └── reports/                       # history.json, CSV log & Daily/Weekly/Monthly/Master HTML availability dashboards
+
+└── client_health_report/              # 💼 MSP One-Click Client Health Report Generator [Option 13]
+    ├── README.md                      # Boardroom & CEO executive health assessment documentation
+    ├── run_client_health_report.bat   # Generate executive 360-degree client health deliverable
+    ├── generate_report.ps1            # Audits server health, storage, VSS, security, patching & certs with 0-100 Score
+    └── reports/                       # Print-to-PDF boardroom HTML report (@media print) & itemized findings CSV
+
+└── msp_platform/                      # 🏛️ Complete Self-Hosted MSP Monitoring & Reporting Platform [Option 14]
+    ├── README.md                      # Lansweeper, PRTG, NinjaOne & OpManager alternative documentation
+    ├── run_msp_platform.bat           # Launch 10-module enterprise IT management ecosystem
+    ├── msp_platform.ps1               # 10 core modules, 3 KPI risk scoring engines, scheduled task & email alerting
+    └── reports/                       # Master Command Center HTML dashboard, historical trend JSON/CSV & risk logs
 ```
 
 ---
