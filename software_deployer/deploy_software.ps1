@@ -251,16 +251,18 @@ if ($Packages.Count -gt 0) {
             Add-Type -AssemblyName System.Windows.Forms
             Add-Type -AssemblyName System.Drawing
 
-            # Create Main Form (Expanded Width for 102 Apps across 4 wide columns!)
+            # Create Main Form (Responsive, Resizable, Compact Starting Size for 102 Apps!)
             $Form = New-Object System.Windows.Forms.Form
             $Form.Text = "OmviHub Ninite Software Deployer (102 Enterprise Catalog)"
-            $Form.Size = New-Object System.Drawing.Size([int]1180, [int]800)
+            $Form.Size = New-Object System.Drawing.Size([int]1050, [int]660)
+            $Form.MinimumSize = New-Object System.Drawing.Size([int]900, [int]500)
             $Form.StartPosition = "CenterScreen"
             $Form.BackColor = [System.Drawing.Color]::FromArgb(18, 24, 38) # Deep Dark Navy #121826
             $Form.ForeColor = [System.Drawing.Color]::White
             $Form.Font = New-Object System.Drawing.Font("Segoe UI", 9.5)
-            $Form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedSingle
-            $Form.MaximizeBox = $false
+            $Form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::Sizable
+            $Form.MaximizeBox = $true
+            $Form.MinimizeBox = $true
 
             # Header Panel
             $HeaderPanel = New-Object System.Windows.Forms.Panel
@@ -306,8 +308,9 @@ if ($Packages.Count -gt 0) {
             $InstallBtn.ForeColor = [System.Drawing.Color]::White
             $InstallBtn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
             $InstallBtn.FlatAppearance.BorderSize = 0
-            $InstallBtn.Size = New-Object System.Drawing.Size([int]380, [int]45)
-            $InstallBtn.Location = New-Object System.Drawing.Point([int]750, [int]20)
+            $InstallBtn.Size = New-Object System.Drawing.Size([int]360, [int]45)
+            $InstallBtn.Location = New-Object System.Drawing.Point([int]650, [int]20)
+            $InstallBtn.Anchor = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Right
             $InstallBtn.Cursor = [System.Windows.Forms.Cursors]::Hand
             $BottomBar.Controls.Add($InstallBtn)
 
@@ -367,8 +370,8 @@ if ($Packages.Count -gt 0) {
             $SelectionPanel.Controls.Add($ColumnsArea)
 
             # 4 Wide Columns for 102 Applications!
-            [int]$ColWidth = 265
-            [int[]]$ColX = @(20, 300, 580, 860)
+            [int]$ColWidth = 240
+            [int[]]$ColX = @(20, 275, 530, 785)
             [int[]]$ColY = @(15, 15, 15, 15)
 
             $CheckBoxes = @()
@@ -437,8 +440,9 @@ if ($Packages.Count -gt 0) {
 
             $ProgressBar = New-Object System.Windows.Forms.ProgressBar
             $ProgressBar.Location = New-Object System.Drawing.Point([int]20, [int]20)
-            $ProgressBar.Size = New-Object System.Drawing.Size([int]1120, [int]25)
+            $ProgressBar.Size = New-Object System.Drawing.Size([int]990, [int]25)
             $ProgressBar.Style = [System.Windows.Forms.ProgressBarStyle]::Continuous
+            $ProgressBar.Anchor = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Right
             $ProgBottomBar.Controls.Add($ProgressBar)
 
             $ProgressStatusLabel = New-Object System.Windows.Forms.Label
@@ -455,8 +459,9 @@ if ($Packages.Count -gt 0) {
             $CloseReportBtn.BackColor = [System.Drawing.Color]::FromArgb(56, 189, 248) # Cyan
             $CloseReportBtn.ForeColor = [System.Drawing.Color]::FromArgb(15, 23, 42)
             $CloseReportBtn.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
-            $CloseReportBtn.Size = New-Object System.Drawing.Size([int]280, [int]35)
-            $CloseReportBtn.Location = New-Object System.Drawing.Point([int]860, [int]50)
+            $CloseReportBtn.Size = New-Object System.Drawing.Size([int]260, [int]35)
+            $CloseReportBtn.Location = New-Object System.Drawing.Point([int]750, [int]50)
+            $CloseReportBtn.Anchor = [System.Windows.Forms.AnchorStyles]::Top -bor [System.Windows.Forms.AnchorStyles]::Right
             $CloseReportBtn.Visible = $false
             $CloseReportBtn.Cursor = [System.Windows.Forms.Cursors]::Hand
             $ProgBottomBar.Controls.Add($CloseReportBtn)
