@@ -89,6 +89,12 @@ D:\projects\script\
     ├── run_msp_platform.bat           # Launch 10-module enterprise IT management ecosystem
     ├── msp_platform.ps1               # 10 core modules, 3 KPI risk scoring engines, scheduled task & email alerting
     └── reports/                       # Master Command Center HTML dashboard, historical trend JSON/CSV & risk logs
+
+└── winre_recovery_assistant/          # 🚑 WinRE Recovery & Boot Repair Assistant [Option 15]
+    ├── README.md                      # Senior Microsoft Support recovery architecture & USB boot guide
+    ├── run_winre_recovery_assistant.bat # Launch interactive boot repair & offline diagnostic assistant
+    ├── winre_recovery_assistant.ps1   # 14 diagnostic modules with strict Y/N repair approval protocols
+    └── reports/                       # 6 CSV sheets, recovery.log & dark-mode HTML recovery command center
 ```
 
 ---
