@@ -82,7 +82,7 @@ Open your Nginx configuration file:
 sudo nano /etc/nginx/sites-available/toolkit.omvihub.in
 ```
 
-Paste the following production-ready configuration block:
+Paste the following **Zero-Maintenance Auto-Fetch Nginx Configuration** (this proxies directly to GitHub so you NEVER have to manually log into AWS or run `wget` again!):
 ```nginx
 server {
     listen 80;
@@ -96,26 +96,26 @@ server {
     root /var/www/toolkit;
     index install.ps1 index.html;
 
-    # 1. Ensure .ps1 files are always served as UTF-8 Plain Text without caching issues
-    location ~ \.ps1$ {
+    # 1. LIVE GITHUB PROXY: Automatically fetch latest install.ps1 from GitHub!
+    # Whenever someone runs irm https://toolkit.omvihub.in/install.ps1 | iex,
+    # Nginx fetches the live, up-to-the-second script directly from GitHub!
+    location ~ ^/(install\.ps1|get)$ {
+        proxy_pass https://raw.githubusercontent.com/IAmHeroForFun/WindowsAdminScript/master/install.ps1;
+        proxy_set_header Host raw.githubusercontent.com;
+        proxy_ssl_server_name on;
         default_type text/plain;
         add_header Content-Type "text/plain; charset=utf-8";
         add_header Cache-Control "no-cache, no-store, must-revalidate";
     }
 
-    # 2. Handle /install.ps1 and /get shortcuts
-    location = /get {
-        rewrite ^/get$ /install.ps1 last;
-    }
-
-    # 3. MASSGRAVE ROUTING TRICK:
-    # If root (/) is requested by PowerShell or curl/wget -> serve install.ps1
+    # 2. MASSGRAVE ROUTING TRICK:
+    # If root (/) is requested by PowerShell or curl/wget -> serve install.ps1 via live proxy!
     # If root (/) is requested by a Web Browser -> redirect to GitHub repo!
     location = / {
         if ($http_user_agent ~* "PowerShell|curl|wget|WindowsPowerShell") {
             rewrite ^/$ /install.ps1 last;
         }
-        return 301 https://github.com/omvihub/Windows-IT-Toolkit;
+        return 301 https://github.com/IAmHeroForFun/WindowsAdminScript;
     }
 }
 ```
