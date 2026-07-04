@@ -47,9 +47,9 @@ if (-not (Test-IsAdmin)) {
     Write-Host "  Requesting UAC Elevation... Please click 'Yes' on the prompt." -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor DarkYellow
     
-    $CommandLine = "-NoProfile -ExecutionPolicy Bypass -Command `"irm https://toolkit.omvihub.in/install.ps1 | iex`""
+    $CommandLine = "-NoExit -NoProfile -ExecutionPolicy Bypass -Command `"irm https://toolkit.omvihub.in/install.ps1 | iex`""
     if ($MyInvocation.MyCommand.Path) {
-        $CommandLine = "-NoProfile -ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Path)`""
+        $CommandLine = "-NoExit -NoProfile -ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Path)`""
     }
     
     try {
@@ -57,7 +57,7 @@ if (-not (Test-IsAdmin)) {
         exit
     } catch {
         Write-Host "`n[ERROR] Administrative elevation was cancelled or failed. Cannot proceed." -ForegroundColor Red
-        Start-Sleep -Seconds 3
+        Write-Host "`nPress Enter to exit..." -ForegroundColor DarkGray; [void](Read-Host)
         exit 1
     }
 }
@@ -103,9 +103,9 @@ try {
 } catch {
     Write-Host "`n[ERROR] Failed to download toolkit archive from $DownloadUrl" -ForegroundColor Red
     Write-Host "Reason: $($_.Exception.Message)" -ForegroundColor Yellow
-    Write-Host "`nPlease verify internet connectivity and AWS/GitHub repository accessibility." -ForegroundColor DarkGray
+    Write-Host "`nPlease verify internet connectivity and ensure your GitHub repository URL is correct and public!" -ForegroundColor DarkGray
     Remove-Item -Path $StagingDir -Recurse -Force -ErrorAction SilentlyContinue
-    Start-Sleep -Seconds 5
+    Write-Host "`nPress Enter to exit..." -ForegroundColor DarkGray; [void](Read-Host)
     exit 1
 }
 
@@ -119,6 +119,7 @@ try {
     } catch {
         Write-Host "`n[ERROR] Failed to extract ZIP archive: $($_.Exception.Message)" -ForegroundColor Red
         Remove-Item -Path $StagingDir -Recurse -Force -ErrorAction SilentlyContinue
+        Write-Host "`nPress Enter to exit..." -ForegroundColor DarkGray; [void](Read-Host)
         exit 1
     }
 }
