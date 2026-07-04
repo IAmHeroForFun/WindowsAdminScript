@@ -10,8 +10,10 @@ A modular, enterprise-grade collection of portable Windows and Windows Server ad
 D:\projects\script\
 │
 ├── README.md                          # Master directory index
+├── WEB_BOOTSTRAP_GUIDE.md             # 🌐 Guide for deploying via AWS Lightsail Nginx & GitHub
+├── install.ps1                        # 🌟 Massgrave-style 2-Stage Web Bootstrapper (irm | iex)
 ├── Windows_IT_Toolkit.bat             # 🌟 Master Interactive Menu Launcher (Double-Click)
-├── windows_it_toolkit.ps1             # Central menu interface connecting all 10 suites
+├── windows_it_toolkit.ps1             # Central menu interface connecting all 15 suites
 │
 └── inventory/                         # 💻 Windows Hardware & Software Inventory Tool
     ├── README.md                      # Detailed suite documentation
