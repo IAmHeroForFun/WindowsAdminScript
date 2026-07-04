@@ -1,6 +1,6 @@
-# 🛠️ IT Administration Script Suite
+# 🛠️ Windows & Windows Server IT Administration Toolkit
 
-A modular collection of portable Windows administration and automation tools. Every suite is contained inside its own dedicated subdirectory with its own batch launchers, documentation, output files, and automatic backup directories.
+A modular, enterprise-grade collection of portable Windows and Windows Server administration, forensic diagnostic, and automation tools. Engineered for 100% compatibility across Windows 7–11 and Windows Server 2008 R2–2025. Every suite is contained inside its own dedicated subdirectory with its own batch launchers, documentation, and forensic report directories.
 
 ---
 
@@ -10,8 +10,8 @@ A modular collection of portable Windows administration and automation tools. Ev
 D:\projects\script\
 │
 ├── README.md                          # Master directory index
-├── run_it_toolkit.bat                 # 🌟 Master Interactive Menu Launcher (Double-Click)
-├── it_toolkit_menu.ps1                # Central menu interface connecting all suites
+├── Windows_IT_Toolkit.bat             # 🌟 Master Interactive Menu Launcher (Double-Click)
+├── windows_it_toolkit.ps1             # Central menu interface connecting all 10 suites
 │
 └── inventory/                         # 💻 Windows Hardware & Software Inventory Tool
     ├── README.md                      # Detailed suite documentation
@@ -59,6 +59,12 @@ D:\projects\script\
     ├── run_deep_diagnostic.bat        # Run 360-degree infrastructure scan
     ├── deep_diagnostic.ps1            # Scans AD replication, SSL certs, SMBv1, listening ports & reboots
     └── reports/                       # Generated port maps and certificate CSVs
+
+└── enterprise_security_auditor/       # 🛡️ Enterprise Security, Compliance & Recovery Auditor [Option 10]
+    ├── README.md                      # Complete enterprise MSP assessment documentation
+    ├── run_enterprise_security_auditor.bat # Run comprehensive audit scan
+    ├── enterprise_security_auditor.ps1# 360-degree security, patch, backup, disk & network scoring engine
+    └── reports/                       # 6 CSV data sheets, audit.log & dark-mode HTML executive dashboard
 ```
 
 ---

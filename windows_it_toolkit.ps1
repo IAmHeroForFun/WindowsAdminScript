@@ -1,5 +1,5 @@
-# Master IT Administration Toolkit Menu
-# Compatible with Windows 7 (PowerShell 2.0) through Windows 11 (PowerShell 5.1 & 7+)
+# Windows & Windows Server Master IT Administration Toolkit Menu
+# Compatible with Windows 7-11 & Windows Server 2008 R2-2025
 
 $ErrorActionPreference = "SilentlyContinue"
 
@@ -15,7 +15,7 @@ if (-not $PSScriptRoot) {
 while ($true) {
     Clear-Host
     Write-Host "==========================================================================" -ForegroundColor Magenta
-    Write-Host "                  MASTER IT ADMINISTRATION TOOLKIT" -ForegroundColor Magenta
+    Write-Host "       WINDOWS & WINDOWS SERVER MASTER IT ADMINISTRATION TOOLKIT" -ForegroundColor Magenta
     Write-Host "==========================================================================" -ForegroundColor Magenta
     Write-Host "  System: $env:COMPUTERNAME | User: $env:USERNAME" -ForegroundColor DarkCyan
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
@@ -28,11 +28,12 @@ while ($true) {
     Write-Host "  [7] Run Server Health & Misconfiguration Doctor (DNS, NTP, Firewall)" -ForegroundColor Yellow
     Write-Host "  [8] Run Server Crash, Reboot & Error Detective (Live Web Lookup)" -ForegroundColor Red
     Write-Host "  [9] Run Deep Infrastructure & Security Scan (AD, SSL, SMBv1, Ports)" -ForegroundColor Cyan
+    Write-Host "  [10] Run Enterprise Security, Compliance & Recovery Auditor" -ForegroundColor Magenta
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "  [Q] Exit Toolkit" -ForegroundColor DarkRed
     Write-Host "==========================================================================" -ForegroundColor Magenta
     
-    $Choice = Read-Host "Select a tool to execute [1-9, Q]"
+    $Choice = Read-Host "Select a tool to execute [1-10, Q]"
     
     switch ($Choice) {
         "1" {
@@ -98,12 +99,19 @@ while ($true) {
             if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
+        "10" {
+            Clear-Host
+            Write-Host "Executing Enterprise Security, Compliance & Recovery Auditor..." -ForegroundColor Magenta
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "enterprise_security_auditor\enterprise_security_auditor.ps1"
+            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
         { $_ -eq "Q" -or $_ -eq "q" } {
             Write-Host "`nExiting IT Toolkit. Have a productive day!" -ForegroundColor Cyan
             exit
         }
         default {
-            Write-Host "`nInvalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9, or Q." -ForegroundColor Red
+            Write-Host "`nInvalid choice. Please enter 1-10, or Q." -ForegroundColor Red
             Start-Sleep -Seconds 1
         }
     }
