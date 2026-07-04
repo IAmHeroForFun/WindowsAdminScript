@@ -667,7 +667,7 @@ if ($Packages.Count -gt 0) {
 
                     try {
                         if ($PackageManager -eq "Winget") {
-                            $InstallCmd = "winget install --id $($App.WingetID) --silent --accept-package-agreements --accept-source-agreements"
+                            $InstallCmd = "winget install --id $($App.WingetID) --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity"
                             if ($ForceInstall) { $InstallCmd += " --force" }
                             $Output = Invoke-Expression $InstallCmd 2>&1 | Out-String
                             if ($LASTEXITCODE -eq 0 -or $Output -match "Successfully installed|already installed|No applicable update found") {
@@ -676,7 +676,7 @@ if ($Packages.Count -gt 0) {
                                 if (Get-Command choco -ErrorAction SilentlyContinue) {
                                     $Grid.Rows[$i].Cells[3].Value = "[>>] Winget failed -> Retrying via Choco..."
                                     [System.Windows.Forms.Application]::DoEvents()
-                                    $ChocoCmd = "choco install $($App.ChocoID) -y --no-progress"
+                                    $ChocoCmd = "choco install $($App.ChocoID) -y --no-progress --ignore-checksums"
                                     $Output = Invoke-Expression $ChocoCmd 2>&1 | Out-String
                                     if ($LASTEXITCODE -eq 0 -or $Output -match "already installed|The install of $($App.ChocoID) was successful") {
                                         $Status = "Success (Choco Fallback)"
@@ -690,7 +690,7 @@ if ($Packages.Count -gt 0) {
                                 }
                             }
                         } elseif ($PackageManager -eq "Chocolatey") {
-                            $ChocoCmd = "choco install $($App.ChocoID) -y --no-progress"
+                            $ChocoCmd = "choco install $($App.ChocoID) -y --no-progress --ignore-checksums"
                             $Output = Invoke-Expression $ChocoCmd 2>&1 | Out-String
                             if ($LASTEXITCODE -eq 0 -or $Output -match "already installed|The install of $($App.ChocoID) was successful") {
                                 $Status = "Success"
@@ -811,14 +811,14 @@ if ($Packages.Count -gt 0) {
             [datetime]$StartTime = Get-Date; $Status = "Failed"; $ErrorMsg = "None"
             try {
                 if ($PackageManager -eq "Winget") {
-                    $InstallCmd = "winget install --id $($App.WingetID) --silent --accept-package-agreements --accept-source-agreements"
+                    $InstallCmd = "winget install --id $($App.WingetID) --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity"
                     if ($ForceInstall) { $InstallCmd += " --force" }
                     $Output = Invoke-Expression $InstallCmd 2>&1 | Out-String
                     if ($LASTEXITCODE -eq 0 -or $Output -match "Successfully installed|already installed|No applicable update found") {
                         $Status = "Success"; Write-Host " [OK - Winget]" -ForegroundColor Green
                     } else {
                         if (Get-Command choco -ErrorAction SilentlyContinue) {
-                            $ChocoCmd = "choco install $($App.ChocoID) -y --no-progress"
+                            $ChocoCmd = "choco install $($App.ChocoID) -y --no-progress --ignore-checksums"
                             $Output = Invoke-Expression $ChocoCmd 2>&1 | Out-String
                             if ($LASTEXITCODE -eq 0 -or $Output -match "already installed|The install of $($App.ChocoID) was successful") {
                                 $Status = "Success (Choco Fallback)"; Write-Host " [OK - Choco]" -ForegroundColor Green
@@ -826,7 +826,7 @@ if ($Packages.Count -gt 0) {
                         } else { $Status = "Failed"; $ErrorMsg = "Winget exit code $LASTEXITCODE"; Write-Host " [FAILED]" -ForegroundColor Red }
                     }
                 } elseif ($PackageManager -eq "Chocolatey") {
-                    $ChocoCmd = "choco install $($App.ChocoID) -y --no-progress"
+                    $ChocoCmd = "choco install $($App.ChocoID) -y --no-progress --ignore-checksums"
                     $Output = Invoke-Expression $ChocoCmd 2>&1 | Out-String
                     if ($LASTEXITCODE -eq 0 -or $Output -match "already installed|The install of $($App.ChocoID) was successful") {
                         $Status = "Success"; Write-Host " [OK - Choco]" -ForegroundColor Green
