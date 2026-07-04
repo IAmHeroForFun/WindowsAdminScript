@@ -670,20 +670,20 @@ if ($Packages.Count -gt 0) {
                         Stop-Process -Name "winget", "WindowsPackageManagerServer" -Force -ErrorAction SilentlyContinue
 
                         if ($PackageManager -eq "Winget") {
-                            $ArgsList = "install --id $($App.WingetID) --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity"
+                            $ArgsList = "/c winget install --id $($App.WingetID) --exact --silent --accept-package-agreements --accept-source-agreements --scope machine"
                             if ($ForceInstall) { $ArgsList += " --force" }
-                            $Proc = Start-Process -FilePath "winget" -ArgumentList $ArgsList -PassThru -NoNewWindow -ErrorAction SilentlyContinue
+                            $Proc = Start-Process -FilePath "cmd.exe" -ArgumentList $ArgsList -WindowStyle Hidden -PassThru -ErrorAction SilentlyContinue
                             if ($Proc) {
-                                [int]$TimeoutSec = 180; [double]$Elapsed = 0
+                                [int]$TimeoutSec = 300; [double]$Elapsed = 0
                                 while (-not $Proc.HasExited -and $Elapsed -lt $TimeoutSec) {
                                     Start-Sleep -Milliseconds 500; $Elapsed += 0.5
                                     [System.Windows.Forms.Application]::DoEvents(); $Form.Refresh()
                                 }
                                 if (-not $Proc.HasExited) {
                                     $Proc | Stop-Process -Force -ErrorAction SilentlyContinue
-                                    Stop-Process -Name "winget", "WindowsPackageManagerServer" -Force -ErrorAction SilentlyContinue
-                                    $Status = "Failed"; $ErrorMsg = "Timed out after 180s (stuck in queue/installer)"
-                                } elseif ($Proc.ExitCode -eq 0 -or $Proc.ExitCode -eq -1978335189 -or $Proc.ExitCode -eq -1978335212) {
+                                    Stop-Process -Name "winget", "WindowsPackageManagerServer", "cmd" -Force -ErrorAction SilentlyContinue
+                                    $Status = "Failed"; $ErrorMsg = "Timed out after 300s (stuck in queue/installer)"
+                                } elseif ($Proc.ExitCode -eq 0 -or $Proc.ExitCode -eq -1978335189 -or $Proc.ExitCode -eq -1978335212 -or $Proc.ExitCode -eq 2316632075) {
                                     $Status = "Success"
                                 } else { $Status = "Failed"; $ErrorMsg = "Winget exit code $($Proc.ExitCode)" }
                             } else { $Status = "Failed"; $ErrorMsg = "Failed to launch winget process." }
@@ -691,9 +691,9 @@ if ($Packages.Count -gt 0) {
                             if ($Status -like "*Failed*" -and (Get-Command choco -ErrorAction SilentlyContinue)) {
                                 $Grid.Rows[$i].Cells[3].Value = "[>>] Winget failed -> Retrying via Choco..."
                                 [System.Windows.Forms.Application]::DoEvents()
-                                $ChocoProc = Start-Process -FilePath "choco" -ArgumentList "install $($App.ChocoID) -y --no-progress --ignore-checksums" -PassThru -NoNewWindow -ErrorAction SilentlyContinue
+                                $ChocoProc = Start-Process -FilePath "cmd.exe" -ArgumentList "/c choco install $($App.ChocoID) -y --no-progress --ignore-checksums --force" -WindowStyle Hidden -PassThru -ErrorAction SilentlyContinue
                                 if ($ChocoProc) {
-                                    [int]$TimeoutSec = 180; [double]$Elapsed = 0
+                                    [int]$TimeoutSec = 300; [double]$Elapsed = 0
                                     while (-not $ChocoProc.HasExited -and $Elapsed -lt $TimeoutSec) {
                                         Start-Sleep -Milliseconds 500; $Elapsed += 0.5
                                         [System.Windows.Forms.Application]::DoEvents(); $Form.Refresh()
@@ -707,16 +707,16 @@ if ($Packages.Count -gt 0) {
                                 }
                             }
                         } elseif ($PackageManager -eq "Chocolatey") {
-                            $ChocoProc = Start-Process -FilePath "choco" -ArgumentList "install $($App.ChocoID) -y --no-progress --ignore-checksums" -PassThru -NoNewWindow -ErrorAction SilentlyContinue
+                            $ChocoProc = Start-Process -FilePath "cmd.exe" -ArgumentList "/c choco install $($App.ChocoID) -y --no-progress --ignore-checksums --force" -WindowStyle Hidden -PassThru -ErrorAction SilentlyContinue
                             if ($ChocoProc) {
-                                [int]$TimeoutSec = 180; [double]$Elapsed = 0
+                                [int]$TimeoutSec = 300; [double]$Elapsed = 0
                                 while (-not $ChocoProc.HasExited -and $Elapsed -lt $TimeoutSec) {
                                     Start-Sleep -Milliseconds 500; $Elapsed += 0.5
                                     [System.Windows.Forms.Application]::DoEvents(); $Form.Refresh()
                                 }
                                 if (-not $ChocoProc.HasExited) {
                                     $ChocoProc | Stop-Process -Force -ErrorAction SilentlyContinue
-                                    $Status = "Failed"; $ErrorMsg = "Choco timed out after 180s."
+                                    $Status = "Failed"; $ErrorMsg = "Choco timed out after 300s."
                                 } elseif ($ChocoProc.ExitCode -eq 0 -or $ChocoProc.ExitCode -eq 1641 -or $ChocoProc.ExitCode -eq 3010) {
                                     $Status = "Success"
                                 } else { $Status = "Failed"; $ErrorMsg = "Choco exit code $($ChocoProc.ExitCode)" }
@@ -836,26 +836,26 @@ if ($Packages.Count -gt 0) {
                 Stop-Process -Name "winget", "WindowsPackageManagerServer" -Force -ErrorAction SilentlyContinue
 
                 if ($PackageManager -eq "Winget") {
-                    $ArgsList = "install --id $($App.WingetID) --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity"
+                    $ArgsList = "/c winget install --id $($App.WingetID) --exact --silent --accept-package-agreements --accept-source-agreements --scope machine"
                     if ($ForceInstall) { $ArgsList += " --force" }
-                    $Proc = Start-Process -FilePath "winget" -ArgumentList $ArgsList -PassThru -NoNewWindow -ErrorAction SilentlyContinue
+                    $Proc = Start-Process -FilePath "cmd.exe" -ArgumentList $ArgsList -WindowStyle Hidden -PassThru -ErrorAction SilentlyContinue
                     if ($Proc) {
-                        [int]$TimeoutSec = 180; [double]$Elapsed = 0
+                        [int]$TimeoutSec = 300; [double]$Elapsed = 0
                         while (-not $Proc.HasExited -and $Elapsed -lt $TimeoutSec) { Start-Sleep -Milliseconds 500; $Elapsed += 0.5 }
                         if (-not $Proc.HasExited) {
                             $Proc | Stop-Process -Force -ErrorAction SilentlyContinue
-                            Stop-Process -Name "winget", "WindowsPackageManagerServer" -Force -ErrorAction SilentlyContinue
-                            $Status = "Failed"; $ErrorMsg = "Timed out after 180s"; Write-Host " [FAILED (TIMEOUT)]" -ForegroundColor Red
-                        } elseif ($Proc.ExitCode -eq 0 -or $Proc.ExitCode -eq -1978335189 -or $Proc.ExitCode -eq -1978335212) {
+                            Stop-Process -Name "winget", "WindowsPackageManagerServer", "cmd" -Force -ErrorAction SilentlyContinue
+                            $Status = "Failed"; $ErrorMsg = "Timed out after 300s"; Write-Host " [FAILED (TIMEOUT)]" -ForegroundColor Red
+                        } elseif ($Proc.ExitCode -eq 0 -or $Proc.ExitCode -eq -1978335189 -or $Proc.ExitCode -eq -1978335212 -or $Proc.ExitCode -eq 2316632075) {
                             $Status = "Success"; Write-Host " [OK - Winget]" -ForegroundColor Green
                         } else { $Status = "Failed"; $ErrorMsg = "Winget exit code $($Proc.ExitCode)"; Write-Host " [FAILED]" -ForegroundColor Red }
                     } else { $Status = "Failed"; $ErrorMsg = "Failed to launch winget."; Write-Host " [FAILED]" -ForegroundColor Red }
 
                     if ($Status -like "*Failed*" -and (Get-Command choco -ErrorAction SilentlyContinue)) {
                         Write-Host " -> Retrying via Choco..." -ForegroundColor Yellow -NoNewline
-                        $ChocoProc = Start-Process -FilePath "choco" -ArgumentList "install $($App.ChocoID) -y --no-progress --ignore-checksums" -PassThru -NoNewWindow -ErrorAction SilentlyContinue
+                        $ChocoProc = Start-Process -FilePath "cmd.exe" -ArgumentList "/c choco install $($App.ChocoID) -y --no-progress --ignore-checksums --force" -WindowStyle Hidden -PassThru -ErrorAction SilentlyContinue
                         if ($ChocoProc) {
-                            [int]$TimeoutSec = 180; [double]$Elapsed = 0
+                            [int]$TimeoutSec = 300; [double]$Elapsed = 0
                             while (-not $ChocoProc.HasExited -and $Elapsed -lt $TimeoutSec) { Start-Sleep -Milliseconds 500; $Elapsed += 0.5 }
                             if (-not $ChocoProc.HasExited) {
                                 $ChocoProc | Stop-Process -Force -ErrorAction SilentlyContinue
@@ -866,13 +866,13 @@ if ($Packages.Count -gt 0) {
                         }
                     }
                 } elseif ($PackageManager -eq "Chocolatey") {
-                    $ChocoProc = Start-Process -FilePath "choco" -ArgumentList "install $($App.ChocoID) -y --no-progress --ignore-checksums" -PassThru -NoNewWindow -ErrorAction SilentlyContinue
+                    $ChocoProc = Start-Process -FilePath "cmd.exe" -ArgumentList "/c choco install $($App.ChocoID) -y --no-progress --ignore-checksums --force" -WindowStyle Hidden -PassThru -ErrorAction SilentlyContinue
                     if ($ChocoProc) {
-                        [int]$TimeoutSec = 180; [double]$Elapsed = 0
+                        [int]$TimeoutSec = 300; [double]$Elapsed = 0
                         while (-not $ChocoProc.HasExited -and $Elapsed -lt $TimeoutSec) { Start-Sleep -Milliseconds 500; $Elapsed += 0.5 }
                         if (-not $ChocoProc.HasExited) {
                             $ChocoProc | Stop-Process -Force -ErrorAction SilentlyContinue
-                            $Status = "Failed"; $ErrorMsg = "Choco timed out after 180s."; Write-Host " [FAILED (TIMEOUT)]" -ForegroundColor Red
+                            $Status = "Failed"; $ErrorMsg = "Choco timed out after 300s."; Write-Host " [FAILED (TIMEOUT)]" -ForegroundColor Red
                         } elseif ($ChocoProc.ExitCode -eq 0 -or $ChocoProc.ExitCode -eq 1641 -or $ChocoProc.ExitCode -eq 3010) {
                             $Status = "Success"; Write-Host " [OK - Choco]" -ForegroundColor Green
                         } else { $Status = "Failed"; $ErrorMsg = "Choco exit code $($ChocoProc.ExitCode)"; Write-Host " [FAILED]" -ForegroundColor Red }
