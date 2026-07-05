@@ -98,11 +98,13 @@ D:\projects\script\
     ├── winre_recovery_assistant.ps1   # 14 diagnostic modules with strict Y/N repair approval protocols
     └── reports/                       # 6 CSV sheets, recovery.log & dark-mode HTML recovery command center
 
-└── software_deployer/                 # ⚡ Cloud Software & Utility Deployer (Ninite Style) [Option 16]
-    ├── README.md                      # Hybrid CDN application deployment & offline caching documentation
-    ├── run_software_deployer.bat      # Launch interactive Ninite-style package deployer
-    ├── deploy_software.ps1            # Multi-select Winget/Choco CDN engine with Out-GridView & CLI support
-    └── reports/                       # Itemized CSV audit logs & dark-mode HTML deployment command center
+└── software_deployer/                 # ⚡ Cloud Software & Utility Deployer (WPF & Winget Engine) [Option 16]
+    ├── README.md                      # Antivirus-friendly WPF & Winget deployment documentation
+    ├── run_software_deployer.bat      # Launch interactive WPF-based package deployer
+    ├── deploy_software.ps1            # Multi-select WPF XAML UI controller & Winget background engine
+    ├── MainWindow.xaml / .ps1         # Modern dark-themed presentation layout & event loop
+    ├── Apps.json                      # Catalog of 18 essential Windows applications across 8 categories
+    └── Modules/                       # Modular engines for Logger, Winget silent installs & AppManager
 ```
 
 ---

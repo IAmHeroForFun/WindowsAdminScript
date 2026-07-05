@@ -34,7 +34,7 @@ while ($true) {
     Write-Host "  [13] Run MSP One-Click Client Health Report Generator" -ForegroundColor Green
     Write-Host "  [14] Run Complete Self-Hosted MSP Monitoring & Reporting Platform" -ForegroundColor Magenta
     Write-Host "  [15] Run WinRE Recovery Assistant (Boot Repair & Diagnostics)" -ForegroundColor Red
-    Write-Host "  [16] Run Cloud Software & Utility Deployer (Ninite Style)" -ForegroundColor Cyan
+    Write-Host "  [16] Run Cloud Software & Utility Deployer (WPF & Winget Engine)" -ForegroundColor Cyan
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "  [Q] Exit Toolkit" -ForegroundColor DarkRed
     Write-Host "==========================================================================" -ForegroundColor Magenta
@@ -149,7 +149,7 @@ while ($true) {
         }
         "16" {
             Clear-Host
-            Write-Host "Executing Cloud Software & Utility Deployer (Ninite Style)..." -ForegroundColor Cyan
+            Write-Host "Executing Cloud Software & Utility Deployer (WPF & Winget Engine)..." -ForegroundColor Cyan
             $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "software_deployer\deploy_software.ps1"
             if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
