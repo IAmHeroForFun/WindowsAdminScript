@@ -76,13 +76,25 @@ sudo apt update && sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d toolkit.omvihub.in
 ```
 
-### 4. Configure Nginx (`/etc/nginx/sites-available/toolkit.omvihub.in`)
-Open your Nginx configuration file:
-```bash
-sudo nano /etc/nginx/sites-available/toolkit.omvihub.in
-```
+### 4. Locate & Configure Your Nginx Server Block
+Depending on your AWS Lightsail OS image, your Nginx configuration file is located in one of these paths:
 
-Paste the following **Zero-Maintenance Auto-Fetch Nginx Configuration** (this proxies directly to GitHub so you NEVER have to manually log into AWS or run `wget` again!):
+- **Amazon Linux 2 / Amazon Linux 2023 / RHEL / CentOS**: 
+  `/etc/nginx/conf.d/toolkit.conf` (or edit `/etc/nginx/nginx.conf` directly)
+- **Bitnami Stack (WordPress / LAMP / Nginx)**: 
+  `/opt/bitnami/nginx/conf/server_blocks/toolkit.conf` (or `/opt/bitnami/nginx/conf/bitnami/bitnami-ssl.conf`)
+- **Ubuntu / Debian (Standard Nginx)**: 
+  `/etc/nginx/sites-available/toolkit.omvihub.in` (symlinked to `sites-enabled`)
+
+> **🔍 Don't know where your Nginx file is?** Run this command in SSH to find your exact config path instantly:
+> ```bash
+> sudo nginx -t
+> # Or find all active server blocks:
+> sudo grep -rnw "server_name" /etc/nginx /opt/bitnami 2>/dev/null
+> ```
+
+Open your Nginx configuration file in an editor (e.g., `sudo nano /path/to/your/nginx.conf`):
+Paste the following **Zero-Maintenance Auto-Fetch Nginx Configuration** inside your file (this proxies directly to GitHub so you NEVER have to manually log into AWS or run `wget` again!):
 ```nginx
 server {
     listen 80;
@@ -96,9 +108,7 @@ server {
     root /var/www/toolkit;
     index install.ps1 index.html;
 
-    # 1. LIVE GITHUB PROXY: Automatically fetch latest install.ps1 from GitHub!
-    # Whenever someone runs irm https://toolkit.omvihub.in/install.ps1 | iex,
-    # Nginx fetches the live, up-to-the-second script directly from GitHub!
+    # 1. MASTER TOOLKIT BOOTSTRAPPER (irm https://toolkit.omvihub.in | iex)
     location = /install.ps1 {
         rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
         proxy_pass https://raw.githubusercontent.com;
@@ -108,9 +118,11 @@ server {
         add_header Content-Type "text/plain; charset=utf-8";
         add_header Cache-Control "no-cache, no-store, must-revalidate";
     }
+    location = /get { rewrite ^ /install.ps1 last; }
 
-    location = /get {
-        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
+    # 2. DIRECT SHORTCUT: WPF Software Deployer (irm https://toolkit.omvihub.in/deploy | iex)
+    location ~* ^/(deploy|deploy\.ps1|software)$ {
+        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/deploy.ps1 break;
         proxy_pass https://raw.githubusercontent.com;
         proxy_set_header Host raw.githubusercontent.com;
         proxy_ssl_server_name on;
@@ -119,7 +131,40 @@ server {
         add_header Cache-Control "no-cache, no-store, must-revalidate";
     }
 
-    # 2. MASSGRAVE ROUTING TRICK:
+    # 3. DIRECT SHORTCUT: WinRE Recovery Assistant (irm https://toolkit.omvihub.in/winre | iex)
+    location ~* ^/(winre|winre\.ps1|recovery)$ {
+        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/winre.ps1 break;
+        proxy_pass https://raw.githubusercontent.com;
+        proxy_set_header Host raw.githubusercontent.com;
+        proxy_ssl_server_name on;
+        default_type text/plain;
+        add_header Content-Type "text/plain; charset=utf-8";
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+    }
+
+    # 4. DIRECT SHORTCUT: Client Health Doctor (irm https://toolkit.omvihub.in/health | iex)
+    location ~* ^/(health|health\.ps1|doctor)$ {
+        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/health.ps1 break;
+        proxy_pass https://raw.githubusercontent.com;
+        proxy_set_header Host raw.githubusercontent.com;
+        proxy_ssl_server_name on;
+        default_type text/plain;
+        add_header Content-Type "text/plain; charset=utf-8";
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+    }
+
+    # 5. DIRECT SHORTCUT: Hardware Inventory Scanner (irm https://toolkit.omvihub.in/inventory | iex)
+    location ~* ^/(inventory|inventory\.ps1|scan)$ {
+        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/inventory.ps1 break;
+        proxy_pass https://raw.githubusercontent.com;
+        proxy_set_header Host raw.githubusercontent.com;
+        proxy_ssl_server_name on;
+        default_type text/plain;
+        add_header Content-Type "text/plain; charset=utf-8";
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+    }
+
+    # 6. MASSGRAVE ROUTING TRICK:
     # If root (/) is requested by PowerShell or curl/wget -> serve install.ps1 via live proxy!
     # If root (/) is requested by a Web Browser -> redirect to GitHub repo!
     location = / {
@@ -140,16 +185,38 @@ sudo systemctl reload nginx
 
 ---
 
-## 🚀 Step 3: Global Execution Test!
+## 🚀 Step 3: Global Execution Test & Multi-Tool Shortcuts!
 
-You are now ready to test! On any Windows 10, Windows 11, or Windows Server machine anywhere in the world, open PowerShell as Administrator and run:
+You are now ready to test! On any Windows 10, Windows 11, or Windows Server machine anywhere in the world, open PowerShell as Administrator and run any of your global one-liners:
 
+### 🌟 1. Master IT Toolkit Console (All 16 Modules)
 ```powershell
 irm https://toolkit.omvihub.in | iex
+# or: irm https://toolkit.omvihub.in/install.ps1 | iex
 ```
 
-### What you will see:
-1. **UAC Elevation**: If not running as Admin, it prompts for elevation.
-2. **Silent Download & Extraction**: Downloads `master.zip` and extracts to `C:\SysMaster\`.
-3. **Data Preservation**: Preserves all existing `reports\`, `backups\`, and `.csv` files.
-4. **Master Console**: Instantly launches the 16-module interactive command center!
+### ⚡ 2. WPF Software Deployer (Direct Launch)
+```powershell
+irm https://toolkit.omvihub.in/deploy | iex
+# or: irm https://toolkit.omvihub.in/deploy.ps1 | iex
+```
+
+### 🚑 3. WinRE Boot Repair Assistant (Direct Launch)
+```powershell
+irm https://toolkit.omvihub.in/winre | iex
+# or: irm https://toolkit.omvihub.in/winre.ps1 | iex
+```
+
+### 🩺 4. MSP Client Health Doctor (Direct Launch)
+```powershell
+irm https://toolkit.omvihub.in/health | iex
+# or: irm https://toolkit.omvihub.in/health.ps1 | iex
+```
+
+### 💻 5. Hardware Inventory Scanner (Direct Launch)
+```powershell
+irm https://toolkit.omvihub.in/inventory | iex
+# or: irm https://toolkit.omvihub.in/inventory.ps1 | iex
+```
+
+> **🎉 Pro Tip**: Because Nginx is configured as a Live GitHub Proxy, whenever you push changes to your GitHub repo, ALL of these shortcuts update globally in real-time without ever touching your AWS server!

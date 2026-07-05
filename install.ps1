@@ -19,6 +19,7 @@
 param (
     [string]$DownloadUrl = "https://github.com/IAmHeroForFun/WindowsAdminScript/archive/refs/heads/master.zip",
     [string]$InstallDir = "C:\SysMaster",
+    [string]$Tool = "",
     [switch]$ForceOverwriteAll
 )
 
@@ -183,17 +184,33 @@ Get-ChildItem -Path $InstallDir -Recurse -Include "*.ps1", "*.bat", "*.cmd" -Err
 }
 
 # ---------------------------------------------------------
-# 7. LAUNCH MASTER MENU
+# 7. LAUNCH MASTER MENU OR SPECIFIC TOOL
 # ---------------------------------------------------------
 Write-Host "`n==========================================================================" -ForegroundColor Magenta
-Write-Host "  BOOTSTRAP COMPLETE! LAUNCHING OMVIHUB MASTER IT TOOLKIT CONSOLE..." -ForegroundColor White
+Write-Host "  BOOTSTRAP COMPLETE!" -ForegroundColor White
 Write-Host "==========================================================================" -ForegroundColor Magenta
-Start-Sleep -Seconds 2
+Start-Sleep -Seconds 1
 
-$MasterScript = Join-Path $InstallDir "windows_it_toolkit.ps1"
-if (Test-Path $MasterScript) {
-    & $MasterScript
+if ($Tool -eq "deploy" -or $Tool -eq "16") {
+    Write-Host "Launching OmviHub WPF Software Deployer..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "software_deployer\deploy_software.ps1"
+} elseif ($Tool -eq "winre" -or $Tool -eq "15") {
+    Write-Host "Launching WinRE Recovery Assistant..." -ForegroundColor Red
+    $TargetScript = Join-Path $InstallDir "winre_recovery_assistant\winre_recovery_assistant.ps1"
+} elseif ($Tool -eq "health" -or $Tool -eq "13") {
+    Write-Host "Launching MSP Client Health Report Generator..." -ForegroundColor Green
+    $TargetScript = Join-Path $InstallDir "client_health_report\get_health_report.ps1"
+} elseif ($Tool -eq "inventory" -or $Tool -eq "1") {
+    Write-Host "Launching Hardware Inventory Scanner..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "inventory\get_inventory.ps1"
 } else {
-    Write-Host "[ERROR] Could not locate master script at $MasterScript" -ForegroundColor Red
-    Write-Host "Please verify that your ZIP archive contains windows_it_toolkit.ps1 at the root level." -ForegroundColor Yellow
+    Write-Host "Launching OmviHub Master IT Toolkit Console..." -ForegroundColor White
+    $TargetScript = Join-Path $InstallDir "windows_it_toolkit.ps1"
+}
+
+if (Test-Path $TargetScript) {
+    & $TargetScript
+} else {
+    Write-Host "[ERROR] Could not locate target script at $TargetScript" -ForegroundColor Red
+    Write-Host "Please verify that your ZIP archive contains the required files at the root level." -ForegroundColor Yellow
 }
