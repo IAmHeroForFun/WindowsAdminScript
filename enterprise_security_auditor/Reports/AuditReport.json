@@ -1,0 +1,545 @@
+﻿{
+    "SystemInfo":  {
+                       "BIOS":  "American Megatrends Inc. F14a (11/29/2021 05:30:00)",
+                       "Architecture":  "64-bit",
+                       "Username":  "hero",
+                       "Motherboard":  "Gigabyte Technology Co., Ltd. H310M S2 2.0",
+                       "ComputerName":  "VERONICA",
+                       "LastBoot":  "2026-07-07 17:24:32",
+                       "OS":  "Microsoft Windows 11 Pro (Build 26200)",
+                       "Uptime":  "0d 4h 34m",
+                       "TimeZone":  "India Standard Time",
+                       "RAM":  "15.94 GB",
+                       "CPU":  "Intel(R) Core(TM) i5-9400 CPU @ 2.90GHz"
+                   },
+    "NetworkStats":  {
+                         "EstablishedConnections":  21,
+                         "IPAddresses":  "192.168.0.5, fe80::91e2:c8:9b68:d475",
+                         "Gateways":  "192.168.0.1",
+                         "DNSServers":  "43.204.50.228, 1.1.1.1"
+                     },
+    "PortStats":  {
+                      "TotalListeningPorts":  0
+                  },
+    "DefenderStats":  {
+                          "SignatureUpdated":  "\/Date(1783359415000)\/",
+                          "AntivirusEnabled":  true,
+                          "RealTimeProtection":  true,
+                          "BehaviorMonitor":  true
+                      },
+    "SecurityScore":  0,
+    "SecurityRating":  "Critical",
+    "RiskDistribution":  {
+                             "Low":  9,
+                             "Critical":  0,
+                             "Medium":  6,
+                             "Informational":  34,
+                             "High":  7
+                         },
+    "Findings":  [
+                     {
+                         "Category":  "System Info",
+                         "Title":  "OS Baseline",
+                         "Status":  "Active",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Microsoft Windows 11 Pro (Build 26200)",
+                         "Explanation":  "Operating system and build version recorded.",
+                         "Recommendation":  "Ensure OS is within Microsoft servicing support lifecycle."
+                     },
+                     {
+                         "Category":  "Network",
+                         "Title":  "Unclassified / External DNS Server",
+                         "Status":  "Configured",
+                         "RiskLevel":  "Medium",
+                         "Evidence":  "DNS: 43.204.50.228",
+                         "Explanation":  "DNS queries are routed to an unclassified external resolver.",
+                         "Recommendation":  "Verify if 43.204.50.228 is a trusted ISP or organizational DNS server to prevent DNS hijacking."
+                     },
+                     {
+                         "Category":  "Network",
+                         "Title":  "Known Public DNS Provider",
+                         "Status":  "Configured",
+                         "RiskLevel":  "Low",
+                         "Evidence":  "DNS: 1.1.1.1",
+                         "Explanation":  "System uses reputable public DNS (Google, Cloudflare, Quad9, or AdGuard).",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Network",
+                         "Title":  "Outbound Connection Volume",
+                         "Status":  "Normal",
+                         "RiskLevel":  "Low",
+                         "Evidence":  "21 established connections",
+                         "Explanation":  "Connection count within normal operational parameters.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Process Analysis",
+                         "Title":  "Security Audit Process Active",
+                         "Status":  "Running",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "PID 14216: powershell.exe  -NoProfile -ExecutionPolicy Bypass -File \"D:\\projects\\script\\enterprise_security_auditor\\enterprise_security_auditor.ps1\" -OutputDir \"D:\\projects\\script\\enterprise_security_auditor\\Reports\"",
+                         "Explanation":  "Authorized Windows Security \u0026 Forensic Auditor process.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Suspicious Registry Autorun (Discord)",
+                         "Status":  "Configured",
+                         "RiskLevel":  "High",
+                         "Evidence":  "Key: HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run -\u003e \"C:\\Users\\hero\\AppData\\Local\\Discord\\Update.exe\" --processStart Discord.exe",
+                         "Explanation":  "Autorun entry launches scripts, interpreters, or temp executables upon login.",
+                         "Recommendation":  "Inspect and remove unauthorized autorun entry."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Registry Autorun Entry (GalaxyClient)",
+                         "Status":  "Configured",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Value: ",
+                         "Explanation":  "Standard startup application registered in Windows Registry.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Registry Autorun Entry (GogGalaxy)",
+                         "Status":  "Configured",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Value: D:\\Software\\GOG Galaxy\\GalaxyClient.exe /launchViaAutoStart",
+                         "Explanation":  "Standard startup application registered in Windows Registry.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Registry Autorun Entry (Free Download Manager)",
+                         "Status":  "Configured",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Value: \"D:\\Software\\Free Download Manager\\fdm.exe\" --hidden",
+                         "Explanation":  "Standard startup application registered in Windows Registry.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Registry Autorun Entry (Steam)",
+                         "Status":  "Configured",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Value: \"D:\\Games\\steam.exe\" -silent",
+                         "Explanation":  "Standard startup application registered in Windows Registry.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Registry Autorun Entry (MicrosoftEdgeAutoLaunch_4906344B732B5B751CFBF8A4B5C8B9CE)",
+                         "Status":  "Configured",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Value: \"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --no-startup-window --win-session-start",
+                         "Explanation":  "Standard startup application registered in Windows Registry.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Suspicious Registry Autorun (Delete Cached Update Binary)",
+                         "Status":  "Configured",
+                         "RiskLevel":  "High",
+                         "Evidence":  "Key: HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce -\u003e C:\\WINDOWS\\system32\\cmd.exe /q /c del /q \"C:\\Users\\hero\\AppData\\Local\\Microsoft\\OneDrive\\Update\\OneDriveSetup.exe\"",
+                         "Explanation":  "Autorun entry launches scripts, interpreters, or temp executables upon login.",
+                         "Recommendation":  "Inspect and remove unauthorized autorun entry."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Suspicious Registry Autorun (Delete Cached Standalone Update Binary)",
+                         "Status":  "Configured",
+                         "RiskLevel":  "High",
+                         "Evidence":  "Key: HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce -\u003e C:\\WINDOWS\\system32\\cmd.exe /q /c del /q \"C:\\Users\\hero\\AppData\\Local\\Microsoft\\OneDrive\\StandaloneUpdater\\OneDriveSetup.exe\"",
+                         "Explanation":  "Autorun entry launches scripts, interpreters, or temp executables upon login.",
+                         "Recommendation":  "Inspect and remove unauthorized autorun entry."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Registry Autorun Entry (SecurityHealth)",
+                         "Status":  "Configured",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Value: C:\\WINDOWS\\system32\\SecurityHealthSystray.exe",
+                         "Explanation":  "Standard startup application registered in Windows Registry.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Registry Autorun Entry (RtkAudUService)",
+                         "Status":  "Configured",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Value: \"C:\\WINDOWS\\System32\\RtkAudUService64.exe\" -background",
+                         "Explanation":  "Standard startup application registered in Windows Registry.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Registry Autorun Entry (PDF24)",
+                         "Status":  "Configured",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Value: \"D:\\Software\\pdf24.exe\"",
+                         "Explanation":  "Standard startup application registered in Windows Registry.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Startup Folder Item (Voicemeeter (VB-Audio).LNK)",
+                         "Status":  "Present",
+                         "RiskLevel":  "Low",
+                         "Evidence":  "Path: C:\\Users\\hero\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Voicemeeter (VB-Audio).LNK",
+                         "Explanation":  "Application shortcut in Startup folder.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Startup Folder Item (AnyDesk.lnk)",
+                         "Status":  "Present",
+                         "RiskLevel":  "Low",
+                         "Evidence":  "Path: C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\AnyDesk.lnk",
+                         "Explanation":  "Application shortcut in Startup folder.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (Activation-Renewal)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: %ProgramFiles%\\Activation-Renewal\\Activation_task.cmd Task",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (FreeDownloadManagerHelperService)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: \"D:\\Software\\Free Download Manager\\helperservice.exe\" ",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (MicrosoftEdgeUpdateTaskMachineCore{D8D9016F-852A-488C-84CC-C7E07328CC1D})",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files (x86)\\Microsoft\\EdgeUpdate\\MicrosoftEdgeUpdate.exe /c",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (MicrosoftEdgeUpdateTaskMachineUA{377B29D7-6F4A-4CEB-B87D-8206BF401944})",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files (x86)\\Microsoft\\EdgeUpdate\\MicrosoftEdgeUpdate.exe /ua /installsource scheduler",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (nWizard_{B2FE1952-0186-46C3-BAEC-A80AA35AC5B8})",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\NVIDIA Corporation\\nview\\nwiz.exe /installquiet",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (OmenInstallMonitor-sid-)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\HP\\OmenInstallMonitor\\OmenInstallMonitor.exe ",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (OmenInstallMonitorCustomEvent-sid-)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\HP\\OmenInstallMonitor\\OmenInstallMonitor.exe ",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "SUSPICIOUS SCHEDULED TASK: OmenInstallMonitorTemp-sid-",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "High",
+                         "Evidence":  "Path: \\ | Action: C:\\Users\\hero\\AppData\\Local\\Temp\\HP\\OmenInstallMonitorTemp\\OmenInstallMonitor.exe -update",
+                         "Explanation":  "Scheduled task is configured to launch script engines or obfuscated commands.",
+                         "Recommendation":  "Disable task (Disable-ScheduledTask -TaskName \u0027OmenInstallMonitorTemp-sid-\u0027) and investigate script target."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (OneDrive Reporting Task-S-1-5-21-1903099582-2950547113-257467891-1001)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: %localappdata%\\Microsoft\\OneDrive\\OneDriveStandaloneUpdater.exe /reporting",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (OneDrive Standalone Update Task-S-1-5-21-1903099582-2950547113-257467891-1001)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: %localappdata%\\Microsoft\\OneDrive\\OneDriveStandaloneUpdater.exe ",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "SUSPICIOUS SCHEDULED TASK: OneDrive Startup Task-S-1-5-21-1903099582-2950547113-257467891-1001",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "High",
+                         "Evidence":  "Path: \\ | Action: C:\\Users\\hero\\AppData\\Local\\Microsoft\\OneDrive\\26.108.0607.0002\\OneDriveLauncher.exe /startInstances",
+                         "Explanation":  "Scheduled task is configured to launch script engines or obfuscated commands.",
+                         "Recommendation":  "Disable task (Disable-ScheduledTask -TaskName \u0027OneDrive Startup Task-S-1-5-21-1903099582-2950547113-257467891-1001\u0027) and investigate script target."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (SystemOptimizer-sid-)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\HP\\SystemOptimizer\\SystemOptimizer.exe ",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (SystemOptimizerCustomEvent-sid-)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\HP\\SystemOptimizer\\SystemOptimizer.exe ",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (RunPlatformExperienceHelper_Daily)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: \"C:\\Program Files\\Google\\Chrome\\Application\\PlatformExperienceHelper\\platform_experience_helper.exe\" ",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (RunPlatformExperienceHelper_Metrics)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: \"C:\\Program Files\\Google\\Chrome\\Application\\PlatformExperienceHelper\\platform_experience_helper.exe\" --chrome-upload-metrics",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (Office Automatic Updates 2.0)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\Common Files\\Microsoft Shared\\ClickToRun\\OfficeC2RClient.exe /frequentupdate SCHEDULEDTASK displaylevel=False",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (Office ClickToRun Service Monitor)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\Common Files\\Microsoft Shared\\ClickToRun\\OfficeC2RClient.exe /WatchService",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (OfficeBackgroundTaskHandlerLogon)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\Microsoft Office\\root\\Office16\\officebackgroundtaskhandler.exe ",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (OfficeBackgroundTaskHandlerRegistration)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\Microsoft Office\\root\\Office16\\officebackgroundtaskhandler.exe ",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (OfficeTelemetryAgentFallBack2016)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\Microsoft Office\\root\\Office16\\msoia.exe scan upload mininterval:2880",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (OfficeTelemetryAgentLogOn2016)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\Microsoft Office\\root\\Office16\\msoia.exe scan upload",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (XblGameSaveTask)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: %windir%\\System32\\XblGameSaveTask.exe standby",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (Firefox Background Update S-1-5-21-1903099582-2950547113-257467891-1001 308046B0AF4A39CB)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\Mozilla Firefox\\firefox.exe --MOZ_LOG sync,prependheader,timestamp,append,maxsize:1,Dump:5 --MOZ_LOG_FILE C:\\ProgramData\\Mozilla-1de4eec8-1241-4177-a864-e594e8d1fb38\\updates\\308046B0AF4A39CB\\backgroundupdate.moz_log --backgroundtask backgroundupdate",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (Firefox Default Browser Agent 308046B0AF4A39CB)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action: C:\\Program Files\\Mozilla Firefox\\default-browser-agent.exe do-task \"308046B0AF4A39CB\"",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Persistence",
+                         "Title":  "Third-Party Scheduled Task (SoftLandingCreativeManagementTask)",
+                         "Status":  "Active Task",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Action:  ",
+                         "Explanation":  "Standard application maintenance or updater task.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Defender AV",
+                         "Title":  "Real-Time Protection",
+                         "Status":  "ENABLED",
+                         "RiskLevel":  "Low",
+                         "Evidence":  "Microsoft Defender Real-Time Protection is active.",
+                         "Explanation":  "Baseline endpoint monitoring operational.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Defender AV",
+                         "Title":  "Active Defender Exclusions Detected!",
+                         "Status":  "Configured",
+                         "RiskLevel":  "High",
+                         "Evidence":  "Exclusions: Paths: D:\\projects | Exts:  | Procs: ",
+                         "Explanation":  "Malware frequently adds C:, Temp, or PowerShell to Defender exclusions to evade detection!",
+                         "Recommendation":  "Review all exclusions in Windows Security and remove any unauthorized paths or file extensions immediately!"
+                     },
+                     {
+                         "Category":  "Defender AV",
+                         "Title":  "Recent Malware Detection History",
+                         "Status":  "Threat Recorded",
+                         "RiskLevel":  "High",
+                         "Evidence":  "Date: 07/06/2026 00:00:02 | Threat ID: 2147808050 | Target: amsi:_\\Device\\HarddiskVolume4\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                         "Explanation":  "Microsoft Defender intercepted a malware execution attempt (e.g., TrojanDownloader:PowerShell/Rozena.A).",
+                         "Recommendation":  "Verify in Protection History that the threat status is Quarantined or Removed, and perform an Offline Scan."
+                     },
+                     {
+                         "Category":  "Firewall",
+                         "Title":  "Windows Firewall Profile (Domain)",
+                         "Status":  "ENABLED",
+                         "RiskLevel":  "Low",
+                         "Evidence":  "Profile: Domain | Default Inbound: Block",
+                         "Explanation":  "Network boundary filtering active.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Firewall",
+                         "Title":  "Windows Firewall Profile (Private)",
+                         "Status":  "ENABLED",
+                         "RiskLevel":  "Low",
+                         "Evidence":  "Profile: Private | Default Inbound: NotConfigured",
+                         "Explanation":  "Network boundary filtering active.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Firewall",
+                         "Title":  "Windows Firewall Profile (Public)",
+                         "Status":  "ENABLED",
+                         "RiskLevel":  "Low",
+                         "Evidence":  "Profile: Public | Default Inbound: NotConfigured",
+                         "Explanation":  "Network boundary filtering active.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "User Audit",
+                         "Title":  "Active Local Account (hero)",
+                         "Status":  "Enabled (Administrator)",
+                         "RiskLevel":  "Informational",
+                         "Evidence":  "Account: hero | Last Logon: 07/07/2026 17:25:54",
+                         "Explanation":  "Authorized local user account.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Software Audit",
+                         "Title":  "Potentially Unwanted / Risky Software (AnyDesk)",
+                         "Status":  "Installed",
+                         "RiskLevel":  "Medium",
+                         "Evidence":  "Publisher: AnyDesk Software GmbH | Version: ad 9.7.3 | Path: \"D:\\Software\\AnyDesk\"",
+                         "Explanation":  "Software matches keywords associated with software cracks, KMS activators, or remote access tools (RATs). Cracks/KMS tools are the #1 vector for TrojanDownloader:PowerShell/Rozena.A!",
+                         "Recommendation":  "Uninstall \u0027AnyDesk\u0027 immediately if unauthorized and scan system with Defender Offline."
+                     },
+                     {
+                         "Category":  "Software Audit",
+                         "Title":  "Potentially Unwanted / Risky Software (qBittorrent)",
+                         "Status":  "Installed",
+                         "RiskLevel":  "Medium",
+                         "Evidence":  "Publisher: The qBittorrent project | Version: 5.2.1 | Path: ",
+                         "Explanation":  "Software matches keywords associated with software cracks, KMS activators, or remote access tools (RATs). Cracks/KMS tools are the #1 vector for TrojanDownloader:PowerShell/Rozena.A!",
+                         "Recommendation":  "Uninstall \u0027qBittorrent\u0027 immediately if unauthorized and scan system with Defender Offline."
+                     },
+                     {
+                         "Category":  "Hardening",
+                         "Title":  "User Account Control (UAC)",
+                         "Status":  "Enabled",
+                         "RiskLevel":  "Low",
+                         "Evidence":  "Registry EnableLUA = 1",
+                         "Explanation":  "Privilege escalation prompts active.",
+                         "Recommendation":  "None required."
+                     },
+                     {
+                         "Category":  "Hardening",
+                         "Title":  "BitLocker Drive Encryption (C:)",
+                         "Status":  "UNENCRYPTED",
+                         "RiskLevel":  "Medium",
+                         "Evidence":  "Volume C: protection status inactive / unencrypted.",
+                         "Explanation":  "Physical access to drive allows data extraction without credentials.",
+                         "Recommendation":  "Enable BitLocker drive encryption on system volume."
+                     },
+                     {
+                         "Category":  "Hardening",
+                         "Title":  "UEFI Secure Boot",
+                         "Status":  "DISABLED",
+                         "RiskLevel":  "Medium",
+                         "Evidence":  "UEFI firmware signature verification inactive.",
+                         "Explanation":  "System is susceptible to boot-level rootkits and pre-OS tampering.",
+                         "Recommendation":  "Enable Secure Boot in motherboard BIOS/UEFI settings."
+                     },
+                     {
+                         "Category":  "Hardening",
+                         "Title":  "PowerShell ScriptBlock Logging",
+                         "Status":  "DISABLED",
+                         "RiskLevel":  "Medium",
+                         "Evidence":  "Registry EnableScriptBlockLogging is not enabled.",
+                         "Explanation":  "Obfuscated or memory-only PowerShell attacks cannot be forensically reconstructed from logs.",
+                         "Recommendation":  "Enable PowerShell ScriptBlock Logging via Group Policy or Registry."
+                     }
+                 ]
+}
