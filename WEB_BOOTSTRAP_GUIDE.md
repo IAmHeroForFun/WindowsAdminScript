@@ -18,7 +18,7 @@ irm https://toolkit.omvihub.in/install.ps1 | iex
    * Enforces **TLS 1.2 / 1.3** security protocols.
    * Downloads the latest toolkit release archive (`main.zip`) from GitHub (or directly from AWS Lightsail).
    * Silently installs or synchronizes the modules directly into **`C:\SysMaster\`**.
-   * **Intelligent Preservation**: Updates all script logic while strictly protecting and preserving 100% of existing historical reports (`history.json`), inventories (`inventory.csv`), and HTML dashboards!
+   * **Intelligent Preservation**: Updates all script logic while strictly protecting and preserving 100% of existing historical inventories (`inventory.csv`), reports, and logs!
    * Unblocks all files and launches the interactive Master Menu console!
 
 ---

@@ -49,7 +49,7 @@ D:\projects\script\
     ├── run_software_deployer.bat      # Launch interactive WPF-based package deployer
     ├── deploy_software.ps1            # Multi-select WPF XAML UI controller & Winget background engine
     ├── MainWindow.xaml / .ps1         # Modern dark-themed presentation layout & event loop
-    ├── Apps.json                      # Catalog of 18 essential Windows applications across 8 categories
+    ├── Apps.json                      # Catalog of 100+ essential Windows applications across 10 categories
     └── Modules/                       # Modular engines for Logger, Winget silent installs & AppManager
 ```
 

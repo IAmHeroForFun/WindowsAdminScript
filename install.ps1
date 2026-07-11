@@ -8,7 +8,7 @@
     Features:
     - Automatic Administrative Elevation (UAC prompt handling)
     - TLS 1.2 / 1.3 Security Enforcement for Windows 7 / Server 2008 R2+ compatibility
-    - Intelligent Update Engine: Downloads latest code while strictly preserving 100% of existing reports, CSV logs, and historical SLA data
+    - Intelligent Update Engine: Downloads latest code while strictly preserving 100% of existing reports and CSV logs
     - Bypasses PowerShell Execution Policy & SmartScreen file blocking
     - Seamlessly launches the interactive Master IT Toolkit console
 .AUTHOR
@@ -57,18 +57,34 @@ if (-not (Test-IsAdmin)) {
     Write-Host "  Requesting UAC Elevation... Please click 'Yes' on the prompt." -ForegroundColor Cyan
     Write-Host "==========================================================================" -ForegroundColor DarkYellow
     
-    $CommandLine = "-NoExit -NoProfile -ExecutionPolicy Bypass -Command `"irm https://toolkit.omvihub.in/install.ps1 | iex`""
     if ($MyInvocation.MyCommand.Path) {
-        $CommandLine = "-NoExit -NoProfile -ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Path)`""
-    }
-    
-    try {
-        Start-Process -FilePath "powershell.exe" -ArgumentList $CommandLine -Verb RunAs -Wait
-        exit
-    } catch {
-        Write-Host "`n[ERROR] Administrative elevation was cancelled or failed. Cannot proceed." -ForegroundColor Red
-        Write-Host "`nPress Enter to exit..." -ForegroundColor DarkGray; [void](Read-Host)
-        exit 1
+        $ArgsList = @("-NoExit", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$($MyInvocation.MyCommand.Path)`"")
+        if ($Tool) { $ArgsList += @("-Tool", "`"$Tool`"") }
+        if ($ForceOverwriteAll) { $ArgsList += "-ForceOverwriteAll" }
+        
+        try {
+            Start-Process -FilePath "powershell.exe" -ArgumentList $ArgsList -Verb RunAs -Wait
+            exit
+        } catch {
+            Write-Host "`n[ERROR] Administrative elevation was cancelled or failed. Cannot proceed." -ForegroundColor Red
+            Write-Host "`nPress Enter to exit..." -ForegroundColor DarkGray; [void](Read-Host)
+            exit 1
+        }
+    } else {
+        $Url = "https://toolkit.omvihub.in/install.ps1"
+        if ($Tool -eq "deploy") { $Url = "https://toolkit.omvihub.in/deploy" }
+        elseif ($Tool -eq "inventory") { $Url = "https://toolkit.omvihub.in/inventory" }
+        
+        $CommandLine = "-NoExit -NoProfile -ExecutionPolicy Bypass -Command `"irm $Url | iex`""
+        
+        try {
+            Start-Process -FilePath "powershell.exe" -ArgumentList $CommandLine -Verb RunAs -Wait
+            exit
+        } catch {
+            Write-Host "`n[ERROR] Administrative elevation was cancelled or failed. Cannot proceed." -ForegroundColor Red
+            Write-Host "`nPress Enter to exit..." -ForegroundColor DarkGray; [void](Read-Host)
+            exit 1
+        }
     }
 }
 
