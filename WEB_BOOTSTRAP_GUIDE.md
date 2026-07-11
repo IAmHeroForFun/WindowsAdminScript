@@ -1,6 +1,6 @@
 # 🌐 OmviHub IT Toolkit - Web Bootstrapper & AWS Lightsail Deployment Guide
 
-This guide explains how to deploy your 16-module Windows IT Toolkit to GitHub and AWS Lightsail (Nginx) so any administrator can launch it globally using the Massgrave-style one-liner:
+This guide explains how to deploy your 7-module Windows IT Toolkit to GitHub and AWS Lightsail (Nginx) so any administrator can launch it globally using the Massgrave-style one-liner:
 
 ```powershell
 irm https://toolkit.omvihub.in | iex
@@ -34,12 +34,10 @@ Windows-IT-Toolkit/
 ├── windows_it_toolkit.ps1         # Master menu script
 ├── Windows_IT_Toolkit.bat         # Master double-click launcher
 ├── inventory/
-├── network_mapper/
-├── uptime_monitor/
-├── msp_platform/
-├── winre_recovery_assistant/
-├── software_deployer/
-└── ... (all 16 tool folders)
+├── slowness_debug/
+├── search_fixer/
+├── server_audit/
+└── software_deployer/
 ```
 
 ### 2. Verify your ZIP Download URL
@@ -122,49 +120,33 @@ server {
 
     # 2. DIRECT SHORTCUT: WPF Software Deployer (irm https://toolkit.omvihub.in/deploy | iex)
     location ~* ^/(deploy|deploy\.ps1|software)$ {
-        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/deploy.ps1 break;
+        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
         proxy_pass https://raw.githubusercontent.com;
         proxy_set_header Host raw.githubusercontent.com;
         proxy_ssl_server_name on;
+        proxy_set_header Accept-Encoding ""; # Prevent gzip compression so sub_filter works
+        sub_filter 'DEFAULT_TOOL_PLACEHOLDER' 'deploy';
+        sub_filter_once on;
         default_type text/plain;
         add_header Content-Type "text/plain; charset=utf-8";
         add_header Cache-Control "no-cache, no-store, must-revalidate";
     }
 
-    # 3. DIRECT SHORTCUT: WinRE Recovery Assistant (irm https://toolkit.omvihub.in/winre | iex)
-    location ~* ^/(winre|winre\.ps1|recovery)$ {
-        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/winre.ps1 break;
-        proxy_pass https://raw.githubusercontent.com;
-        proxy_set_header Host raw.githubusercontent.com;
-        proxy_ssl_server_name on;
-        default_type text/plain;
-        add_header Content-Type "text/plain; charset=utf-8";
-        add_header Cache-Control "no-cache, no-store, must-revalidate";
-    }
-
-    # 4. DIRECT SHORTCUT: Client Health Doctor (irm https://toolkit.omvihub.in/health | iex)
-    location ~* ^/(health|health\.ps1|doctor)$ {
-        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/health.ps1 break;
-        proxy_pass https://raw.githubusercontent.com;
-        proxy_set_header Host raw.githubusercontent.com;
-        proxy_ssl_server_name on;
-        default_type text/plain;
-        add_header Content-Type "text/plain; charset=utf-8";
-        add_header Cache-Control "no-cache, no-store, must-revalidate";
-    }
-
-    # 5. DIRECT SHORTCUT: Hardware Inventory Scanner (irm https://toolkit.omvihub.in/inventory | iex)
+    # 3. DIRECT SHORTCUT: Hardware Inventory Scanner (irm https://toolkit.omvihub.in/inventory | iex)
     location ~* ^/(inventory|inventory\.ps1|scan)$ {
-        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/inventory.ps1 break;
+        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
         proxy_pass https://raw.githubusercontent.com;
         proxy_set_header Host raw.githubusercontent.com;
         proxy_ssl_server_name on;
+        proxy_set_header Accept-Encoding ""; # Prevent gzip compression so sub_filter works
+        sub_filter 'DEFAULT_TOOL_PLACEHOLDER' 'inventory';
+        sub_filter_once on;
         default_type text/plain;
         add_header Content-Type "text/plain; charset=utf-8";
         add_header Cache-Control "no-cache, no-store, must-revalidate";
     }
 
-    # 6. MASSGRAVE ROUTING TRICK:
+    # 4. MASSGRAVE ROUTING TRICK:
     # If root (/) is requested by PowerShell or curl/wget -> serve install.ps1 via live proxy!
     # If root (/) is requested by a Web Browser -> redirect to GitHub repo!
     location = / {
@@ -189,7 +171,7 @@ sudo systemctl reload nginx
 
 You are now ready to test! On any Windows 10, Windows 11, or Windows Server machine anywhere in the world, open PowerShell as Administrator and run any of your global one-liners:
 
-### 🌟 1. Master IT Toolkit Console (All 16 Modules)
+### 🌟 1. Master IT Toolkit Console (All 7 Modules)
 ```powershell
 irm https://toolkit.omvihub.in | iex
 # or: irm https://toolkit.omvihub.in/install.ps1 | iex
@@ -201,19 +183,7 @@ irm https://toolkit.omvihub.in/deploy | iex
 # or: irm https://toolkit.omvihub.in/deploy.ps1 | iex
 ```
 
-### 🚑 3. WinRE Boot Repair Assistant (Direct Launch)
-```powershell
-irm https://toolkit.omvihub.in/winre | iex
-# or: irm https://toolkit.omvihub.in/winre.ps1 | iex
-```
-
-### 🩺 4. MSP Client Health Doctor (Direct Launch)
-```powershell
-irm https://toolkit.omvihub.in/health | iex
-# or: irm https://toolkit.omvihub.in/health.ps1 | iex
-```
-
-### 💻 5. Hardware Inventory Scanner (Direct Launch)
+### 💻 3. Hardware Inventory Scanner (Direct Launch)
 ```powershell
 irm https://toolkit.omvihub.in/inventory | iex
 # or: irm https://toolkit.omvihub.in/inventory.ps1 | iex

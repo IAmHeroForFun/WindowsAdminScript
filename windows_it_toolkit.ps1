@@ -25,21 +25,12 @@ while ($true) {
     Write-Host "  [4] Launch Sherlock Slow PC Diagnostics & Turbo Tune-Up Suite" -ForegroundColor Yellow
     Write-Host "  [5] Launch Windows Search & Indexing Diagnostic & Repair Suite" -ForegroundColor Green
     Write-Host "  [6] Run Main Server Forensic & Configuration Audit (Users, GPOs, Shares)" -ForegroundColor Magenta
-    Write-Host "  [7] Run Server Health & Misconfiguration Doctor (DNS, NTP, Firewall)" -ForegroundColor Yellow
-    Write-Host "  [8] Run Server Crash, Reboot & Error Detective (Live Web Lookup)" -ForegroundColor Red
-    Write-Host "  [9] Run Deep Infrastructure & Security Scan (AD, SSL, SMBv1, Ports)" -ForegroundColor Cyan
-    Write-Host "  [10] Run Enterprise Security, Compliance & Recovery Auditor" -ForegroundColor Magenta
-    Write-Host "  [11] Run Advanced Network Mapper & Topology Discovery Tool" -ForegroundColor Cyan
-    Write-Host "  [12] Run NOC Uptime & Availability Monitoring Platform" -ForegroundColor Yellow
-    Write-Host "  [13] Run MSP One-Click Client Health Report Generator" -ForegroundColor Green
-    Write-Host "  [14] Run Complete Self-Hosted MSP Monitoring & Reporting Platform" -ForegroundColor Magenta
-    Write-Host "  [15] Run WinRE Recovery Assistant (Boot Repair & Diagnostics)" -ForegroundColor Red
-    Write-Host "  [16] Run Cloud Software & Utility Deployer (WPF & Winget Engine)" -ForegroundColor Cyan
+    Write-Host "  [7] Run Cloud Software & Utility Deployer (WPF & Winget Engine)" -ForegroundColor Cyan
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "  [Q] Exit Toolkit" -ForegroundColor DarkRed
     Write-Host "==========================================================================" -ForegroundColor Magenta
     
-    $Choice = Read-Host "Select a tool to execute [1-16, Q]"
+    $Choice = Read-Host "Select a tool to execute [1-7, Q]"
     
     switch ($Choice) {
         "1" {
@@ -86,69 +77,6 @@ while ($true) {
         }
         "7" {
             Clear-Host
-            Write-Host "Executing Windows Server Health & Misconfiguration Scan..." -ForegroundColor Yellow
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "server_health_doctor\server_doctor.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "8" {
-            Clear-Host
-            Write-Host "Executing Server Crash, Reboot & Error Forensic Scan..." -ForegroundColor Red
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "crash_and_error_detective\crash_detective.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "9" {
-            Clear-Host
-            Write-Host "Executing Ultimate Deep Infrastructure & Security Scan..." -ForegroundColor Cyan
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "deep_infrastructure_audit\deep_diagnostic.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "10" {
-            Clear-Host
-            Write-Host "Executing Enterprise Security, Compliance & Recovery Auditor..." -ForegroundColor Magenta
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "enterprise_security_auditor\enterprise_security_auditor.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "11" {
-            Clear-Host
-            Write-Host "Executing Advanced Network Mapper & Topology Discovery Tool..." -ForegroundColor Cyan
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "network_mapper\network_mapper.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "12" {
-            Clear-Host
-            Write-Host "Executing NOC Uptime & Availability Monitoring Platform..." -ForegroundColor Yellow
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "uptime_monitor\uptime_monitor.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "13" {
-            Clear-Host
-            Write-Host "Executing MSP One-Click Client Health Report Generator..." -ForegroundColor Green
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "client_health_report\generate_report.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "14" {
-            Clear-Host
-            Write-Host "Executing Complete Self-Hosted MSP Monitoring & Reporting Platform..." -ForegroundColor Magenta
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "msp_platform\msp_platform.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "15" {
-            Clear-Host
-            Write-Host "Executing WinRE Recovery Assistant (Boot Repair & Diagnostics)..." -ForegroundColor Red
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "winre_recovery_assistant\winre_recovery_assistant.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "16" {
-            Clear-Host
             Write-Host "Executing Cloud Software & Utility Deployer (WPF & Winget Engine)..." -ForegroundColor Cyan
             $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "software_deployer\deploy_software.ps1"
             if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
@@ -159,8 +87,9 @@ while ($true) {
             exit
         }
         default {
-            Write-Host "`nInvalid choice. Please enter 1-16, or Q." -ForegroundColor Red
+            Write-Host "`nInvalid choice. Please enter 1-7, or Q." -ForegroundColor Red
             Start-Sleep -Seconds 1
         }
     }
 }
+

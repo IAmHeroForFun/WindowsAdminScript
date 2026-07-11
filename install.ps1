@@ -26,6 +26,15 @@ param (
 $ErrorActionPreference = "Stop"
 
 # ---------------------------------------------------------
+# 0. DYNAMIC TOOL CONFIGURATION VIA PROXY PLACEHOLDER
+# ---------------------------------------------------------
+$DefaultTool = "DEFAULT_TOOL_PLACEHOLDER"
+if ($Tool -eq "" -and $DefaultTool -ne "DEFAULT_TOOL_PLACEHOLDER") {
+    $Tool = $DefaultTool
+}
+
+
+# ---------------------------------------------------------
 # 1. ENFORCE TLS 1.2 / 1.3 & SECURITY PROTOCOLS
 # ---------------------------------------------------------
 try {
@@ -191,15 +200,9 @@ Write-Host "  BOOTSTRAP COMPLETE!" -ForegroundColor White
 Write-Host "==========================================================================" -ForegroundColor Magenta
 Start-Sleep -Seconds 1
 
-if ($Tool -eq "deploy" -or $Tool -eq "16") {
+if ($Tool -eq "deploy" -or $Tool -eq "7") {
     Write-Host "Launching OmviHub WPF Software Deployer..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "software_deployer\deploy_software.ps1"
-} elseif ($Tool -eq "winre" -or $Tool -eq "15") {
-    Write-Host "Launching WinRE Recovery Assistant..." -ForegroundColor Red
-    $TargetScript = Join-Path $InstallDir "winre_recovery_assistant\winre_recovery_assistant.ps1"
-} elseif ($Tool -eq "health" -or $Tool -eq "13") {
-    Write-Host "Launching MSP Client Health Report Generator..." -ForegroundColor Green
-    $TargetScript = Join-Path $InstallDir "client_health_report\get_health_report.ps1"
 } elseif ($Tool -eq "inventory" -or $Tool -eq "1") {
     Write-Host "Launching Hardware Inventory Scanner..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "inventory\get_inventory.ps1"
