@@ -50,10 +50,15 @@ D:\projects\script\
 │   ├── manage_printers.ps1            # Force queue purger, latency check & port cleanup
 │   └── reports/                       # Generated printer inventory CSV database
 │
-└── win11_debloater/                   # 🚀 Windows 11 Debloat & Privacy Suite
-    ├── README.md                      # Debloater suite documentation
-    ├── run_debloater.bat              # Run interactive Windows 11 debloater
-    └── debloat.ps1                    # Uninstalls sponsored packages & telemetry
+├── win11_debloater/                   # 🚀 Windows 11 Debloat & Privacy Suite
+│   ├── README.md                      # Debloater suite documentation
+│   ├── run_debloater.bat              # Run interactive Windows 11 debloater
+│   └── debloat.ps1                    # Uninstalls sponsored packages & telemetry
+│
+└── network_auditor/                   # 🌐 Network Security & Port Exposure Auditor
+    ├── README.md                      # Network auditor suite documentation
+    ├── run_network_audit.bat          # Run interactive listening port & firewall block tool
+    └── audit_network.ps1              # Checks all sockets, heuristics safety & prompts to close
 ```
 
 ---

@@ -75,6 +75,7 @@ if (-not (Test-IsAdmin)) {
         if ($Tool -eq "inventory") { $Url = "https://toolkit.omvihub.in/inventory" }
         elseif ($Tool -eq "printer") { $Url = "https://toolkit.omvihub.in/printer" }
         elseif ($Tool -eq "debloat") { $Url = "https://toolkit.omvihub.in/debloat" }
+        elseif ($Tool -eq "netaudit") { $Url = "https://toolkit.omvihub.in/netaudit" }
         
         $CommandLine = "-NoExit -NoProfile -ExecutionPolicy Bypass -Command `"irm $Url | iex`""
         
@@ -217,7 +218,10 @@ Write-Host "  BOOTSTRAP COMPLETE!" -ForegroundColor White
 Write-Host "==========================================================================" -ForegroundColor Magenta
 Start-Sleep -Seconds 1
 
-if ($Tool -eq "debloat" -or $Tool -eq "optimize") {
+if ($Tool -eq "netaudit") {
+    Write-Host "Launching Network Security, Scanner & Diagnostics Auditor (6 Phases)..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "network_auditor\audit_network.ps1"
+} elseif ($Tool -eq "debloat" -or $Tool -eq "optimize") {
     Write-Host "Launching Windows 11 Debloat & Privacy Suite..." -ForegroundColor Green
     $TargetScript = Join-Path $InstallDir "win11_debloater\debloat.ps1"
 } elseif ($Tool -eq "printer" -or $Tool -eq "7") {

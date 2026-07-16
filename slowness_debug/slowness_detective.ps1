@@ -343,7 +343,7 @@ Write-Host ""
 
 # ACTION 1: Clean User & System Temp Files
 Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
-Write-Host "[ACTION 1/5] Temporary Digital Clutter Cleanup" -ForegroundColor White
+Write-Host "[ACTION 1/6] Temporary Digital Clutter Cleanup" -ForegroundColor White
 Write-Host "Target: User Temp (%TEMP%) and System Temp (C:\Windows\Temp)" -ForegroundColor DarkCyan
 Write-Host "Benefit: Reclaims disk space and removes corrupted application caches." -ForegroundColor DarkGray
 $Ans1 = Read-Host " -> Execute Temp File Cleanup? (Y/N)"
@@ -359,7 +359,7 @@ Write-Host ""
 
 # ACTION 2: Empty Recycle Bin
 Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
-Write-Host "[ACTION 2/5] Recycle Bin Purge" -ForegroundColor White
+Write-Host "[ACTION 2/6] Recycle Bin Purge" -ForegroundColor White
 Write-Host "Target: Local Recycle Bin across all drives" -ForegroundColor DarkCyan
 Write-Host "Benefit: Permanently frees hard drive storage space." -ForegroundColor DarkGray
 $Ans2 = Read-Host " -> Empty Recycle Bin? (Y/N)"
@@ -378,13 +378,95 @@ if ($Ans2 -eq "Y" -or $Ans2 -eq "y") {
 }
 Write-Host ""
 
-# ACTION 3: Flush DNS & Reset Network Buffer
+# ACTION 3: Advanced System Disk Cleanup & Windows Update Cache Purge
 Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
-Write-Host "[ACTION 3/5] Network Pipe & DNS Cache Refresh" -ForegroundColor White
+Write-Host "[ACTION 3/6] Advanced System Disk Cleanup & Update Cache Purge" -ForegroundColor White
+Write-Host "Target: Windows Update download cache, IIS logs, crash dumps, and Windows Logs" -ForegroundColor DarkCyan
+Write-Host "Benefit: Frees up gigabytes of storage and clears stale Windows Update locks." -ForegroundColor DarkGray
+$Ans3 = Read-Host " -> Execute Advanced System Disk Cleanup? (Y/N)"
+if ($Ans3 -eq "Y" -or $Ans3 -eq "y") {
+    Write-Host "    [EXEC] Stopping Windows Update service (wuauserv)..." -ForegroundColor Green
+    $UpdateSvc = Get-Service -Name "wuauserv" -ErrorAction SilentlyContinue
+    if ($UpdateSvc -and $UpdateSvc.Status -eq "Running") {
+        Stop-Service -Name "wuauserv" -Force -ErrorAction SilentlyContinue | Out-Null
+    }
+    
+    Write-Host "    [EXEC] Purging Windows Update download cache..." -ForegroundColor Green
+    $WuCachePath = "C:\Windows\SoftwareDistribution\Download"
+    if (Test-Path $WuCachePath) {
+        $WuFiles = Get-ChildItem -Path "$WuCachePath\*" -Recurse -ErrorAction SilentlyContinue
+        $WuFilesCount = 0
+        foreach ($File in $WuFiles) {
+            try {
+                Remove-Item -Path $File.FullName -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
+                $WuFilesCount++
+            } catch {}
+        }
+        Write-Host "    -> Cleaned $WuFilesCount files from Update Cache." -ForegroundColor Green
+    }
+    
+    Write-Host "    [EXEC] Restarting Windows Update service..." -ForegroundColor Green
+    Start-Service -Name "wuauserv" -ErrorAction SilentlyContinue | Out-Null
+    
+    # 2. System crash dumps
+    Write-Host "    [EXEC] Purging system crash memory dumps..." -ForegroundColor Green
+    if (Test-Path "C:\Windows\MEMORY.DMP") {
+        try { Remove-Item -Path "C:\Windows\MEMORY.DMP" -Force -ErrorAction SilentlyContinue | Out-Null; Write-Host "    -> Deleted MEMORY.DMP" -ForegroundColor Green } catch {}
+    }
+    if (Test-Path "C:\Windows\Minidump") {
+        $DumpFiles = Get-ChildItem -Path "C:\Windows\Minidump\*" -Include *.dmp -ErrorAction SilentlyContinue
+        foreach ($Dmp in $DumpFiles) {
+            try { Remove-Item -Path $Dmp.FullName -Force -ErrorAction SilentlyContinue | Out-Null } catch {}
+        }
+    }
+    
+    # 3. IIS logs older than 14 days
+    $IisLogsPath = "C:\inetpub\logs\LogFiles"
+    if (Test-Path $IisLogsPath) {
+        Write-Host "    [EXEC] Purging IIS logs older than 14 days..." -ForegroundColor Green
+        $IisFiles = Get-ChildItem -Path $IisLogsPath -Recurse -File -ErrorAction SilentlyContinue
+        $IisDeletedCount = 0
+        foreach ($File in $IisFiles) {
+            if ($File.LastWriteTime -lt (Get-Date).AddDays(-14)) {
+                try {
+                    Remove-Item -Path $File.FullName -Force -ErrorAction SilentlyContinue | Out-Null
+                    $IisDeletedCount++
+                } catch {}
+            }
+        }
+        Write-Host "    -> Deleted $IisDeletedCount stale IIS log files." -ForegroundColor Green
+    }
+    
+    # 4. Windows Logs older than 30 days
+    $WinLogsPath = "C:\Windows\Logs"
+    if (Test-Path $WinLogsPath) {
+        Write-Host "    [EXEC] Purging Windows CBS/DISM/Setup logs older than 30 days..." -ForegroundColor Green
+        $WinLogFiles = Get-ChildItem -Path $WinLogsPath -Recurse -File -ErrorAction SilentlyContinue
+        $LogDeletedCount = 0
+        foreach ($File in $WinLogFiles) {
+            if ($File.LastWriteTime -lt (Get-Date).AddDays(-30)) {
+                try {
+                    Remove-Item -Path $File.FullName -Force -ErrorAction SilentlyContinue | Out-Null
+                    $LogDeletedCount++
+                } catch {}
+            }
+        }
+        Write-Host "    -> Deleted $LogDeletedCount Windows log files." -ForegroundColor Green
+    }
+    
+    Write-Host "    [DONE] Advanced System Disk Cleanup completed." -ForegroundColor Green
+} else {
+    Write-Host "    [SKIP] Skipped advanced disk cleanup." -ForegroundColor DarkYellow
+}
+Write-Host ""
+
+# ACTION 4: Flush DNS & Reset Network Buffer
+Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
+Write-Host "[ACTION 4/6] Network Pipe & DNS Cache Refresh" -ForegroundColor White
 Write-Host "Target: Windows Resolver Cache (ipconfig /flushdns)" -ForegroundColor DarkCyan
 Write-Host "Benefit: Fixes sluggish web browsing, outdated DNS lookups, and socket lag." -ForegroundColor DarkGray
-$Ans3 = Read-Host " -> Flush DNS and reset network resolver cache? (Y/N)"
-if ($Ans3 -eq "Y" -or $Ans3 -eq "y") {
+$Ans4 = Read-Host " -> Flush DNS and reset network resolver cache? (Y/N)"
+if ($Ans4 -eq "Y" -or $Ans4 -eq "y") {
     Write-Host "    [EXEC] Flushing DNS resolver cache..." -ForegroundColor Green
     ipconfig /flushdns | Out-Null
     Write-Host "    [DONE] DNS resolver cache refreshed." -ForegroundColor Green
@@ -393,13 +475,13 @@ if ($Ans3 -eq "Y" -or $Ans3 -eq "y") {
 }
 Write-Host ""
 
-# ACTION 4: Power Plan Optimization
+# ACTION 5: Power Plan Optimization
 Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
-Write-Host "[ACTION 4/5] Power Scheme Performance Boost" -ForegroundColor White
+Write-Host "[ACTION 5/6] Power Scheme Performance Boost" -ForegroundColor White
 Write-Host "Target: Active Windows Power Plan" -ForegroundColor DarkCyan
 Write-Host "Benefit: Ensures CPU operates at full clock speed without ECO throttling." -ForegroundColor DarkGray
-$Ans4 = Read-Host " -> Switch active Power Plan to 'High Performance'? (Y/N)"
-if ($Ans4 -eq "Y" -or $Ans4 -eq "y") {
+$Ans5 = Read-Host " -> Switch active Power Plan to 'High Performance'? (Y/N)"
+if ($Ans5 -eq "Y" -or $Ans5 -eq "y") {
     Write-Host "    [EXEC] Locating High Performance power scheme GUID..." -ForegroundColor Green
     try {
         $HighPerfGuid = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
@@ -414,13 +496,13 @@ if ($Ans4 -eq "Y" -or $Ans4 -eq "y") {
 }
 Write-Host ""
 
-# ACTION 5: Export Startup Report & Cleanup Advice
+# ACTION 6: Export Startup Report & Cleanup Advice
 Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
-Write-Host "[ACTION 5/5] Startup Application Audit Export" -ForegroundColor White
+Write-Host "[ACTION 6/6] Startup Application Audit Export" -ForegroundColor White
 Write-Host "Target: Auto-launch registry keys (Run entries)" -ForegroundColor DarkCyan
 Write-Host "Benefit: Exports a detailed list of boot items into a clean text file so you can review what to disable." -ForegroundColor DarkGray
-$Ans5 = Read-Host " -> Export detailed Startup Applications audit file? (Y/N)"
-if ($Ans5 -eq "Y" -or $Ans5 -eq "y") {
+$Ans6 = Read-Host " -> Export detailed Startup Applications audit file? (Y/N)"
+if ($Ans6 -eq "Y" -or $Ans6 -eq "y") {
     $StartupReportPath = Join-Path -Path $ReportsDir -ChildPath "startup_audit_$($env:COMPUTERNAME).txt"
     $StartLines = New-Object System.Collections.ArrayList
     [void]$StartLines.Add("DETAILED STARTUP APPLICATIONS AUDIT FOR: $env:COMPUTERNAME")

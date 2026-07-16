@@ -38,7 +38,8 @@ Windows-IT-Toolkit/
 ├── search_fixer/
 ├── server_audit/
 ├── printer_manager/
-└── win11_debloater/
+├── win11_debloater/
+└── network_auditor/
 ```
 
 ### 2. Verify your ZIP Download URL
@@ -161,7 +162,21 @@ server {
         add_header Cache-Control "no-cache, no-store, must-revalidate";
     }
 
-    # 5. MASSGRAVE ROUTING TRICK:
+    # 5. DIRECT SHORTCUT: Network Security Auditor Suite (irm https://toolkit.omvihub.in/netaudit | iex)
+    location ~* ^/(netaudit|ports|socket|netstat)$ {
+        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
+        proxy_pass https://raw.githubusercontent.com;
+        proxy_set_header Host raw.githubusercontent.com;
+        proxy_ssl_server_name on;
+        proxy_set_header Accept-Encoding "";
+        sub_filter 'DEFAULT_TOOL_PLACEHOLDER' 'netaudit';
+        sub_filter_once on;
+        default_type text/plain;
+        add_header Content-Type "text/plain; charset=utf-8";
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+    }
+
+    # 6. MASSGRAVE ROUTING TRICK:
     # If root (/) is requested by PowerShell or curl/wget -> serve install.ps1 via live proxy!
     # If root (/) is requested by a Web Browser -> redirect to GitHub repo!
     location = / {
@@ -208,6 +223,12 @@ irm https://toolkit.omvihub.in/printer | iex
 ```powershell
 irm https://toolkit.omvihub.in/debloat | iex
 # or: irm https://toolkit.omvihub.in/debloat.ps1 | iex
+```
+
+### 🌐 5. Network Security & Port Exposure Auditor (Direct Launch)
+```powershell
+irm https://toolkit.omvihub.in/netaudit | iex
+# or: irm https://toolkit.omvihub.in/netaudit.ps1 | iex
 ```
 
 > **🎉 Pro Tip**: Because Nginx is configured as a Live GitHub Proxy, whenever you push changes to your GitHub repo, ALL of these shortcuts update globally in real-time without ever touching your AWS server!
