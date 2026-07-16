@@ -13,7 +13,7 @@ D:\projects\script\
 ├── WEB_BOOTSTRAP_GUIDE.md             # 🌐 Guide for deploying via AWS Lightsail Nginx & GitHub
 ├── install.ps1                        # 🌟 Massgrave-style 2-Stage Web Bootstrapper (irm | iex)
 ├── Windows_IT_Toolkit.bat             # 🌟 Master Interactive Menu Launcher (Double-Click)
-├── windows_it_toolkit.ps1             # Central menu interface connecting all 6 tools
+├── windows_it_toolkit.ps1             # Central menu interface connecting all 7 tools
 │
 ├── inventory/                         # 💻 Windows Hardware & Software Inventory Tool
 │   ├── README.md                      # Detailed suite documentation
@@ -38,11 +38,17 @@ D:\projects\script\
 │   ├── run_search_fixer.bat           # Run interactive search & indexing fix
 │   └── fix_search.ps1                 # WSearch service, database rebuild & UWP repair
 │
-└── server_audit/                      # 🏛️ Main Server Forensic & Configuration Auditor
-    ├── README.md                      # Server audit documentation
-    ├── run_server_audit.bat           # Run extraction of server configurations
-    ├── audit_server.ps1               # Extracts Users, GPOs, Shares, Services & Tasks
-    └── reports/                       # Generated spreadsheets and GPO web reports
+├── server_audit/                      # 🏛️ Main Server Forensic & Configuration Auditor
+│   ├── README.md                      # Server audit documentation
+│   ├── run_server_audit.bat           # Run extraction of server configurations
+│   ├── audit_server.ps1               # Extracts Users, GPOs, Shares, Services & Tasks
+│   └── reports/                       # Generated spreadsheets and GPO web reports
+│
+└── printer_manager/                   # 🖨️ Printer Diagnostic & Management Suite
+    ├── README.md                      # Print diagnostic suite documentation
+    ├── run_printer_manager.bat        # Run interactive spooler & port fixer
+    ├── manage_printers.ps1            # Force queue purger, latency check & port cleanup
+    └── reports/                       # Generated printer inventory CSV database
 ```
 
 ---

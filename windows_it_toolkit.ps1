@@ -25,11 +25,12 @@ while ($true) {
     Write-Host "  [4] Launch Sherlock Slow PC Diagnostics & Turbo Tune-Up Suite" -ForegroundColor Yellow
     Write-Host "  [5] Launch Windows Search & Indexing Diagnostic & Repair Suite" -ForegroundColor Green
     Write-Host "  [6] Run Main Server Forensic & Configuration Audit (Users, GPOs, Shares)" -ForegroundColor Magenta
+    Write-Host "  [7] Launch Printer Diagnostic & Management Suite (Spooler, Ports, Drivers)" -ForegroundColor Cyan
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "  [Q] Exit Toolkit" -ForegroundColor DarkRed
     Write-Host "==========================================================================" -ForegroundColor Magenta
     
-    $Choice = Read-Host "Select a tool to execute [1-6, Q]"
+    $Choice = Read-Host "Select a tool to execute [1-7, Q]"
     
     switch ($Choice) {
         "1" {
@@ -74,12 +75,19 @@ while ($true) {
             if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
+        "7" {
+            Clear-Host
+            Write-Host "Launching Printer Diagnostic & Management Suite..." -ForegroundColor Cyan
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "printer_manager\manage_printers.ps1"
+            if (Test-Path $ScriptPath) { & $ScriptPath } else { & $ScriptPath }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
         { $_ -eq "Q" -or $_ -eq "q" } {
             Write-Host "`nExiting IT Toolkit. Have a productive day!" -ForegroundColor Cyan
             exit
         }
         default {
-            Write-Host "`nInvalid choice. Please enter 1-6, or Q." -ForegroundColor Red
+            Write-Host "`nInvalid choice. Please enter 1-7, or Q." -ForegroundColor Red
             Start-Sleep -Seconds 1
         }
     }

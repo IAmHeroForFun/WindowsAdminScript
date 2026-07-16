@@ -73,6 +73,7 @@ if (-not (Test-IsAdmin)) {
     } else {
         $Url = "https://toolkit.omvihub.in/install.ps1"
         if ($Tool -eq "inventory") { $Url = "https://toolkit.omvihub.in/inventory" }
+        elseif ($Tool -eq "printer") { $Url = "https://toolkit.omvihub.in/printer" }
         
         $CommandLine = "-NoExit -NoProfile -ExecutionPolicy Bypass -Command `"irm $Url | iex`""
         
@@ -215,7 +216,10 @@ Write-Host "  BOOTSTRAP COMPLETE!" -ForegroundColor White
 Write-Host "==========================================================================" -ForegroundColor Magenta
 Start-Sleep -Seconds 1
 
-if ($Tool -eq "inventory" -or $Tool -eq "1") {
+if ($Tool -eq "printer" -or $Tool -eq "7") {
+    Write-Host "Launching Printer Diagnostic Suite..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "printer_manager\manage_printers.ps1"
+} elseif ($Tool -eq "inventory" -or $Tool -eq "1") {
     Write-Host "Launching Hardware Inventory Scanner..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "inventory\get_inventory.ps1"
 } else {
