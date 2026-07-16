@@ -74,6 +74,7 @@ if (-not (Test-IsAdmin)) {
         $Url = "https://toolkit.omvihub.in/install.ps1"
         if ($Tool -eq "inventory") { $Url = "https://toolkit.omvihub.in/inventory" }
         elseif ($Tool -eq "printer") { $Url = "https://toolkit.omvihub.in/printer" }
+        elseif ($Tool -eq "debloat") { $Url = "https://toolkit.omvihub.in/debloat" }
         
         $CommandLine = "-NoExit -NoProfile -ExecutionPolicy Bypass -Command `"irm $Url | iex`""
         
@@ -216,7 +217,10 @@ Write-Host "  BOOTSTRAP COMPLETE!" -ForegroundColor White
 Write-Host "==========================================================================" -ForegroundColor Magenta
 Start-Sleep -Seconds 1
 
-if ($Tool -eq "printer" -or $Tool -eq "7") {
+if ($Tool -eq "debloat" -or $Tool -eq "optimize") {
+    Write-Host "Launching Windows 11 Debloat & Privacy Suite..." -ForegroundColor Green
+    $TargetScript = Join-Path $InstallDir "win11_debloater\debloat.ps1"
+} elseif ($Tool -eq "printer" -or $Tool -eq "7") {
     Write-Host "Launching Printer Diagnostic Suite..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "printer_manager\manage_printers.ps1"
 } elseif ($Tool -eq "inventory" -or $Tool -eq "1") {

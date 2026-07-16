@@ -44,11 +44,16 @@ D:\projects\script\
 │   ├── audit_server.ps1               # Extracts Users, GPOs, Shares, Services & Tasks
 │   └── reports/                       # Generated spreadsheets and GPO web reports
 │
-└── printer_manager/                   # 🖨️ Printer Diagnostic & Management Suite
-    ├── README.md                      # Print diagnostic suite documentation
-    ├── run_printer_manager.bat        # Run interactive spooler & port fixer
-    ├── manage_printers.ps1            # Force queue purger, latency check & port cleanup
-    └── reports/                       # Generated printer inventory CSV database
+├── printer_manager/                   # 🖨️ Printer Diagnostic & Management Suite
+│   ├── README.md                      # Print diagnostic suite documentation
+│   ├── run_printer_manager.bat        # Run interactive spooler & port fixer
+│   ├── manage_printers.ps1            # Force queue purger, latency check & port cleanup
+│   └── reports/                       # Generated printer inventory CSV database
+│
+└── win11_debloater/                   # 🚀 Windows 11 Debloat & Privacy Suite
+    ├── README.md                      # Debloater suite documentation
+    ├── run_debloater.bat              # Run interactive Windows 11 debloater
+    └── debloat.ps1                    # Uninstalls sponsored packages & telemetry
 ```
 
 ---
