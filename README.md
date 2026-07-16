@@ -13,7 +13,7 @@ D:\projects\script\
 ├── WEB_BOOTSTRAP_GUIDE.md             # 🌐 Guide for deploying via AWS Lightsail Nginx & GitHub
 ├── install.ps1                        # 🌟 Massgrave-style 2-Stage Web Bootstrapper (irm | iex)
 ├── Windows_IT_Toolkit.bat             # 🌟 Master Interactive Menu Launcher (Double-Click)
-├── windows_it_toolkit.ps1             # Central menu interface connecting all 7 suites
+├── windows_it_toolkit.ps1             # Central menu interface connecting all 6 tools
 │
 ├── inventory/                         # 💻 Windows Hardware & Software Inventory Tool
 │   ├── README.md                      # Detailed suite documentation
@@ -38,19 +38,11 @@ D:\projects\script\
 │   ├── run_search_fixer.bat           # Run interactive search & indexing fix
 │   └── fix_search.ps1                 # WSearch service, database rebuild & UWP repair
 │
-├── server_audit/                      # 🏛️ Main Server Forensic & Configuration Auditor
-│   ├── README.md                      # Server audit documentation
-│   ├── run_server_audit.bat           # Run extraction of server configurations
-│   ├── audit_server.ps1               # Extracts Users, GPOs, Shares, Services & Tasks
-│   └── reports/                       # Generated spreadsheets and GPO web reports
-│
-└── software_deployer/                 # ⚡ Cloud Software & Utility Deployer (WPF & Winget Engine)
-    ├── README.md                      # Antivirus-friendly WPF & Winget deployment documentation
-    ├── run_software_deployer.bat      # Launch interactive WPF-based package deployer
-    ├── deploy_software.ps1            # Multi-select WPF XAML UI controller & Winget background engine
-    ├── MainWindow.xaml / .ps1         # Modern dark-themed presentation layout & event loop
-    ├── Apps.json                      # Catalog of 100+ essential Windows applications across 10 categories
-    └── Modules/                       # Modular engines for Logger, Winget silent installs & AppManager
+└── server_audit/                      # 🏛️ Main Server Forensic & Configuration Auditor
+    ├── README.md                      # Server audit documentation
+    ├── run_server_audit.bat           # Run extraction of server configurations
+    ├── audit_server.ps1               # Extracts Users, GPOs, Shares, Services & Tasks
+    └── reports/                       # Generated spreadsheets and GPO web reports
 ```
 
 ---

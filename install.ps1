@@ -72,8 +72,7 @@ if (-not (Test-IsAdmin)) {
         }
     } else {
         $Url = "https://toolkit.omvihub.in/install.ps1"
-        if ($Tool -eq "deploy") { $Url = "https://toolkit.omvihub.in/deploy" }
-        elseif ($Tool -eq "inventory") { $Url = "https://toolkit.omvihub.in/inventory" }
+        if ($Tool -eq "inventory") { $Url = "https://toolkit.omvihub.in/inventory" }
         
         $CommandLine = "-NoExit -NoProfile -ExecutionPolicy Bypass -Command `"irm $Url | iex`""
         
@@ -216,10 +215,7 @@ Write-Host "  BOOTSTRAP COMPLETE!" -ForegroundColor White
 Write-Host "==========================================================================" -ForegroundColor Magenta
 Start-Sleep -Seconds 1
 
-if ($Tool -eq "deploy" -or $Tool -eq "7") {
-    Write-Host "Launching OmviHub WPF Software Deployer..." -ForegroundColor Cyan
-    $TargetScript = Join-Path $InstallDir "software_deployer\deploy_software.ps1"
-} elseif ($Tool -eq "inventory" -or $Tool -eq "1") {
+if ($Tool -eq "inventory" -or $Tool -eq "1") {
     Write-Host "Launching Hardware Inventory Scanner..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "inventory\get_inventory.ps1"
 } else {

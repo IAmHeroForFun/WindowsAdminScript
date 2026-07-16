@@ -1,6 +1,6 @@
 # 🌐 OmviHub IT Toolkit - Web Bootstrapper & AWS Lightsail Deployment Guide
 
-This guide explains how to deploy your 7-module Windows IT Toolkit to GitHub and AWS Lightsail (Nginx) so any administrator can launch it globally using the Massgrave-style one-liner:
+This guide explains how to deploy your 6-module Windows IT Toolkit to GitHub and AWS Lightsail (Nginx) so any administrator can launch it globally using the Massgrave-style one-liner:
 
 ```powershell
 irm https://toolkit.omvihub.in | iex
@@ -36,8 +36,7 @@ Windows-IT-Toolkit/
 ├── inventory/
 ├── slowness_debug/
 ├── search_fixer/
-├── server_audit/
-└── software_deployer/
+└── server_audit/
 ```
 
 ### 2. Verify your ZIP Download URL
@@ -118,21 +117,7 @@ server {
     }
     location = /get { rewrite ^ /install.ps1 last; }
 
-    # 2. DIRECT SHORTCUT: WPF Software Deployer (irm https://toolkit.omvihub.in/deploy | iex)
-    location ~* ^/(deploy|deploy\.ps1|software)$ {
-        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
-        proxy_pass https://raw.githubusercontent.com;
-        proxy_set_header Host raw.githubusercontent.com;
-        proxy_ssl_server_name on;
-        proxy_set_header Accept-Encoding ""; # Prevent gzip compression so sub_filter works
-        sub_filter 'DEFAULT_TOOL_PLACEHOLDER' 'deploy';
-        sub_filter_once on;
-        default_type text/plain;
-        add_header Content-Type "text/plain; charset=utf-8";
-        add_header Cache-Control "no-cache, no-store, must-revalidate";
-    }
-
-    # 3. DIRECT SHORTCUT: Hardware Inventory Scanner (irm https://toolkit.omvihub.in/inventory | iex)
+    # 2. DIRECT SHORTCUT: Hardware Inventory Scanner (irm https://toolkit.omvihub.in/inventory | iex)
     location ~* ^/(inventory|inventory\.ps1|scan)$ {
         rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
         proxy_pass https://raw.githubusercontent.com;
@@ -146,7 +131,7 @@ server {
         add_header Cache-Control "no-cache, no-store, must-revalidate";
     }
 
-    # 4. MASSGRAVE ROUTING TRICK:
+    # 3. MASSGRAVE ROUTING TRICK:
     # If root (/) is requested by PowerShell or curl/wget -> serve install.ps1 via live proxy!
     # If root (/) is requested by a Web Browser -> redirect to GitHub repo!
     location = / {
@@ -171,19 +156,13 @@ sudo systemctl reload nginx
 
 You are now ready to test! On any Windows 10, Windows 11, or Windows Server machine anywhere in the world, open PowerShell as Administrator and run any of your global one-liners:
 
-### 🌟 1. Master IT Toolkit Console (All 7 Modules)
+### 🌟 1. Master IT Toolkit Console (All 6 Modules)
 ```powershell
 irm https://toolkit.omvihub.in | iex
 # or: irm https://toolkit.omvihub.in/install.ps1 | iex
 ```
 
-### ⚡ 2. WPF Software Deployer (Direct Launch)
-```powershell
-irm https://toolkit.omvihub.in/deploy | iex
-# or: irm https://toolkit.omvihub.in/deploy.ps1 | iex
-```
-
-### 💻 3. Hardware Inventory Scanner (Direct Launch)
+### 💻 2. Hardware Inventory Scanner (Direct Launch)
 ```powershell
 irm https://toolkit.omvihub.in/inventory | iex
 # or: irm https://toolkit.omvihub.in/inventory.ps1 | iex
