@@ -247,3 +247,43 @@ if (Test-Path $TargetScript) {
     Write-Host "[ERROR] Could not locate target script at $TargetScript" -ForegroundColor Red
     Write-Host "Please verify that your ZIP archive contains the required files at the root level." -ForegroundColor Yellow
 }
+
+# ---------------------------------------------------------
+# 8. POST-EXECUTION FOOTPRINT CLEANUP (PRESERVING REPORTS)
+# ---------------------------------------------------------
+if (Test-Path $InstallDir) {
+    Write-Host "`n[+] Cleaning up script files to leave no footprint (preserving reports)..." -ForegroundColor Cyan
+    
+    # Define file patterns to delete (scripts, launchers, markdowns, configurations)
+    $TargetExtensions = @(".ps1", ".bat", ".cmd", ".md", ".conf")
+    
+    $Files = Get-ChildItem -Path $InstallDir -Recurse -File -Force -ErrorAction SilentlyContinue
+    foreach ($File in $Files) {
+        if ($TargetExtensions -contains $File.Extension.ToLower()) {
+            Remove-Item -Path $File.FullName -Force -ErrorAction SilentlyContinue
+        }
+    }
+    
+    # Recursively remove empty subdirectories so that only reports/ remain
+    do {
+        $Dirs = Get-ChildItem -Path $InstallDir -Recurse -Directory -Force -ErrorAction SilentlyContinue
+        $DeletedAny = $false
+        foreach ($Dir in $Dirs) {
+            $Items = Get-ChildItem -Path $Dir.FullName -Force -ErrorAction SilentlyContinue
+            if ($Items.Count -eq 0) {
+                Remove-Item -Path $Dir.FullName -Force -ErrorAction SilentlyContinue
+                $DeletedAny = $true
+            }
+        }
+    } while ($DeletedAny)
+    
+    # If the root installation directory is now completely empty, delete it too
+    if (Test-Path $InstallDir) {
+        $RootItems = Get-ChildItem -Path $InstallDir -Force -ErrorAction SilentlyContinue
+        if ($RootItems.Count -eq 0) {
+            Remove-Item -Path $InstallDir -Force -ErrorAction SilentlyContinue
+        }
+    }
+    
+    Write-Host "[+] Script cleanup complete. Reports are preserved under: $InstallDir" -ForegroundColor Green
+}

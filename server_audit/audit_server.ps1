@@ -18,8 +18,14 @@ if (-not $PSScriptRoot) {
     }
 }
 
-# Ensure reports directory exists
-$ReportsDir = Join-Path -Path $PSScriptRoot -ChildPath "reports"
+# Centralized report directory handling
+$ReportsDir = $null
+$ParentDir = Split-Path -Parent -Path $PSScriptRoot
+if ($ParentDir -match "SysMaster") {
+    $ReportsDir = Join-Path $ParentDir "reports"
+} else {
+    $ReportsDir = Join-Path $PSScriptRoot "reports"
+}
 if (-not (Test-Path $ReportsDir)) { New-Item -ItemType Directory -Path $ReportsDir -Force | Out-Null }
 
 Clear-Host

@@ -48,9 +48,20 @@ function Clean-String($str) {
     return $s.Trim()
 }
 
-# 1. Set CSV Path relative to script location
-$CsvPath = Join-Path -Path $PSScriptRoot -ChildPath "inventory.csv"
-$BackupDir = Join-Path -Path $PSScriptRoot -ChildPath "backups"
+# Centralized report directory handling
+$ReportsDir = $null
+$ParentDir = Split-Path -Parent -Path $PSScriptRoot
+if ($ParentDir -match "SysMaster") {
+    $ReportsDir = Join-Path $ParentDir "reports"
+} else {
+    $ReportsDir = $PSScriptRoot
+}
+if (-not (Test-Path $ReportsDir)) {
+    New-Item -ItemType Directory -Path $ReportsDir -Force | Out-Null
+}
+
+$CsvPath = Join-Path -Path $ReportsDir -ChildPath "inventory.csv"
+$BackupDir = Join-Path -Path $ReportsDir -ChildPath "backups"
 
 if (-not (Test-Path $BackupDir)) {
     New-Item -ItemType Directory -Path $BackupDir -Force | Out-Null

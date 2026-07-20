@@ -117,6 +117,33 @@ while ($true) {
         }
         { $_ -eq "Q" -or $_ -eq "q" } {
             Write-Host "`nExiting IT Toolkit. Have a productive day!" -ForegroundColor Cyan
+            
+            # Post-execution footprint cleanup (preserving reports)
+            $InstallDir = $PSScriptRoot
+            if (Test-Path $InstallDir) {
+                Write-Host "`n[+] Cleaning up script files to leave no footprint (preserving reports)..." -ForegroundColor Cyan
+                $TargetExtensions = @(".ps1", ".bat", ".cmd", ".md", ".conf")
+                
+                $Files = Get-ChildItem -Path $InstallDir -Recurse -File -Force -ErrorAction SilentlyContinue
+                foreach ($File in $Files) {
+                    if ($TargetExtensions -contains $File.Extension.ToLower()) {
+                        Remove-Item -Path $File.FullName -Force -ErrorAction SilentlyContinue
+                    }
+                }
+                
+                # Recursively clean up empty directories
+                do {
+                    $Dirs = Get-ChildItem -Path $InstallDir -Recurse -Directory -Force -ErrorAction SilentlyContinue
+                    $DeletedAny = $false
+                    foreach ($Dir in $Dirs) {
+                        $Items = Get-ChildItem -Path $Dir.FullName -Force -ErrorAction SilentlyContinue
+                        if ($Items.Count -eq 0) {
+                            Remove-Item -Path $Dir.FullName -Force -ErrorAction SilentlyContinue
+                            $DeletedAny = $true
+                        }
+                    }
+                } while ($DeletedAny)
+            }
             exit
         }
         default {

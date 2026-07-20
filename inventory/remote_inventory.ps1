@@ -18,10 +18,21 @@ if (-not $PSScriptRoot) {
     }
 }
 
-# 1. Set paths
-$CsvPath = Join-Path -Path $PSScriptRoot -ChildPath "inventory.csv"
-$SoftwareDir = Join-Path -Path $PSScriptRoot -ChildPath "installed_software"
-$BackupDir = Join-Path -Path $PSScriptRoot -ChildPath "backups"
+# Centralized report directory handling
+$ReportsDir = $null
+$ParentDir = Split-Path -Parent -Path $PSScriptRoot
+if ($ParentDir -match "SysMaster") {
+    $ReportsDir = Join-Path $ParentDir "reports"
+} else {
+    $ReportsDir = $PSScriptRoot
+}
+if (-not (Test-Path $ReportsDir)) {
+    New-Item -ItemType Directory -Path $ReportsDir -Force | Out-Null
+}
+
+$CsvPath = Join-Path -Path $ReportsDir -ChildPath "inventory.csv"
+$SoftwareDir = Join-Path -Path $ReportsDir -ChildPath "installed_software"
+$BackupDir = Join-Path -Path $ReportsDir -ChildPath "backups"
 
 if (-not (Test-Path $SoftwareDir)) { New-Item -ItemType Directory -Path $SoftwareDir -Force | Out-Null }
 if (-not (Test-Path $BackupDir)) { New-Item -ItemType Directory -Path $BackupDir -Force | Out-Null }
