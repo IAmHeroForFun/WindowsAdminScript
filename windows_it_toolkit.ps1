@@ -31,11 +31,13 @@ while ($true) {
     Write-Host "  [5] Launch Windows Search & Indexing Diagnostic & Repair Suite" -ForegroundColor Green
     Write-Host "  [6] Run Main Server Forensic & Configuration Audit (Users, GPOs, Shares)" -ForegroundColor Magenta
     Write-Host "  [7] Launch Printer Diagnostic & Management Suite (Spooler, Ports, Drivers)" -ForegroundColor Cyan
+    Write-Host "  [8] Launch Windows 11 Enterprise Debloat & Privacy Suite (Apps, Telemetry)" -ForegroundColor Green
+    Write-Host "  [9] Run Network Security, Port Exposure & Performance Auditor (6-Phases)" -ForegroundColor Cyan
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "  [Q] Exit Toolkit" -ForegroundColor DarkRed
     Write-Host "==========================================================================" -ForegroundColor Magenta
     
-    $Choice = Read-Host "Select a tool to execute [1-7, Q]"
+    $Choice = Read-Host "Select a tool to execute [1-9, Q]"
     
     switch ($Choice) {
         "1" {
@@ -84,7 +86,33 @@ while ($true) {
             Clear-Host
             Write-Host "Launching Printer Diagnostic & Management Suite..." -ForegroundColor Cyan
             $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "printer_manager\manage_printers.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { & $ScriptPath }
+            if (Test-Path $ScriptPath) {
+                powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
+            } else {
+                Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red
+            }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        "8" {
+            Clear-Host
+            Write-Host "Launching Windows 11 Enterprise Debloat & Privacy Suite..." -ForegroundColor Green
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "win11_debloater\debloat.ps1"
+            if (Test-Path $ScriptPath) {
+                powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
+            } else {
+                Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red
+            }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        "9" {
+            Clear-Host
+            Write-Host "Launching Network Security, Socket Auditor & Diagnostics Suite..." -ForegroundColor Cyan
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "network_auditor\audit_network.ps1"
+            if (Test-Path $ScriptPath) {
+                powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
+            } else {
+                Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red
+            }
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
         { $_ -eq "Q" -or $_ -eq "q" } {
@@ -92,7 +120,7 @@ while ($true) {
             exit
         }
         default {
-            Write-Host "`nInvalid choice. Please enter 1-7, or Q." -ForegroundColor Red
+            Write-Host "`nInvalid choice. Please enter 1-9, or Q." -ForegroundColor Red
             Start-Sleep -Seconds 1
         }
     }
