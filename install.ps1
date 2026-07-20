@@ -25,6 +25,11 @@ param (
 
 $ErrorActionPreference = "Stop"
 
+# Try to bypass Execution Policy for the current session/process
+try {
+    Set-ExecutionPolicy Bypass -Scope Process -Force -ErrorAction SilentlyContinue
+} catch {}
+
 # ---------------------------------------------------------
 # 0. DYNAMIC TOOL CONFIGURATION VIA PROXY PLACEHOLDER
 # ---------------------------------------------------------
@@ -236,7 +241,8 @@ if ($Tool -eq "netaudit") {
 }
 
 if (Test-Path $TargetScript) {
-    & $TargetScript
+    # Execute target script in a new powershell process with Bypass execution policy to ensure compatibility
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File $TargetScript
 } else {
     Write-Host "[ERROR] Could not locate target script at $TargetScript" -ForegroundColor Red
     Write-Host "Please verify that your ZIP archive contains the required files at the root level." -ForegroundColor Yellow

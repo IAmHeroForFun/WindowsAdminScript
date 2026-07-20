@@ -4,6 +4,11 @@
 
 $ErrorActionPreference = "SilentlyContinue"
 
+# Try to bypass Execution Policy for the current session/process
+try {
+    Set-ExecutionPolicy Bypass -Scope Process -Force -ErrorAction SilentlyContinue
+} catch {}
+
 # Check if running as Admin
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $isAdmin) {

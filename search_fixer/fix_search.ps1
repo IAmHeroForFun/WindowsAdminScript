@@ -4,6 +4,11 @@
 
 $ErrorActionPreference = "SilentlyContinue"
 
+# Try to bypass Execution Policy for the current session/process
+try {
+    Set-ExecutionPolicy Bypass -Scope Process -Force -ErrorAction SilentlyContinue
+} catch {}
+
 # 0. Ensure $PSScriptRoot is defined for PowerShell 2.0 compatibility
 if (-not $PSScriptRoot) {
     if ($MyInvocation.MyCommand.Definition) {
