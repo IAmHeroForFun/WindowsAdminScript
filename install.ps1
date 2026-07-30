@@ -226,6 +226,9 @@ Start-Sleep -Seconds 1
 if ($Tool -eq "netaudit") {
     Write-Host "Launching Network Security, Scanner & Diagnostics Auditor (6 Phases)..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "network_auditor\audit_network.ps1"
+} elseif ($Tool -eq "office" -or $Tool -eq "officefix") {
+    Write-Host "Launching MS Office Diagnostic & Repair Suite (All Versions)..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "office_fixer\Repair-Office.ps1"
 } elseif ($Tool -eq "debloat" -or $Tool -eq "optimize") {
     Write-Host "Launching Windows 11 Debloat & Privacy Suite..." -ForegroundColor Green
     $TargetScript = Join-Path $InstallDir "win11_debloater\debloat.ps1"

@@ -33,11 +33,12 @@ while ($true) {
     Write-Host "  [7] Launch Printer Diagnostic & Management Suite (Spooler, Ports, Drivers)" -ForegroundColor Cyan
     Write-Host "  [8] Launch Windows 11 Enterprise Debloat & Privacy Suite (Apps, Telemetry)" -ForegroundColor Green
     Write-Host "  [9] Run Network Security, Port Exposure & Performance Auditor (6-Phases)" -ForegroundColor Cyan
+    Write-Host "  [10] Launch MS Office Diagnostic & Repair Suite (All Versions)" -ForegroundColor Yellow
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "  [Q] Exit Toolkit" -ForegroundColor DarkRed
     Write-Host "==========================================================================" -ForegroundColor Magenta
     
-    $Choice = Read-Host "Select a tool to execute [1-9, Q]"
+    $Choice = Read-Host "Select a tool to execute [1-10, Q]"
     
     switch ($Choice) {
         "1" {
@@ -115,6 +116,17 @@ while ($true) {
             }
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
+        "10" {
+            Clear-Host
+            Write-Host "Launching MS Office Diagnostic & Repair Suite..." -ForegroundColor Cyan
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "office_fixer\Repair-Office.ps1"
+            if (Test-Path $ScriptPath) {
+                powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
+            } else {
+                Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red
+            }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
         { $_ -eq "Q" -or $_ -eq "q" } {
             Write-Host "`nExiting IT Toolkit. Have a productive day!" -ForegroundColor Cyan
             
@@ -147,7 +159,7 @@ while ($true) {
             exit
         }
         default {
-            Write-Host "`nInvalid choice. Please enter 1-9, or Q." -ForegroundColor Red
+            Write-Host "`nInvalid choice. Please enter 1-10, or Q." -ForegroundColor Red
             Start-Sleep -Seconds 1
         }
     }
