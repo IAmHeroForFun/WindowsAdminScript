@@ -232,6 +232,9 @@ if ($Tool -eq "netaudit") {
 } elseif ($Tool -eq "sharing" -or $Tool -eq "smbfix" -or $Tool -eq "11") {
     Write-Host "Launching Windows 10/11 Shared Drive & USB Shared Printer Repair Suite..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "network_sharing_fixer\fix_sharing.ps1"
+} elseif ($Tool -eq "sql" -or $Tool -eq "database" -or $Tool -eq "12") {
+    Write-Host "Launching SQL Database Port & Protocol Diagnostic Suite..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "sql_database_fixer\fix_sql.ps1"
 } elseif ($Tool -eq "debloat" -or $Tool -eq "optimize") {
     Write-Host "Launching Windows 11 Debloat & Privacy Suite..." -ForegroundColor Green
     $TargetScript = Join-Path $InstallDir "win11_debloater\debloat.ps1"
