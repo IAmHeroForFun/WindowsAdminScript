@@ -24,23 +24,32 @@ while ($true) {
     Write-Host "==========================================================================" -ForegroundColor Magenta
     Write-Host "  System: $env:COMPUTERNAME | User: $env:USERNAME" -ForegroundColor DarkCyan
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
-    Write-Host "  [1] Run Local PC Inventory Scan (Hardware & Software)" -ForegroundColor Cyan
-    Write-Host "  [2] Run Network Subnet Discovery Scan (Ping Sweep)" -ForegroundColor Cyan
-    Write-Host "  [3] Run Remote WMI Network Inventory (Domain & Workgroup PCs)" -ForegroundColor Cyan
-    Write-Host "  [4] Launch Sherlock Slow PC Diagnostics & Turbo Tune-Up Suite" -ForegroundColor Yellow
-    Write-Host "  [5] Launch Windows Search & Indexing Diagnostic & Repair Suite" -ForegroundColor Green
-    Write-Host "  [6] Run Main Server Forensic & Configuration Audit (Users, GPOs, Shares)" -ForegroundColor Magenta
-    Write-Host "  [7] Launch Printer Diagnostic & Management Suite (Spooler, Ports, Drivers)" -ForegroundColor Cyan
-    Write-Host "  [8] Launch Windows 11 Enterprise Debloat & Privacy Suite (Apps, Telemetry)" -ForegroundColor Green
-    Write-Host "  [9] Run Network Security, Port Exposure & Performance Auditor (6-Phases)" -ForegroundColor Cyan
-    Write-Host "  [10] Launch MS Office Diagnostic & Repair Suite (All Versions)" -ForegroundColor Yellow
-    Write-Host "  [11] Launch Windows 10/11 Shared Drive & USB Shared Printer Repair Suite" -ForegroundColor Cyan
-    Write-Host "  [12] Launch SQL Database Port & Protocol Diagnostic & Repair Suite" -ForegroundColor Yellow
+    Write-Host " [AUDIT & INVENTORY]" -ForegroundColor DarkYellow
+    Write-Host "  [1] Local Hardware & Installed Software Inventory Scanner" -ForegroundColor Cyan
+    Write-Host "  [2] Local Network Subnet IP & Active Host Discovery (Ping Sweep)" -ForegroundColor Cyan
+    Write-Host "  [3] Agentless Remote Network PC Inventory (WMI / CIM)" -ForegroundColor Cyan
+    Write-Host "  [4] Network Security, Open Port Exposure & Socket Auditor (6-Phases)" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host " [SYSTEM TUNE-UP & DEBLOAT]" -ForegroundColor DarkYellow
+    Write-Host "  [5] Sherlock Slow PC Performance Debugger & Turbo Tune-Up" -ForegroundColor Green
+    Write-Host "  [6] Windows Search & Indexing Repair Engine" -ForegroundColor Green
+    Write-Host "  [7] Windows 11 Enterprise Debloat & Privacy Optimizer" -ForegroundColor Green
+    Write-Host ""
+    Write-Host " [INFRASTRUCTURE & SERVER ADMIN]" -ForegroundColor DarkYellow
+    Write-Host "  [8] Server Security & Configuration Audit (GPOs, Accounts, SMB Shares)" -ForegroundColor Magenta
+    Write-Host "  [9] Local Print Spooler, Queue & Driver Manager" -ForegroundColor Magenta
+    Write-Host "  [10] Windows 10/11 Network Folder & SMB Sharing Fixer" -ForegroundColor Magenta
+    Write-Host "  [11] Remote Desktop (RDP) & CredSSP Connection Fixer" -ForegroundColor Magenta
+    Write-Host ""
+    Write-Host " [APPLICATION & DATABASE SUITES]" -ForegroundColor DarkYellow
+    Write-Host "  [12] MS Office & Outlook Interactive Diagnostic & Repair Suite" -ForegroundColor Yellow
+    Write-Host "  [13] SQL & Database Server Network Protocol Fixer (1433, 3306, 5432)" -ForegroundColor Yellow
+    Write-Host "  [14] Windows Defender Signature Reset & Exclusion Engine" -ForegroundColor Yellow
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "  [Q] Exit Toolkit" -ForegroundColor DarkRed
     Write-Host "==========================================================================" -ForegroundColor Magenta
     
-    $Choice = Read-Host "Select a tool to execute [1-12, Q]"
+    $Choice = Read-Host "Select a tool to execute [1-14, Q]"
     
     switch ($Choice) {
         "1" {
@@ -66,29 +75,8 @@ while ($true) {
         }
         "4" {
             Clear-Host
-            Write-Host "Launching Sherlock Slow PC Diagnostics Suite..." -ForegroundColor Yellow
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "slowness_debug\slowness_detective.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "5" {
-            Clear-Host
-            Write-Host "Launching Windows Search & Indexing Repair Suite..." -ForegroundColor Green
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "search_fixer\fix_search.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "6" {
-            Clear-Host
-            Write-Host "Executing Main Server Forensic & Configuration Audit..." -ForegroundColor Magenta
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "server_audit\audit_server.ps1"
-            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "7" {
-            Clear-Host
-            Write-Host "Launching Printer Diagnostic & Management Suite..." -ForegroundColor Cyan
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "printer_manager\manage_printers.ps1"
+            Write-Host "Launching Network Security, Socket Auditor & Diagnostics Suite..." -ForegroundColor Cyan
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "network_auditor\audit_network.ps1"
             if (Test-Path $ScriptPath) {
                 powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
             } else {
@@ -96,7 +84,21 @@ while ($true) {
             }
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
-        "8" {
+        "5" {
+            Clear-Host
+            Write-Host "Launching Sherlock Slow PC Diagnostics Suite..." -ForegroundColor Yellow
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "slowness_debug\slowness_detective.ps1"
+            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        "6" {
+            Clear-Host
+            Write-Host "Launching Windows Search & Indexing Repair Suite..." -ForegroundColor Green
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "search_fixer\fix_search.ps1"
+            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        "7" {
             Clear-Host
             Write-Host "Launching Windows 11 Enterprise Debloat & Privacy Suite..." -ForegroundColor Green
             $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "win11_debloater\debloat.ps1"
@@ -107,10 +109,17 @@ while ($true) {
             }
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
+        "8" {
+            Clear-Host
+            Write-Host "Executing Main Server Forensic & Configuration Audit..." -ForegroundColor Magenta
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "server_audit\audit_server.ps1"
+            if (Test-Path $ScriptPath) { & $ScriptPath } else { Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
         "9" {
             Clear-Host
-            Write-Host "Launching Network Security, Socket Auditor & Diagnostics Suite..." -ForegroundColor Cyan
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "network_auditor\audit_network.ps1"
+            Write-Host "Launching Printer Diagnostic & Management Suite..." -ForegroundColor Cyan
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "printer_manager\manage_printers.ps1"
             if (Test-Path $ScriptPath) {
                 powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
             } else {
@@ -119,17 +128,6 @@ while ($true) {
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
         "10" {
-            Clear-Host
-            Write-Host "Launching MS Office Diagnostic & Repair Suite..." -ForegroundColor Cyan
-            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "office_fixer\Repair-Office.ps1"
-            if (Test-Path $ScriptPath) {
-                powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
-            } else {
-                Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red
-            }
-            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
-        }
-        "11" {
             Clear-Host
             Write-Host "Launching Windows 10/11 Shared Drive & USB Shared Printer Repair Suite..." -ForegroundColor Cyan
             $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "network_sharing_fixer\fix_sharing.ps1"
@@ -140,10 +138,43 @@ while ($true) {
             }
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
+        "11" {
+            Clear-Host
+            Write-Host "Launching Remote Desktop (RDP) & CredSSP Encryption Oracle Repair Suite..." -ForegroundColor Cyan
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "rdp_fixer\fix_rdp.ps1"
+            if (Test-Path $ScriptPath) {
+                powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
+            } else {
+                Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red
+            }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
         "12" {
+            Clear-Host
+            Write-Host "Launching MS Office Diagnostic & Repair Suite..." -ForegroundColor Cyan
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "office_fixer\Repair-Office.ps1"
+            if (Test-Path $ScriptPath) {
+                powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
+            } else {
+                Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red
+            }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        "13" {
             Clear-Host
             Write-Host "Launching SQL Database Port & Protocol Diagnostic & Repair Suite..." -ForegroundColor Cyan
             $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "sql_database_fixer\fix_sql.ps1"
+            if (Test-Path $ScriptPath) {
+                powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
+            } else {
+                Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red
+            }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        "14" {
+            Clear-Host
+            Write-Host "Launching Windows Defender Signature Reset & Exclusion Repair Suite..." -ForegroundColor Green
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "antivirus_fixer\fix_antivirus.ps1"
             if (Test-Path $ScriptPath) {
                 powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
             } else {
@@ -183,7 +214,7 @@ while ($true) {
             exit
         }
         default {
-            Write-Host "`nInvalid choice. Please enter 1-12, or Q." -ForegroundColor Red
+            Write-Host "`nInvalid choice. Please enter 1-14, or Q." -ForegroundColor Red
             Start-Sleep -Seconds 1
         }
     }

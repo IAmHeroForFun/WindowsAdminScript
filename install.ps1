@@ -223,22 +223,28 @@ Write-Host "  BOOTSTRAP COMPLETE!" -ForegroundColor White
 Write-Host "==========================================================================" -ForegroundColor Magenta
 Start-Sleep -Seconds 1
 
-if ($Tool -eq "netaudit") {
+if ($Tool -eq "netaudit" -or $Tool -eq "4") {
     Write-Host "Launching Network Security, Scanner & Diagnostics Auditor (6 Phases)..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "network_auditor\audit_network.ps1"
-} elseif ($Tool -eq "office" -or $Tool -eq "officefix") {
+} elseif ($Tool -eq "office" -or $Tool -eq "officefix" -or $Tool -eq "12") {
     Write-Host "Launching MS Office Diagnostic & Repair Suite (All Versions)..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "office_fixer\Repair-Office.ps1"
-} elseif ($Tool -eq "sharing" -or $Tool -eq "smbfix" -or $Tool -eq "11") {
+} elseif ($Tool -eq "sharing" -or $Tool -eq "smbfix" -or $Tool -eq "10") {
     Write-Host "Launching Windows 10/11 Shared Drive & USB Shared Printer Repair Suite..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "network_sharing_fixer\fix_sharing.ps1"
-} elseif ($Tool -eq "sql" -or $Tool -eq "database" -or $Tool -eq "12") {
+} elseif ($Tool -eq "sql" -or $Tool -eq "database" -or $Tool -eq "13") {
     Write-Host "Launching SQL Database Port & Protocol Diagnostic Suite..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "sql_database_fixer\fix_sql.ps1"
-} elseif ($Tool -eq "debloat" -or $Tool -eq "optimize") {
+} elseif ($Tool -eq "rdp" -or $Tool -eq "11") {
+    Write-Host "Launching Remote Desktop (RDP) & CredSSP Repair Suite..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "rdp_fixer\fix_rdp.ps1"
+} elseif ($Tool -eq "defender" -or $Tool -eq "antivirus" -or $Tool -eq "14") {
+    Write-Host "Launching Windows Defender Signature Reset Suite..." -ForegroundColor Green
+    $TargetScript = Join-Path $InstallDir "antivirus_fixer\fix_antivirus.ps1"
+} elseif ($Tool -eq "debloat" -or $Tool -eq "optimize" -or $Tool -eq "7") {
     Write-Host "Launching Windows 11 Debloat & Privacy Suite..." -ForegroundColor Green
     $TargetScript = Join-Path $InstallDir "win11_debloater\debloat.ps1"
-} elseif ($Tool -eq "printer" -or $Tool -eq "7") {
+} elseif ($Tool -eq "printer" -or $Tool -eq "9") {
     Write-Host "Launching Printer Diagnostic Suite..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "printer_manager\manage_printers.ps1"
 } elseif ($Tool -eq "inventory" -or $Tool -eq "1") {
