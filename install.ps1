@@ -229,6 +229,9 @@ if ($Tool -eq "netaudit") {
 } elseif ($Tool -eq "office" -or $Tool -eq "officefix") {
     Write-Host "Launching MS Office Diagnostic & Repair Suite (All Versions)..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "office_fixer\Repair-Office.ps1"
+} elseif ($Tool -eq "sharing" -or $Tool -eq "smbfix" -or $Tool -eq "11") {
+    Write-Host "Launching Windows 10/11 Shared Drive & USB Shared Printer Repair Suite..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "network_sharing_fixer\fix_sharing.ps1"
 } elseif ($Tool -eq "debloat" -or $Tool -eq "optimize") {
     Write-Host "Launching Windows 11 Debloat & Privacy Suite..." -ForegroundColor Green
     $TargetScript = Join-Path $InstallDir "win11_debloater\debloat.ps1"
