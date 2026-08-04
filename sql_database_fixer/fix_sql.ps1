@@ -34,7 +34,11 @@ try {
 function Get-UserApproval ($Message) {
     Write-Host ""
     Write-Host ">>> $Message" -ForegroundColor Yellow
-    $Response = Read-Host "Proceed? (Y/N)"
+    $Response = Read-Host "Proceed? (Y/N, Q to Cancel)"
+    if ($Response -eq "Q" -or $Response -eq "q") {
+        Write-Host "Operation cancelled by user. Returning..." -ForegroundColor Yellow
+        exit 0
+    }
     return ($Response -eq "Y" -or $Response -eq "y")
 }
 

@@ -513,10 +513,10 @@ while ($true) {
         }
         
         "Q" {
-            break
+            return
         }
         "q" {
-            break
+            return
         }
         default {
             Write-Host "`nInvalid choice. Please enter 1-6, or Q." -ForegroundColor Red
