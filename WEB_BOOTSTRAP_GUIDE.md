@@ -232,3 +232,20 @@ irm https://toolkit.omvihub.in/netaudit | iex
 ```
 
 > **🎉 Pro Tip**: Because Nginx is configured as a Live GitHub Proxy, whenever you push changes to your GitHub repo, ALL of these shortcuts update globally in real-time without ever touching your AWS server!
+
+---
+
+## 🛠️ Troubleshooting SSL/TLS Errors
+
+If a client system throws an SSL/TLS error such as `Could not create SSL/TLS secure channel` when running `irm`:
+
+### 1. Pre-enforce TLS 1.2 in PowerShell
+```powershell
+[Net.ServicePointManager]::SecurityProtocol = 3072; irm https://toolkit.omvihub.in | iex
+```
+
+### 2. Bypass Certificate Validation (Corporate Proxies)
+```powershell
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}; [Net.ServicePointManager]::SecurityProtocol = 3072; irm https://toolkit.omvihub.in | iex
+```
+
