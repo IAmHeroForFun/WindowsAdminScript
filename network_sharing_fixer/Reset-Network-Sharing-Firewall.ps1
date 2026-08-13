@@ -53,6 +53,16 @@ if (Get-UserApproval "Enable Firewall rules for 'Network Discovery'?") {
     }
 }
 
+if (Get-UserApproval "Configure WSD Print Device & mDNS Firewall Rules (Port 3702 UDP/TCP)?") {
+    try {
+        New-NetFirewallRule -DisplayName "WSD Print Discovery (UDP 3702 Inbound)" -Direction Inbound -Action Allow -Protocol UDP -LocalPort 3702 -ErrorAction SilentlyContinue | Out-Null
+        New-NetFirewallRule -DisplayName "WSD Print Discovery (TCP 3702 Outbound)" -Direction Outbound -Action Allow -Protocol TCP -RemotePort 3702 -ErrorAction SilentlyContinue | Out-Null
+        Log-Msg "  [OK] Successfully configured WSD Print Discovery firewall rules (Port 3702)."
+    } catch {
+        Log-Msg "  [WARN] Could not create WSD firewall rules: $($_.Exception.Message)" "WARN"
+    }
+}
+
 # 2. Inspect and Option to set Network Category to Private
 try {
     $Profiles = Get-NetConnectionProfile -ErrorAction SilentlyContinue

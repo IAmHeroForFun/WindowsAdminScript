@@ -70,7 +70,21 @@ if (Test-Path $LsaKey) {
     }
 }
 
-# 3. Enable Network Discovery Services
+# 3. DNS Aliasing, Strict Name Checking, and Null Session Access Fixes
+$LanmanServerKey = "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters"
+if (Get-UserApproval "Enable DNS Hostname Aliasing & Allow Null Session Access (DisableStrictNameChecking = 1, RestrictNullSessAccess = 0)?") {
+    try {
+        if (-not (Test-Path $LanmanServerKey)) { New-Item -Path $LanmanServerKey -Force | Out-Null }
+        Set-ItemProperty -Path $LanmanServerKey -Name "DisableStrictNameChecking" -Value 1 -PropertyType DWord -Force | Out-Null
+        Set-ItemProperty -Path $LanmanServerKey -Name "DnsOnWire" -Value 1 -PropertyType DWord -Force | Out-Null
+        Set-ItemProperty -Path $LanmanServerKey -Name "RestrictNullSessAccess" -Value 0 -PropertyType DWord -Force | Out-Null
+        Log-Msg "  [OK] Successfully set DisableStrictNameChecking = 1, DnsOnWire = 1, RestrictNullSessAccess = 0."
+    } catch {
+        Log-Msg "  [ERROR] Failed to set LanmanServer parameters: $($_.Exception.Message)" "ERROR"
+    }
+}
+
+# 4. Enable Network Discovery Services
 $DiscoveryServices = @(
     @{ Name = "fdPHost"; Display = "Function Discovery Provider Host" }
     @{ Name = "FDResPub"; Display = "Function Discovery Resource Publication" }
@@ -88,6 +102,18 @@ if (Get-UserApproval "Configure and start Network Discovery services (fdPHost, F
         } catch {
             Log-Msg "  [WARN] Could not modify service $($Svc.Name): $($_.Exception.Message)" "WARN"
         }
+    }
+}
+
+# 5. Flush Network DNS and NetBIOS Caches
+if (Get-UserApproval "Flush DNS Cache and NetBIOS Name Table (ipconfig /flushdns, nbtstat -RR, klist purge)?") {
+    try {
+        cmd.exe /c "ipconfig /flushdns" | Out-Null
+        cmd.exe /c "nbtstat -RR" | Out-Null
+        cmd.exe /c "klist purge" | Out-Null
+        Log-Msg "  [OK] Flushed DNS cache, re-registered NetBIOS names, and purged Kerberos tickets."
+    } catch {
+        Log-Msg "  [WARN] Failed to execute network cache flush: $($_.Exception.Message)" "WARN"
     }
 }
 

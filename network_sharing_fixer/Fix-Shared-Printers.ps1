@@ -62,14 +62,15 @@ if (Get-UserApproval "Allow Non-Admin Users to install USB Shared Printer driver
     }
 }
 
-# 3. Configure RPC Connection Protocol Types (Named Pipes & TCP)
+# 3. Configure RPC Connection Protocol Types (Named Pipes & TCP - Fixes Error 0x00000bc4 & 0x00000709)
 $RpcPrinterKey = "HKLM:\Software\Policies\Microsoft\Windows NT\Printers\RPC"
-if (Get-UserApproval "Enable RPC over Named Pipes and TCP for network printer connections?") {
+if (Get-UserApproval "Enable RPC over Named Pipes & TCP protocol bindings (Fixes Error 0x00000bc4 & 0x00000709)?") {
     try {
         if (-not (Test-Path $RpcPrinterKey)) { New-Item -Path $RpcPrinterKey -Force | Out-Null }
         Set-ItemProperty -Path $RpcPrinterKey -Name "RpcOverNamedPipes" -Value 1 -PropertyType DWord -Force | Out-Null
         Set-ItemProperty -Path $RpcPrinterKey -Name "RpcOverTcp" -Value 1 -PropertyType DWord -Force | Out-Null
-        Log-Msg "  [OK] Successfully configured RPC over Named Pipes & TCP."
+        Set-ItemProperty -Path $RpcPrinterKey -Name "RpcUseNamedPipesAsDefault" -Value 1 -PropertyType DWord -Force | Out-Null
+        Log-Msg "  [OK] Successfully configured RPC over Named Pipes & TCP (RpcUseNamedPipesAsDefault = 1)."
     } catch {
         Log-Msg "  [ERROR] Failed to set RPC protocol keys: $($_.Exception.Message)" "ERROR"
     }
@@ -87,7 +88,35 @@ if (Get-UserApproval "Enable Legacy CopyFiles Spooler Policy (Fixes Error 0x0000
     }
 }
 
-# 5. Restart Print Spooler Service to apply changes
+# 5. KB5089549 Driver Blocklist & Code Integrity Bypass
+$CiConfigKey = "HKLM:\SYSTEM\CurrentControlSet\Control\CI\Config"
+if (Get-UserApproval "Bypass Cumulative Update Driver Blocklist Restrictions (Fix KB5089549 print driver blocks)?") {
+    try {
+        if (-not (Test-Path $CiConfigKey)) { New-Item -Path $CiConfigKey -Force | Out-Null }
+        Set-ItemProperty -Path $CiConfigKey -Name "VulnerableDriverBlocklistEnable" -Value 0 -PropertyType DWord -Force | Out-Null
+        Log-Msg "  [OK] Successfully disabled VulnerableDriverBlocklistEnable."
+    } catch {
+        Log-Msg "  [WARN] Failed to set VulnerableDriverBlocklistEnable: $($_.Exception.Message)" "WARN"
+    }
+}
+
+# 6. Hard Purge Print Queue & Force Stop Stuck Isolation Host Processes
+if (Get-UserApproval "Hard Purge Print Queue (.spl/.shd) & force-stop stuck print processes (splwow64, PrintIsolationHost)?") {
+    try {
+        Stop-Service -Name "spooler" -Force -ErrorAction SilentlyContinue
+        Get-Process -Name "splwow64","PrintIsolationHost","printfilterpipelinesvc" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+        $SpoolPath = Join-Path $env:SystemRoot "System32\spool\PRINTERS"
+        if (Test-Path $SpoolPath) {
+            Remove-Item -Path "$SpoolPath\*" -Force -Recurse -ErrorAction SilentlyContinue
+        }
+        Start-Service -Name "spooler" -ErrorAction SilentlyContinue
+        Log-Msg "  [OK] Hard purge of print queue completed and Spooler restarted."
+    } catch {
+        Log-Msg "  [ERROR] Failed to hard purge print queue: $($_.Exception.Message)" "ERROR"
+    }
+}
+
+# 7. Restart Print Spooler Service to apply changes
 if (Get-UserApproval "Restart the Print Spooler service to apply printer registry changes?") {
     try {
         Restart-Service -Name "spooler" -Force -ErrorAction Stop
