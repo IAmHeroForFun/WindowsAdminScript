@@ -28,18 +28,16 @@ if ($ParentDir -match "SysMaster") {
 }
 if (-not (Test-Path $ReportsDir)) { New-Item -ItemType Directory -Path $ReportsDir -Force | Out-Null }
 
-# Helper function to query WMI/CIM across all PowerShell versions
-function Get-WmiHelper($Class, $Namespace = "root\cimv2", $Filter = $null) {
-    $Params = @{ Namespace = $Namespace; ErrorAction = "SilentlyContinue" }
-    if (Get-Command Get-WmiObject -ErrorAction SilentlyContinue) {
-        $Params.Add("Class", $Class)
-        if ($Filter) { $Params.Add("Filter", $Filter) }
-        Get-WmiObject @Params
-    } elseif (Get-Command Get-CimInstance -ErrorAction SilentlyContinue) {
-        $Params.Add("ClassName", $Class)
-        if ($Filter) { $Params.Add("Filter", $Filter) }
-        Get-CimInstance @Params
+# Helper function for user prompts with Q exit support
+function Get-UserApproval ($Message) {
+    Write-Host ""
+    Write-Host ">>> $Message" -ForegroundColor Yellow
+    $Response = Read-Host "Proceed? (Y/N, Q to Cancel)"
+    if ($Response -eq "Q" -or $Response -eq "q") {
+        Write-Host "Operation cancelled by user. Returning..." -ForegroundColor Yellow
+        exit 0
     }
+    return ($Response -eq "Y" -or $Response -eq "y")
 }
 
 Clear-Host
@@ -357,8 +355,7 @@ Write-Host "--------------------------------------------------------------------
 Write-Host "[ACTION 1/6] Temporary Digital Clutter Cleanup" -ForegroundColor White
 Write-Host "Target: User Temp (%TEMP%) and System Temp (C:\Windows\Temp)" -ForegroundColor DarkCyan
 Write-Host "Benefit: Reclaims disk space and removes corrupted application caches." -ForegroundColor DarkGray
-$Ans1 = Read-Host " -> Execute Temp File Cleanup? (Y/N)"
-if ($Ans1 -eq "Y" -or $Ans1 -eq "y") {
+if (Get-UserApproval "Execute User and System Temp File Cleanup?") {
     Write-Host "    [EXEC] Sweeping user & system temporary files..." -ForegroundColor Green
     Get-ChildItem -Path $env:TEMP -Recurse -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
     Get-ChildItem -Path "C:\Windows\Temp" -Recurse -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
@@ -373,8 +370,7 @@ Write-Host "--------------------------------------------------------------------
 Write-Host "[ACTION 2/6] Recycle Bin Purge" -ForegroundColor White
 Write-Host "Target: Local Recycle Bin across all drives" -ForegroundColor DarkCyan
 Write-Host "Benefit: Permanently frees hard drive storage space." -ForegroundColor DarkGray
-$Ans2 = Read-Host " -> Empty Recycle Bin? (Y/N)"
-if ($Ans2 -eq "Y" -or $Ans2 -eq "y") {
+if (Get-UserApproval "Empty Recycle Bin across all drives?") {
     Write-Host "    [EXEC] Purging deleted items from Recycle Bin..." -ForegroundColor Green
     try {
         $Shell = New-Object -ComObject Shell.Application
@@ -394,8 +390,7 @@ Write-Host "--------------------------------------------------------------------
 Write-Host "[ACTION 3/6] Advanced System Disk Cleanup & Update Cache Purge" -ForegroundColor White
 Write-Host "Target: Windows Update download cache, IIS logs, crash dumps, and Windows Logs" -ForegroundColor DarkCyan
 Write-Host "Benefit: Frees up gigabytes of storage and clears stale Windows Update locks." -ForegroundColor DarkGray
-$Ans3 = Read-Host " -> Execute Advanced System Disk Cleanup? (Y/N)"
-if ($Ans3 -eq "Y" -or $Ans3 -eq "y") {
+if (Get-UserApproval "Execute Advanced System Disk Cleanup & Update Cache Purge?") {
     Write-Host "    [EXEC] Stopping Windows Update service (wuauserv)..." -ForegroundColor Green
     $UpdateSvc = Get-Service -Name "wuauserv" -ErrorAction SilentlyContinue
     if ($UpdateSvc -and $UpdateSvc.Status -eq "Running") {
@@ -476,8 +471,7 @@ Write-Host "--------------------------------------------------------------------
 Write-Host "[ACTION 4/6] Network Pipe & DNS Cache Refresh" -ForegroundColor White
 Write-Host "Target: Windows Resolver Cache (ipconfig /flushdns)" -ForegroundColor DarkCyan
 Write-Host "Benefit: Fixes sluggish web browsing, outdated DNS lookups, and socket lag." -ForegroundColor DarkGray
-$Ans4 = Read-Host " -> Flush DNS and reset network resolver cache? (Y/N)"
-if ($Ans4 -eq "Y" -or $Ans4 -eq "y") {
+if (Get-UserApproval "Flush DNS and reset network resolver cache?") {
     Write-Host "    [EXEC] Flushing DNS resolver cache..." -ForegroundColor Green
     ipconfig /flushdns | Out-Null
     Write-Host "    [DONE] DNS resolver cache refreshed." -ForegroundColor Green
@@ -491,8 +485,7 @@ Write-Host "--------------------------------------------------------------------
 Write-Host "[ACTION 5/6] Power Scheme Performance Boost" -ForegroundColor White
 Write-Host "Target: Active Windows Power Plan" -ForegroundColor DarkCyan
 Write-Host "Benefit: Ensures CPU operates at full clock speed without ECO throttling." -ForegroundColor DarkGray
-$Ans5 = Read-Host " -> Switch active Power Plan to 'High Performance'? (Y/N)"
-if ($Ans5 -eq "Y" -or $Ans5 -eq "y") {
+if (Get-UserApproval "Switch active Power Plan to 'High Performance'?") {
     Write-Host "    [EXEC] Locating High Performance power scheme GUID..." -ForegroundColor Green
     try {
         $HighPerfGuid = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
@@ -512,8 +505,7 @@ Write-Host "--------------------------------------------------------------------
 Write-Host "[ACTION 6/6] Startup Application Audit Export" -ForegroundColor White
 Write-Host "Target: Auto-launch registry keys (Run entries)" -ForegroundColor DarkCyan
 Write-Host "Benefit: Exports a detailed list of boot items into a clean text file so you can review what to disable." -ForegroundColor DarkGray
-$Ans6 = Read-Host " -> Export detailed Startup Applications audit file? (Y/N)"
-if ($Ans6 -eq "Y" -or $Ans6 -eq "y") {
+if (Get-UserApproval "Export detailed Startup Applications audit file?") {
     $StartupReportPath = Join-Path -Path $ReportsDir -ChildPath "startup_audit_$($env:COMPUTERNAME).txt"
     $StartLines = New-Object System.Collections.ArrayList
     [void]$StartLines.Add("DETAILED STARTUP APPLICATIONS AUDIT FOR: $env:COMPUTERNAME")

@@ -223,33 +223,51 @@ Write-Host "  BOOTSTRAP COMPLETE!" -ForegroundColor White
 Write-Host "==========================================================================" -ForegroundColor Magenta
 Start-Sleep -Seconds 1
 
-if ($Tool -eq "netaudit" -or $Tool -eq "4") {
-    Write-Host "Launching Network Security, Scanner & Diagnostics Auditor (6 Phases)..." -ForegroundColor Cyan
+if ($Tool -eq "inventory" -or $Tool -eq "1") {
+    Write-Host "Launching Hardware & Software Inventory Scanner..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "inventory\get_inventory.ps1"
+} elseif ($Tool -eq "netscan" -or $Tool -eq "subnet" -or $Tool -eq "2") {
+    Write-Host "Launching Network Subnet Discovery Scanner..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "inventory\scan_network.ps1"
+} elseif ($Tool -eq "remoteinv" -or $Tool -eq "3") {
+    Write-Host "Launching Remote WMI Network Inventory..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "inventory\remote_inventory.ps1"
+} elseif ($Tool -eq "netaudit" -or $Tool -eq "4") {
+    Write-Host "Launching Network Security & Port Exposure Auditor (6 Phases)..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "network_auditor\audit_network.ps1"
-} elseif ($Tool -eq "office" -or $Tool -eq "officefix" -or $Tool -eq "12") {
-    Write-Host "Launching MS Office Diagnostic & Repair Suite (All Versions)..." -ForegroundColor Cyan
-    $TargetScript = Join-Path $InstallDir "office_fixer\Repair-Office.ps1"
-} elseif ($Tool -eq "sharing" -or $Tool -eq "smbfix" -or $Tool -eq "10") {
-    Write-Host "Launching Windows 10/11 Shared Drive & USB Shared Printer Repair Suite..." -ForegroundColor Cyan
-    $TargetScript = Join-Path $InstallDir "network_sharing_fixer\fix_sharing.ps1"
-} elseif ($Tool -eq "sql" -or $Tool -eq "database" -or $Tool -eq "13") {
-    Write-Host "Launching SQL Database Port & Protocol Diagnostic Suite..." -ForegroundColor Cyan
-    $TargetScript = Join-Path $InstallDir "sql_database_fixer\fix_sql.ps1"
-} elseif ($Tool -eq "rdp" -or $Tool -eq "11") {
-    Write-Host "Launching Remote Desktop (RDP) & CredSSP Repair Suite..." -ForegroundColor Cyan
-    $TargetScript = Join-Path $InstallDir "rdp_fixer\fix_rdp.ps1"
-} elseif ($Tool -eq "defender" -or $Tool -eq "antivirus" -or $Tool -eq "14") {
-    Write-Host "Launching Windows Defender Signature Reset Suite..." -ForegroundColor Green
-    $TargetScript = Join-Path $InstallDir "antivirus_fixer\fix_antivirus.ps1"
+} elseif ($Tool -eq "slowness" -or $Tool -eq "sherlock" -or $Tool -eq "turbo" -or $Tool -eq "5") {
+    Write-Host "Launching Sherlock Slow PC Diagnostics Suite..." -ForegroundColor Yellow
+    $TargetScript = Join-Path $InstallDir "slowness_debug\slowness_detective.ps1"
+} elseif ($Tool -eq "search" -or $Tool -eq "indexing" -or $Tool -eq "6") {
+    Write-Host "Launching Windows Search & Indexing Repair Suite..." -ForegroundColor Green
+    $TargetScript = Join-Path $InstallDir "search_fixer\fix_search.ps1"
 } elseif ($Tool -eq "debloat" -or $Tool -eq "optimize" -or $Tool -eq "7") {
     Write-Host "Launching Windows 11 Debloat & Privacy Suite..." -ForegroundColor Green
     $TargetScript = Join-Path $InstallDir "win11_debloater\debloat.ps1"
-} elseif ($Tool -eq "printer" -or $Tool -eq "9") {
-    Write-Host "Launching Printer Diagnostic Suite..." -ForegroundColor Cyan
+} elseif ($Tool -eq "server" -or $Tool -eq "serveraudit" -or $Tool -eq "8") {
+    Write-Host "Launching Server Forensic & Configuration Audit..." -ForegroundColor Magenta
+    $TargetScript = Join-Path $InstallDir "server_audit\audit_server.ps1"
+} elseif ($Tool -eq "printer" -or $Tool -eq "spooler" -or $Tool -eq "9") {
+    Write-Host "Launching Printer Diagnostic & Management Suite..." -ForegroundColor Cyan
     $TargetScript = Join-Path $InstallDir "printer_manager\manage_printers.ps1"
-} elseif ($Tool -eq "inventory" -or $Tool -eq "1") {
-    Write-Host "Launching Hardware Inventory Scanner..." -ForegroundColor Cyan
-    $TargetScript = Join-Path $InstallDir "inventory\get_inventory.ps1"
+} elseif ($Tool -eq "sharing" -or $Tool -eq "smbfix" -or $Tool -eq "share" -or $Tool -eq "10") {
+    Write-Host "Launching Windows 10/11 Shared Drive & USB Shared Printer Repair Suite..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "network_sharing_fixer\fix_sharing.ps1"
+} elseif ($Tool -eq "rdp" -or $Tool -eq "remotedesktop" -or $Tool -eq "11") {
+    Write-Host "Launching Remote Desktop (RDP) & CredSSP Repair Suite..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "rdp_fixer\fix_rdp.ps1"
+} elseif ($Tool -eq "office" -or $Tool -eq "officefix" -or $Tool -eq "12") {
+    Write-Host "Launching MS Office Diagnostic & Repair Suite (All Versions)..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "office_fixer\Repair-Office.ps1"
+} elseif ($Tool -eq "pst" -or $Tool -eq "scanpst" -or $Tool -eq "pstfix" -or $Tool -eq "13") {
+    Write-Host "Launching Outlook PST / OST Recovery & 100GB Limit Expander..." -ForegroundColor Yellow
+    $TargetScript = Join-Path $InstallDir "office_fixer\Repair-PST.ps1"
+} elseif ($Tool -eq "sql" -or $Tool -eq "database" -or $Tool -eq "db" -or $Tool -eq "14") {
+    Write-Host "Launching SQL Database Port & Protocol Diagnostic Suite..." -ForegroundColor Cyan
+    $TargetScript = Join-Path $InstallDir "sql_database_fixer\fix_sql.ps1"
+} elseif ($Tool -eq "defender" -or $Tool -eq "antivirus" -or $Tool -eq "av" -or $Tool -eq "15") {
+    Write-Host "Launching Windows Defender Signature Reset & Exclusion Suite..." -ForegroundColor Green
+    $TargetScript = Join-Path $InstallDir "antivirus_fixer\fix_antivirus.ps1"
 } else {
     Write-Host "Launching OmviHub Master IT Toolkit Console..." -ForegroundColor White
     $TargetScript = Join-Path $InstallDir "windows_it_toolkit.ps1"

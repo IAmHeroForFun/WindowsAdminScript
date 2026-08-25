@@ -33,10 +33,14 @@ function Show-Header {
 # Helper function for user prompts
 function Ask-Option ($ActionText) {
     while ($true) {
-        $Response = Read-Host " -> $ActionText? [Y/N]"
+        $Response = Read-Host " -> $ActionText? [Y/N, Q to Cancel]"
         if ($Response -eq "Y" -or $Response -eq "y") { return $true }
         if ($Response -eq "N" -or $Response -eq "n") { return $false }
-        Write-Host "Please enter Y (yes) or N (no)." -ForegroundColor Yellow
+        if ($Response -eq "Q" -or $Response -eq "q") {
+            Write-Host "Operation cancelled by user." -ForegroundColor Yellow
+            return $false
+        }
+        Write-Host "Please enter Y (yes), N (no), or Q (cancel)." -ForegroundColor Yellow
     }
 }
 

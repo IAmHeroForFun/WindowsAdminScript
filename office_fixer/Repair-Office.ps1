@@ -147,7 +147,16 @@ if (Test-Path $ResetScript) {
     & $ResetScript
 }
 
-# 7. Licensing Status check
+# 7. Outlook PST & SCANPST Recovery
+if (Get-UserApproval "Scan for Outlook PST/OST files and execute PST recovery & 100GB limit expander?") {
+    Log-Msg "Executing Outlook PST recovery module..." "STAGE"
+    $PstScript = Join-Path $PSScriptRoot "Repair-PST.ps1"
+    if (Test-Path $PstScript) {
+        & $PstScript
+    }
+}
+
+# 8. Licensing Status check
 Log-Msg "Executing licensing and activation audit module..." "STAGE"
 $LicScript = Join-Path $PSScriptRoot "Export-Activation.ps1"
 if (Test-Path $LicScript) {

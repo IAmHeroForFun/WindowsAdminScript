@@ -10,10 +10,15 @@ Compatible with **Office 2010 (14.0), Office 2013 (15.0), and Office 2016/2019/2
 
 1. **Opt-in First-Run Experience Bypass**: Bypasses the initial update settings screens that cause immediate crashes on launch.
 2. **GPU Hardware Acceleration Disable**: Applies registry configs to disable graphics acceleration, a common cause of instant launch failures.
-3. **Outlook Profile & OST Cache Renamer**: Replaces corrupted offline exchange caches (`.ost`) and renames registry profiles recursively to force clean rebuilds.
-4. **Credential Manager Purger**: Clears stored Office and Outlook credentials to resolve credential prompt loops.
-5. **Permissions & Service Restorer**: Fixes system and administrator rights on Office folders/registry paths and repairs required services (`sppsvc`, `osppsvc`, etc.).
-6. **SFC and DISM System Integration**: Runs built-in system file checks to repair core OS component corruptions.
+3. **Outlook PST & OST Auto-Recovery**:
+   - **Automated SCANPST Locator**: Discovers Microsoft Outlook Inbox Repair Tool (`SCANPST.EXE`) across 32-bit & 64-bit Office 2010 to 365 paths.
+   - **PST Discovery**: Finds all `.pst` and `.ost` files across user profiles and displays sizes and status.
+   - **100GB Limit Expander**: Configures `MaxLargeFileSize` (100GB) and `WarnLargeFileSize` (95GB) in the registry.
+   - **PST Permission / Read-Only Unlocker**: Clears read-only file attributes (`attrib -r`) and restores NTFS ACL permissions.
+4. **Outlook Profile & OST Cache Renamer**: Replaces corrupted offline exchange caches (`.ost`) and renames registry profiles recursively to force clean rebuilds.
+5. **Credential Manager Purger**: Clears stored Office and Outlook credentials to resolve credential prompt loops.
+6. **Permissions & Service Restorer**: Fixes system and administrator rights on Office folders/registry paths and repairs required services (`sppsvc`, `osppsvc`, etc.).
+7. **SFC and DISM System Integration**: Runs built-in system file checks to repair core OS component corruptions.
 
 ---
 
@@ -22,19 +27,11 @@ Compatible with **Office 2010 (14.0), Office 2013 (15.0), and Office 2016/2019/2
 This suite is fully **interactive**. Before performing any action or changing any setting, you will be prompted with a yellow message:
 ```text
 >>> Reset Microsoft Office settings, clear caches, and backup/reset profiles?
-Proceed? (Y/N)
+Proceed? (Y/N, Q to Cancel)
 ```
 - Type `Y` (or `y`) to execute the action.
-- Type `N` (or `n` / press Enter) to skip the action. The script will log it as `[SKIPPED]` and continue.
-
----
-
-## 🔄 Rollback Procedures
-
-This suite is built with safety in mind. No settings or user data are permanently deleted.
-- **Registry Hives**: Backups are exported as `.reg` files inside the `Logs\` directory. To restore them, double-click the corresponding `.reg` file.
-- **Directories and normal templates**: Roaming/Local folders and files (like `Normal.dotm` or `*.ost`) are renamed to `*_Backup_TIMESTAMP` or `*.old`. To restore, rename them back to their original names.
-- **Rollback Instruction Log**: When renames are performed, a file named `Logs\Rollback_Instructions_*.txt` is generated, summarizing exactly which files and folders were renamed so you can quickly undo the changes.
+- Type `N` (or `n` / press Enter) to skip the action.
+- Type `Q` (or `q`) to cancel and return to the main menu.
 
 ---
 
@@ -43,7 +40,11 @@ This suite is built with safety in mind. No settings or user data are permanentl
 ### Run Locally
 Right-click `Run-As-Administrator.bat` and select **Run as Administrator**.
 
-### Web One-Liner
+### Web One-Liners
 ```powershell
+# MS Office Diagnostic & Repair Suite
 irm https://toolkit.omvihub.in/office | iex
+
+# Outlook PST Recovery & 100GB Limit Expander
+irm https://toolkit.omvihub.in/pst | iex
 ```

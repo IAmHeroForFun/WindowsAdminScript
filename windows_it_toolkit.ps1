@@ -1,5 +1,8 @@
-# Windows & Windows Server Master IT Administration Toolkit Menu
-# Compatible with Windows 7-11 & Windows Server 2008 R2-2025
+# ==========================================================================
+#   OmviHub Windows & Windows Server Master IT Administration Toolkit
+#   Massgrave (MAS) Minimalist High-Contrast Interface
+#   Compatible with Windows 7-11 & Windows Server 2008 R2-2025
+# ==========================================================================
 
 $ErrorActionPreference = "SilentlyContinue"
 
@@ -19,37 +22,44 @@ if (-not $PSScriptRoot) {
 
 while ($true) {
     Clear-Host
-    Write-Host "==========================================================================" -ForegroundColor Magenta
-    Write-Host "       WINDOWS & WINDOWS SERVER MASTER IT ADMINISTRATION TOOLKIT" -ForegroundColor Magenta
-    Write-Host "==========================================================================" -ForegroundColor Magenta
-    Write-Host "  System: $env:COMPUTERNAME | User: $env:USERNAME" -ForegroundColor DarkCyan
-    Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
+    $IsAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+    $AdminBadge = if ($IsAdmin) { "Elevated / Administrator" } else { "Standard User (Elevation Recommended)" }
+    $OSCaption = (Get-WmiObject -Class Win32_OperatingSystem -ErrorAction SilentlyContinue).Caption
+    if (-not $OSCaption) { $OSCaption = "Windows Operating System" }
+
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host " :: OmviHub Windows & Windows Server Master IT Toolkit (v2.5)" -ForegroundColor White
+    Write-Host " :: Host: $env:COMPUTERNAME | OS: $OSCaption" -ForegroundColor DarkCyan
+    Write-Host " :: User: $env:USERNAME | Privileges: $AdminBadge" -ForegroundColor DarkCyan
+    Write-Host "==========================================================================" -ForegroundColor Cyan
+    Write-Host ""
     Write-Host " [AUDIT & INVENTORY]" -ForegroundColor DarkYellow
-    Write-Host "  [1] Local Hardware & Installed Software Inventory Scanner" -ForegroundColor Cyan
-    Write-Host "  [2] Local Network Subnet IP & Active Host Discovery (Ping Sweep)" -ForegroundColor Cyan
-    Write-Host "  [3] Agentless Remote Network PC Inventory (WMI / CIM)" -ForegroundColor Cyan
-    Write-Host "  [4] Network Security, Open Port Exposure & Socket Auditor (6-Phases)" -ForegroundColor Cyan
+    Write-Host "  [1]  Local Hardware & Installed Software Inventory Scanner" -ForegroundColor White
+    Write-Host "  [2]  Local Network Subnet IP & Active Host Discovery (Ping Sweep)" -ForegroundColor White
+    Write-Host "  [3]  Agentless Remote Network PC Inventory (WMI / CIM)" -ForegroundColor White
+    Write-Host "  [4]  Network Security, Open Port Exposure & Socket Auditor (6-Phases)" -ForegroundColor White
     Write-Host ""
     Write-Host " [SYSTEM TUNE-UP & DEBLOAT]" -ForegroundColor DarkYellow
-    Write-Host "  [5] Sherlock Slow PC Performance Debugger & Turbo Tune-Up" -ForegroundColor Green
-    Write-Host "  [6] Windows Search & Indexing Repair Engine" -ForegroundColor Green
-    Write-Host "  [7] Windows 11 Enterprise Debloat & Privacy Optimizer" -ForegroundColor Green
+    Write-Host "  [5]  Sherlock Slow PC Performance Debugger & Turbo Tune-Up" -ForegroundColor Green
+    Write-Host "  [6]  Windows Search & Indexing Repair Suite (EDB, UWP & MAPI)" -ForegroundColor Green
+    Write-Host "  [7]  Windows 11 Enterprise Debloat & Privacy Optimizer" -ForegroundColor Green
     Write-Host ""
     Write-Host " [INFRASTRUCTURE & SERVER ADMIN]" -ForegroundColor DarkYellow
-    Write-Host "  [8] Server Security & Configuration Audit (GPOs, Accounts, SMB Shares)" -ForegroundColor Magenta
-    Write-Host "  [9] Local Print Spooler, Queue & Driver Manager" -ForegroundColor Magenta
+    Write-Host "  [8]  Server Security & Configuration Audit (GPOs, Accounts, Shares)" -ForegroundColor Magenta
+    Write-Host "  [9]  Local Print Spooler, Queue & Driver Manager" -ForegroundColor Magenta
     Write-Host "  [10] Windows 10/11 Network Folder & SMB Sharing Fixer" -ForegroundColor Magenta
     Write-Host "  [11] Remote Desktop (RDP) & CredSSP Connection Fixer" -ForegroundColor Magenta
     Write-Host ""
     Write-Host " [APPLICATION & DATABASE SUITES]" -ForegroundColor DarkYellow
-    Write-Host "  [12] MS Office & Outlook Interactive Diagnostic & Repair Suite" -ForegroundColor Yellow
-    Write-Host "  [13] SQL & Database Server Network Protocol Fixer (1433, 3306, 5432)" -ForegroundColor Yellow
-    Write-Host "  [14] Windows Defender Signature Reset & Exclusion Engine" -ForegroundColor Yellow
+    Write-Host "  [12] MS Office General Diagnostic & Configuration Reset Suite" -ForegroundColor Yellow
+    Write-Host "  [13] Outlook PST / OST Recovery, SCANPST Locator & 100GB Expander" -ForegroundColor Yellow
+    Write-Host "  [14] SQL Database Port & Protocol Diagnostic Fixer (1433, 3306, 5432)" -ForegroundColor Yellow
+    Write-Host "  [15] Windows Defender Signature Reset & Exclusion Engine" -ForegroundColor Yellow
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
-    Write-Host "  [Q] Exit Toolkit" -ForegroundColor DarkRed
-    Write-Host "==========================================================================" -ForegroundColor Magenta
+    Write-Host "  [Q]  Exit Toolkit" -ForegroundColor DarkRed
+    Write-Host "==========================================================================" -ForegroundColor Cyan
     
-    $Choice = Read-Host "Select a tool to execute [1-14, Q]"
+    $Choice = Read-Host "Select a tool to execute [1-15, Q]"
     
     switch ($Choice) {
         "1" {
@@ -151,7 +161,7 @@ while ($true) {
         }
         "12" {
             Clear-Host
-            Write-Host "Launching MS Office Diagnostic & Repair Suite..." -ForegroundColor Cyan
+            Write-Host "Launching MS Office General Diagnostic & Repair Suite..." -ForegroundColor Cyan
             $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "office_fixer\Repair-Office.ps1"
             if (Test-Path $ScriptPath) {
                 powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
@@ -162,6 +172,17 @@ while ($true) {
         }
         "13" {
             Clear-Host
+            Write-Host "Launching Outlook PST / OST Recovery & 100GB Limit Expander..." -ForegroundColor Cyan
+            $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "office_fixer\Repair-PST.ps1"
+            if (Test-Path $ScriptPath) {
+                powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath
+            } else {
+                Write-Host "Error: Cannot locate $ScriptPath" -ForegroundColor Red
+            }
+            Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        "14" {
+            Clear-Host
             Write-Host "Launching SQL Database Port & Protocol Diagnostic & Repair Suite..." -ForegroundColor Cyan
             $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "sql_database_fixer\fix_sql.ps1"
             if (Test-Path $ScriptPath) {
@@ -171,7 +192,7 @@ while ($true) {
             }
             Write-Host "`nPress Enter to return to Master Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
-        "14" {
+        "15" {
             Clear-Host
             Write-Host "Launching Windows Defender Signature Reset & Exclusion Repair Suite..." -ForegroundColor Green
             $ScriptPath = Join-Path -Path $PSScriptRoot -ChildPath "antivirus_fixer\fix_antivirus.ps1"
@@ -214,9 +235,8 @@ while ($true) {
             exit
         }
         default {
-            Write-Host "`nInvalid choice. Please enter 1-14, or Q." -ForegroundColor Red
+            Write-Host "`nInvalid choice. Please enter 1-15, or Q." -ForegroundColor Red
             Start-Sleep -Seconds 1
         }
     }
 }
-
