@@ -178,7 +178,7 @@ if (Get-UserApproval "Expand Outlook PST / OST file size limit from 50GB to 100G
             Set-ItemProperty -Path $PstRegKey -Name "WarnLargeFileSize" -Value $WarnLarge -PropertyType DWord -Force | Out-Null
             Log-Msg "  [OK] Successfully configured 100GB limit for Outlook version $Ver." "SUCCESS"
         } catch {
-            Log-Msg "  [ERROR] Failed to set registry limits for version $Ver: $($_.Exception.Message)" "ERROR"
+            Log-Msg "  [ERROR] Failed to set registry limits for version $($Ver) - $($_.Exception.Message)" "ERROR"
         }
     }
 }

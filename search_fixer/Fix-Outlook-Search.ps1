@@ -110,7 +110,7 @@ if (Get-UserApproval "Configure Outlook MAPI Search indexing registry values (En
             Set-ItemProperty -Path $SearchReg -Name "DisableServerAssistedSearch" -Value 1 -PropertyType DWord -Force | Out-Null
             Log-Msg "  [OK] Successfully configured Outlook MAPI Search keys for version $Ver." "SUCCESS"
         } catch {
-            Log-Msg "  [ERROR] Failed to set Outlook search keys for version $Ver: $($_.Exception.Message)" "ERROR"
+            Log-Msg "  [ERROR] Failed to set Outlook search keys for version $($Ver) - $($_.Exception.Message)" "ERROR"
         }
     }
 }
@@ -136,7 +136,7 @@ if (Get-UserApproval "Verify and repair .pst and .ost Windows Search IFilter han
             Set-ItemProperty -Path $HandlerPath -Name "(default)" -Value $ExpectedGuid -Force | Out-Null
             Log-Msg "  [OK] Persistent IFilter handler registered for $Ext ($ExpectedGuid)." "SUCCESS"
         } catch {
-            Log-Msg "  [ERROR] Failed to set filter handler for $Ext: $($_.Exception.Message)" "ERROR"
+            Log-Msg "  [ERROR] Failed to set filter handler for $($Ext) - $($_.Exception.Message)" "ERROR"
         }
     }
 }
