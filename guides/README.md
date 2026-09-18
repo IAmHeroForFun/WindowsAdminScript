@@ -26,6 +26,7 @@ Every script, sub-module, and infrastructure component in the toolkit has a dedi
 - [05. Sherlock Slow PC Performance Debugger & Turbo Tune-Up](05_SHERLOCK_SLOW_PC_DEBUGGER.md) - 7-Layer hardware bottleneck diagnostics, thermal throttling, disk health, and system cleanup (`slowness_detective.ps1`).
 - [06. Windows Search & Indexing Repair Suite (EDB, UWP & MAPI)](06_WINDOWS_AND_OUTLOOK_SEARCH_FIXER.md) - Windows Search Service reset, EDB database wipe, Start Menu UWP re-registration, and Outlook email search repair (`fix_search.ps1` & `Fix-Outlook-Search.ps1`).
 - [07. Windows 11 Enterprise Debloat & Privacy Optimizer](07_WINDOWS_11_DEBLOATER_OPTIMIZER.md) - UWP bloatware removal, diagnostic telemetry disabling, taskbar customization, and OneDrive toggles (`debloat.ps1`).
+- [17. Windows Update, WSUS & Component Store Repair Suite](17_WINDOWS_UPDATE_AND_WSUS_FIXER.md) - Service unhang, SoftwareDistribution/catroot2 purge, BITS queue reset, pending-reboot clear, WSUS bypass, and DISM/SFC health restore (`update_fixer/`).
 
 ---
 

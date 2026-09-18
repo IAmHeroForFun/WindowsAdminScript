@@ -22,11 +22,11 @@ irm https://toolkit.omvihub.in | iex
 
 ## 🧭 Master Menu & Suites Overview
 
-The toolkit organizes **15 enterprise tools** across 4 operational domains:
+The toolkit organizes **16 enterprise tools** across 4 operational domains:
 
 ```text
 ==========================================================================
- :: OmviHub Windows & Windows Server Master IT Toolkit (v2.5)
+ :: OmviHub Windows & Windows Server Master IT Toolkit (v2.6)
 ==========================================================================
 
  [AUDIT & INVENTORY]
@@ -39,18 +39,19 @@ The toolkit organizes **15 enterprise tools** across 4 operational domains:
   [5]  Sherlock Slow PC Performance Debugger & Turbo Tune-Up
   [6]  Windows Search & Indexing Repair Suite (EDB, UWP & MAPI)
   [7]  Windows 11 Enterprise Debloat & Privacy Optimizer
+  [8]  Windows Update, WSUS & Component Store (DISM/CBS) Repair Suite
 
  [INFRASTRUCTURE & SERVER ADMIN]
-  [8]  Server Security & Configuration Audit (GPOs, Accounts, Shares)
-  [9]  Local Print Spooler, Queue & Driver Manager
-  [10] Windows 10/11 Network Folder & SMB Sharing Fixer
-  [11] Remote Desktop (RDP) & CredSSP Connection Fixer
+  [9]  Server Security & Configuration Audit (GPOs, Accounts, Shares)
+  [10] Local Print Spooler, Queue & Driver Manager
+  [11] Windows 10/11 Network Folder & SMB Sharing Fixer
+  [12] Remote Desktop (RDP) & CredSSP Connection Fixer
 
  [APPLICATION & DATABASE SUITES]
-  [12] MS Office General Diagnostic & Configuration Reset Suite
-  [13] Outlook PST / OST Recovery, SCANPST Locator & 100GB Expander
-  [14] SQL Database Port & Protocol Diagnostic Fixer (1433, 3306, 5432)
-  [15] Windows Defender Signature Reset & Exclusion Engine
+  [13] MS Office General Diagnostic & Configuration Reset Suite
+  [14] Outlook PST / OST Recovery, SCANPST Locator & 100GB Expander
+  [15] SQL Database Port & Protocol Diagnostic Fixer (1433, 3306, 5432)
+  [16] Windows Defender Signature Reset & Exclusion Engine
 --------------------------------------------------------------------------
   [Q]  Exit Toolkit
 ==========================================================================
@@ -68,7 +69,7 @@ WindowsAdminScript/
 ├── toolkit.conf                       # Simplified Nginx reverse proxy configuration
 ├── install.ps1                        # Massgrave-style Web Bootstrapper (irm | iex)
 ├── Windows_IT_Toolkit.bat             # Master Interactive Menu Launcher (Double-Click)
-├── windows_it_toolkit.ps1             # Central Massgrave console connecting all 15 tools
+├── windows_it_toolkit.ps1             # Central Massgrave console connecting all 16 tools
 │
 ├── inventory/                         # 💻 Hardware & Software Inventory Scanner (Tools 1, 2, 3)
 │   ├── README.md                      # Suite documentation
@@ -98,17 +99,26 @@ WindowsAdminScript/
 │   ├── debloat.ps1                    # Bloatware uninstaller, telemetry & taskbar optimizer
 │   └── run_debloater.bat              # Double-click launcher
 │
-├── server_audit/                      # 🏛️ Server Forensic & Configuration Auditor (Tool 8)
+├── update_fixer/                      # 🔄 Windows Update & Component Store Fixer (Tool 8)
+│   ├── README.md                      # Suite documentation
+│   ├── fix_windows_update.ps1         # Main update repair coordinator
+│   ├── Reset-Update-Components.ps1    # SoftwareDistribution/catroot2 purge & BITS reset
+│   ├── Clear-Pending-Reboot.ps1       # Clears stuck CBS & WindowsUpdate reboot flags
+│   ├── Reset-WSUS-Policies.ps1        # WSUS policy bypass & Microsoft CDN toggle
+│   ├── Repair-Component-Store.ps1     # DISM component cleanup, restore & SFC scan
+│   └── Run-As-Administrator.bat       # Double-click launcher
+│
+├── server_audit/                      # 🏛️ Server Forensic & Configuration Auditor (Tool 9)
 │   ├── README.md                      # Suite documentation
 │   ├── audit_server.ps1               # Users, GPOs, Shares, Services & NTP audit
 │   └── run_server_audit.bat           # Double-click launcher
 │
-├── printer_manager/                   # 🖨️ Print Spooler, Queue & Driver Manager (Tool 9)
+├── printer_manager/                   # 🖨️ Print Spooler, Queue & Driver Manager (Tool 10)
 │   ├── README.md                      # Suite documentation
 │   ├── manage_printers.ps1            # Stuck queue purge, driver isolation & TCP ports
 │   └── run_printer_manager.bat        # Double-click launcher
 │
-├── network_sharing_fixer/             # 📂 Windows 10/11 SMB & USB Printer Sharing (Tool 10)
+├── network_sharing_fixer/             # 📂 Windows 10/11 SMB & USB Printer Sharing (Tool 11)
 │   ├── README.md                      # Suite documentation
 │   ├── fix_sharing.ps1                # Main SMB & printer sharing coordinator
 │   ├── Fix-SMB-Shares.ps1             # Guest auth, SMB signing & CNAME fixes
@@ -116,7 +126,7 @@ WindowsAdminScript/
 │   ├── Reset-Network-Sharing-Firewall.ps1 # Firewall rules for sharing & WSD
 │   └── Run-As-Administrator.bat       # Double-click launcher
 │
-├── rdp_fixer/                         # 🔑 Remote Desktop & CredSSP Oracle Repair (Tool 11)
+├── rdp_fixer/                         # 🔑 Remote Desktop & CredSSP Oracle Repair (Tool 12)
 │   ├── README.md                      # Suite documentation
 │   ├── fix_rdp.ps1                    # Main RDP coordinator
 │   ├── Fix-CredSSP-Oracle.ps1         # CredSSP remediation (0x800706BA)
@@ -124,7 +134,7 @@ WindowsAdminScript/
 │   ├── Configure-RDP-Port.ps1         # Custom RDP port manager
 │   └── Run-As-Administrator.bat       # Double-click launcher
 │
-├── office_fixer/                      # 📑 MS Office & Outlook PST Recovery Suite (Tools 12, 13)
+├── office_fixer/                      # 📑 MS Office & Outlook PST Recovery Suite (Tools 13, 14)
 │   ├── README.md                      # Suite documentation
 │   ├── Repair-Office.ps1              # Office 2010–365 diagnostics, reset & repair
 │   ├── Repair-PST.ps1                 # SCANPST locator & 100GB limit expander
@@ -136,7 +146,7 @@ WindowsAdminScript/
 │   ├── Install-Dependencies.ps1       # VC++ runtime & .NET check
 │   └── Run-As-Administrator.bat       # Double-click launcher
 │
-├── sql_database_fixer/                # 🗄️ SQL Database Port & Protocol Fixer (Tool 14)
+├── sql_database_fixer/                # 🗄️ SQL Database Port & Protocol Fixer (Tool 15)
 │   ├── README.md                      # Suite documentation
 │   ├── fix_sql.ps1                    # Main database fixer coordinator
 │   ├── Fix-MSSQL-Services-Protocols.ps1 # SQL Browser & TCP/IP protocol enable
@@ -144,7 +154,7 @@ WindowsAdminScript/
 │   ├── Audit-SQL-Connectivity.ps1     # Database port connectivity tester
 │   └── Run-As-Administrator.bat       # Double-click launcher
 │
-├── antivirus_fixer/                   # 🛡️ Windows Defender Reset & Exclusions (Tool 15)
+├── antivirus_fixer/                   # 🛡️ Windows Defender Reset & Exclusions (Tool 16)
 │   ├── README.md                      # Suite documentation
 │   ├── fix_antivirus.ps1              # Main Defender coordinator
 │   ├── Reset-Defender-Definitions.ps1 # MpCmdRun.exe definition wipe & update
@@ -153,8 +163,8 @@ WindowsAdminScript/
 │   └── Run-As-Administrator.bat       # Double-click launcher
 │
 └── guides/                            # 📖 Master Technical Documentation Library
-    ├── README.md                      # Navigation index for all 16 guides
-    └── 00_*.md to 16_*.md             # Complete architectural and technical reference manuals
+    ├── README.md                      # Navigation index for all 17 guides
+    └── 00_*.md to 17_*.md             # Complete architectural and technical reference manuals
 ```
 
 ---
