@@ -45,20 +45,12 @@ Every script, sub-module, and infrastructure component in the toolkit has a dedi
 
 ---
 
-## ⚡ Direct Web Shortcuts Quick Matrix
+## ⚡ Universal Web One-Liner
 
-| Target Tool | Web One-Liner Command |
-| :--- | :--- |
-| **Master IT Toolkit** | `irm https://toolkit.omvihub.in \| iex` |
-| **PST Repair & 100GB Expander** | `irm https://toolkit.omvihub.in/pst \| iex` |
-| **Windows & Outlook Search Fixer** | `irm https://toolkit.omvihub.in/search \| iex` |
-| **MS Office Repair Suite** | `irm https://toolkit.omvihub.in/office \| iex` |
-| **Network Security Auditor** | `irm https://toolkit.omvihub.in/netaudit \| iex` |
-| **SMB & Printer Sharing Fixer** | `irm https://toolkit.omvihub.in/sharing \| iex` |
-| **SQL & Database Protocol Fixer** | `irm https://toolkit.omvihub.in/sql \| iex` |
-| **Remote Desktop (RDP) Fixer** | `irm https://toolkit.omvihub.in/rdp \| iex` |
-| **Windows Defender Reset Suite** | `irm https://toolkit.omvihub.in/defender \| iex` |
-| **Windows 11 Debloater Suite** | `irm https://toolkit.omvihub.in/debloat \| iex` |
-| **Sherlock Slow PC Debugger** | `irm https://toolkit.omvihub.in/slowness \| iex` |
-| **Print Spooler Manager** | `irm https://toolkit.omvihub.in/printer \| iex` |
-| **Hardware Inventory Scanner** | `irm https://toolkit.omvihub.in/inventory \| iex` |
+To launch the complete Master IT Toolkit console containing all 15 administration and repair suites, run:
+
+```powershell
+irm https://toolkit.omvihub.in | iex
+```
+
+Once launched, you can immediately select any of the 15 tools directly from the interactive menu.

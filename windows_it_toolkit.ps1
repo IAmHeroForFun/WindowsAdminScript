@@ -207,9 +207,13 @@ while ($true) {
             Write-Host "`nExiting IT Toolkit. Have a productive day!" -ForegroundColor Cyan
             
             # Post-execution footprint cleanup (preserving reports)
+            # Safeguard: Only clean up if deployed via bootstrapper (C:\SysMaster or TEMP) and NEVER if inside a git repo!
             $InstallDir = $PSScriptRoot
-            if (Test-Path $InstallDir) {
-                Write-Host "`n[+] Cleaning up script files to leave no footprint (preserving reports)..." -ForegroundColor Cyan
+            $IsGitRepo = Test-Path (Join-Path $InstallDir ".git")
+            $IsTempOrSysMaster = ($InstallDir -match "SysMaster") -or ($InstallDir -match [regex]::Escape($env:TEMP))
+            
+            if (Test-Path $InstallDir -and -not $IsGitRepo -and $IsTempOrSysMaster) {
+                Write-Host "`n[+] Cleaning up temporary script files (preserving reports)..." -ForegroundColor Cyan
                 $TargetExtensions = @(".ps1", ".bat", ".cmd", ".md", ".conf")
                 
                 $Files = Get-ChildItem -Path $InstallDir -Recurse -File -Force -ErrorAction SilentlyContinue

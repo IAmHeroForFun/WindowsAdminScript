@@ -31,15 +31,6 @@ try {
 } catch {}
 
 # ---------------------------------------------------------
-# 0. DYNAMIC TOOL CONFIGURATION VIA PROXY PLACEHOLDER
-# ---------------------------------------------------------
-$DefaultTool = "DEFAULT_TOOL_PLACEHOLDER"
-if ($Tool -eq "" -and $DefaultTool -ne "DEFAULT_TOOL_PLACEHOLDER") {
-    $Tool = $DefaultTool
-}
-
-
-# ---------------------------------------------------------
 # 1. ENFORCE TLS 1.2 / 1.3 & SECURITY PROTOCOLS
 # ---------------------------------------------------------
 try {
@@ -76,13 +67,7 @@ if (-not (Test-IsAdmin)) {
             exit 1
         }
     } else {
-        $Url = "https://toolkit.omvihub.in/install.ps1"
-        if ($Tool -eq "inventory") { $Url = "https://toolkit.omvihub.in/inventory" }
-        elseif ($Tool -eq "printer") { $Url = "https://toolkit.omvihub.in/printer" }
-        elseif ($Tool -eq "debloat") { $Url = "https://toolkit.omvihub.in/debloat" }
-        elseif ($Tool -eq "netaudit") { $Url = "https://toolkit.omvihub.in/netaudit" }
-        
-        $CommandLine = "-NoExit -NoProfile -ExecutionPolicy Bypass -Command `"irm $Url | iex`""
+        $CommandLine = "-NoExit -NoProfile -ExecutionPolicy Bypass -Command `"irm https://toolkit.omvihub.in | iex`""
         
         try {
             Start-Process -FilePath "powershell.exe" -ArgumentList $CommandLine -Verb RunAs -Wait
@@ -284,7 +269,7 @@ if (Test-Path $TargetScript) {
 # ---------------------------------------------------------
 # 8. POST-EXECUTION FOOTPRINT CLEANUP (PRESERVING REPORTS)
 # ---------------------------------------------------------
-if (Test-Path $InstallDir) {
+if (Test-Path $InstallDir -and -not (Test-Path (Join-Path $InstallDir ".git"))) {
     Write-Host "`n[+] Cleaning up script files to leave no footprint (preserving reports)..." -ForegroundColor Cyan
     
     # Define file patterns to delete (scripts, launchers, markdowns, configurations)

@@ -13,14 +13,21 @@ if (-not $PSScriptRoot) {
     }
 }
 
-# Create Logs directory
-$LogsDir = Join-Path $PSScriptRoot "Logs"
-if (-not (Test-Path $LogsDir)) {
-    New-Item -ItemType Directory -Path $LogsDir -Force | Out-Null
+# Centralized report directory handling
+$ReportsDir = $null
+$ParentDir = Split-Path -Parent -Path $PSScriptRoot
+if ($ParentDir -match "SysMaster") {
+    $ReportsDir = Join-Path $ParentDir "reports"
+} else {
+    $ReportsDir = Join-Path $PSScriptRoot "Logs"
+}
+if (-not (Test-Path $ReportsDir)) {
+    New-Item -ItemType Directory -Path $ReportsDir -Force | Out-Null
 }
 
-$Global:LogFile = Join-Path $LogsDir "Repair.log"
-$ReportPath = Join-Path $LogsDir "RepairReport.txt"
+$Global:LogFile = Join-Path $ReportsDir "Repair.log"
+$ReportPath = Join-Path $ReportsDir "RepairReport.txt"
+$LogsDir = $ReportsDir
 $StartTime = [System.Diagnostics.Stopwatch]::StartNew()
 
 # Try to bypass Execution Policy for the current session/process
@@ -247,7 +254,7 @@ if ($Global:DependencyReport -and (($Global:DependencyReport.MissingRedists -ne 
     $Report.Add("                      If crash persists, run a full 'Online Repair' or perform a clean reinstall.")
 }
 $Report.Add("")
-$Report.Add("Detailed execution logs: Logs\Repair.log")
+$Report.Add("Detailed execution logs: $Global:LogFile")
 $Report.Add("==========================================================================")
 
 $Report | Out-File -FilePath $ReportPath -Encoding UTF8 -Force

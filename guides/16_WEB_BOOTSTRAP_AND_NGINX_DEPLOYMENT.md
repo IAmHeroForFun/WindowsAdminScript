@@ -33,7 +33,7 @@ Located on the Linux host / container:
 - **Port**: `443 ssl` (HTTP redirects to HTTPS 301)
 - **SSL Certificates**: `/etc/letsencrypt/live/toolkit.omvihub.in/fullchain.pem`
 - **Compression Rule**: `proxy_set_header Accept-Encoding "";` (Prevents gzip encoding issues inside PowerShell's `Invoke-RestMethod`).
-- **Dynamic Sub-filter Engine**: Rewrites URL shortcuts (e.g. `/pst`, `/search`, `/office`, `/sql`, `/sharing`) to pre-set `$Tool` variables in `install.ps1` before streaming to the client.
+- **Clean In-Memory Streaming**: Directly proxies `install.ps1` from GitHub raw for PowerShell User-Agents, and redirects standard web browsers to the GitHub repository.
 
 ---
 
@@ -51,5 +51,5 @@ docker exec omvi_blog-nginx-1 nginx -s reload
 
 ### Live Test from CachyOS / Linux:
 ```bash
-curl -sSL -A "PowerShell" https://toolkit.omvihub.in/pst | head -n 25
+curl -sSL -A "PowerShell" https://toolkit.omvihub.in | head -n 25
 ```

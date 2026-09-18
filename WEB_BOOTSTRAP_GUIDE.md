@@ -1,184 +1,105 @@
 # 🌐 OmviHub IT Toolkit - Web Bootstrapper & AWS Lightsail Deployment Guide
 
-This guide explains how to deploy your 7-module Windows IT Toolkit to GitHub and AWS Lightsail (Nginx) so any administrator can launch it globally using the Massgrave-style one-liner:
+This guide explains how to deploy your 15-module Windows IT Toolkit to GitHub and AWS Lightsail (Nginx) so any administrator can launch it globally using the clean single Massgrave-style one-liner:
 
 ```powershell
 irm https://toolkit.omvihub.in | iex
-# OR
-irm https://toolkit.omvihub.in/install.ps1 | iex
 ```
 
 ---
 
 ## 🏗️ How the Architecture Works
 
-1. When a user runs `irm https://toolkit.omvihub.in | iex`, AWS Lightsail Nginx serves the lightweight **`install.ps1` bootstrapper script**.
-2. That bootstrapper script:
-   * Requests **Administrator UAC elevation** if not already elevated.
-   * Enforces **TLS 1.2 / 1.3** security protocols.
-   * Downloads the latest toolkit release archive (`main.zip`) from GitHub (or directly from AWS Lightsail).
-   * Silently installs or synchronizes the modules directly into **`C:\SysMaster\`**.
-   * **Intelligent Preservation**: Updates all script logic while strictly protecting and preserving 100% of existing historical inventories (`inventory.csv`), reports, and logs!
-   * Unblocks all files and launches the interactive Master Menu console!
+1. When an administrator executes `irm https://toolkit.omvihub.in | iex`, AWS Lightsail Nginx detects PowerShell and proxies the lightweight **`install.ps1` bootstrapper script** directly from your GitHub repository.
+2. The bootstrapper script:
+   * **Elevation**: Automatically requests Administrator UAC elevation if not already elevated.
+   * **Security**: Enforces TLS 1.2 / 1.3 cryptographic protocols.
+   * **Acquisition**: Downloads the latest release archive from GitHub and synchronizes the modules directly into **`C:\SysMaster\`**.
+   * **Data Preservation**: Updates all script logic while strictly protecting and preserving 100% of existing historical inventories (`inventory.csv`), reports, and logs.
+   * **Execution**: Unblocks files and immediately launches the interactive Master Menu console (`windows_it_toolkit.ps1`).
+   * **Cleanup**: Upon exit (`Q`), temporary scripts are cleaned up, leaving only your generated reports in `C:\SysMaster\reports\`.
 
 ---
 
-## 🐙 Step 1: What to do on GitHub
+## 🐙 Step 1: Repository Structure on GitHub
 
-### 1. Push your Toolkit to GitHub
-Create a public repository (e.g., `https://github.com/omvihub/Windows-IT-Toolkit`) and push this entire directory structure:
+Ensure your public GitHub repository (`https://github.com/IAmHeroForFun/WindowsAdminScript`) contains the complete 15-tool hierarchy:
+
 ```text
-Windows-IT-Toolkit/
+WindowsAdminScript/
 ├── README.md
-├── install.ps1                    # 🌟 The bootstrapper script
+├── WEB_BOOTSTRAP_GUIDE.md
+├── toolkit.conf
+├── install.ps1                    # 🌟 Cloud bootstrapper
 ├── windows_it_toolkit.ps1         # Master menu script
-├── Windows_IT_Toolkit.bat         # Master double-click launcher
-├── inventory/
-├── slowness_debug/
-├── search_fixer/
-├── server_audit/
-├── printer_manager/
-├── win11_debloater/
-└── network_auditor/
+├── Windows_IT_Toolkit.bat         # Local double-click launcher
+├── inventory/                     # Local, subnet & remote inventory
+├── network_auditor/               # 6-phase socket & port auditor
+├── slowness_debug/                # Sherlock Slow PC debugger & tune-up
+├── search_fixer/                  # Windows & Outlook search repair
+├── win11_debloater/               # Windows 11 enterprise debloater
+├── server_audit/                  # Server security & forensic auditor
+├── printer_manager/               # Spooler, queues & driver isolation
+├── network_sharing_fixer/         # Windows 10/11 SMB & USB printer sharing
+├── rdp_fixer/                     # RDP & CredSSP Oracle repair
+├── office_fixer/                  # MS Office diagnostic & PST recovery
+├── sql_database_fixer/            # Database ports & MSSQL protocols
+├── antivirus_fixer/               # Defender reset & exclusions
+└── guides/                        # Technical documentation library
 ```
 
-### 2. Verify your ZIP Download URL
-In your public repo, your default download URL will be:
-`https://github.com/IAmHeroForFun/WindowsAdminScript/archive/refs/heads/master.zip`
-
-*(Note: If your GitHub username or repository name is different, open `install.ps1` and update line 15: `$DownloadUrl = "https://..."`).*
-
 ---
 
-## ☁️ Step 2: What to do on AWS Lightsail (Nginx Setup)
+## ☁️ Step 2: AWS Lightsail Nginx Setup
 
-Connect to your AWS Lightsail Linux instance (Ubuntu / Debian / Amazon Linux) via SSH and follow these exact steps:
+Connect to your AWS Lightsail Linux instance via SSH and configure Nginx:
 
-### 1. Create the Web Root Directory
-Create the folder where Nginx will store your bootstrapper script:
+### 1. Web Root Directory
 ```bash
 sudo mkdir -p /var/www/toolkit
 sudo chown -R www-data:www-data /var/www/toolkit
 ```
 
-### 2. Copy `install.ps1` to AWS Lightsail
-Upload `install.ps1` from your local machine to `/var/www/toolkit/install.ps1` on your AWS server (using SFTP/SCP or by cloning your git repo directly on the server):
-```bash
-cd /var/www/toolkit
-sudo wget https://raw.githubusercontent.com/omvihub/Windows-IT-Toolkit/main/install.ps1 -O install.ps1
-```
-*(If you want AWS Lightsail to serve the ZIP directly instead of GitHub, also download or copy `main.zip` into `/var/www/toolkit/toolkit.zip` and update `$DownloadUrl` in `install.ps1` to `https://toolkit.omvihub.in/toolkit.zip`!)*
-
-### 3. Ensure Valid SSL / TLS (HTTPS is Mandatory)
-PowerShell `irm` requires a valid SSL certificate. Use Certbot to generate a Let's Encrypt certificate:
+### 2. Ensure Valid SSL / TLS (Certbot)
+PowerShell's `irm` requires a trusted HTTPS certificate:
 ```bash
 sudo apt update && sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d toolkit.omvihub.in
 ```
 
-### 4. Locate & Configure Your Nginx Server Block
-Depending on your AWS Lightsail OS image, your Nginx configuration file is located in one of these paths:
+### 3. Apply Zero-Maintenance Nginx Configuration
+Edit `/etc/nginx/conf.d/toolkit.conf` (or `/etc/nginx/sites-available/toolkit.omvihub.in`):
 
-- **Amazon Linux 2 / Amazon Linux 2023 / RHEL / CentOS**: 
-  `/etc/nginx/conf.d/toolkit.conf` (or edit `/etc/nginx/nginx.conf` directly)
-- **Bitnami Stack (WordPress / LAMP / Nginx)**: 
-  `/opt/bitnami/nginx/conf/server_blocks/toolkit.conf` (or `/opt/bitnami/nginx/conf/bitnami/bitnami-ssl.conf`)
-- **Ubuntu / Debian (Standard Nginx)**: 
-  `/etc/nginx/sites-available/toolkit.omvihub.in` (symlinked to `sites-enabled`)
-
-> **🔍 Don't know where your Nginx file is?** Run this command in SSH to find your exact config path instantly:
-> ```bash
-> sudo nginx -t
-> # Or find all active server blocks:
-> sudo grep -rnw "server_name" /etc/nginx /opt/bitnami 2>/dev/null
-> ```
-
-Open your Nginx configuration file in an editor (e.g., `sudo nano /path/to/your/nginx.conf`):
-Paste the following **Zero-Maintenance Auto-Fetch Nginx Configuration** inside your file (this proxies directly to GitHub so you NEVER have to manually log into AWS or run `wget` again!):
 ```nginx
 server {
-    listen 80;
-    listen 443 ssl http2;
     server_name toolkit.omvihub.in;
+    root /var/www/toolkit;
 
-    # SSL Certificates (managed by Certbot)
+    # SSL Certificates managed by Certbot
+    listen [::]:443 ssl ipv6only=on;
+    listen 443 ssl;
     ssl_certificate /etc/letsencrypt/live/toolkit.omvihub.in/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/toolkit.omvihub.in/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
-    root /var/www/toolkit;
-    index install.ps1 index.html;
+    # Global Proxy Settings for GitHub Raw Content
+    proxy_ssl_server_name on;
+    proxy_ssl_name raw.githubusercontent.com;
+    proxy_http_version 1.1;
+    proxy_set_header Host raw.githubusercontent.com;
+    proxy_set_header Connection "";
+    proxy_set_header Accept-Encoding ""; # Prevents gzip compression issues in PowerShell
 
-    # 1. MASTER TOOLKIT BOOTSTRAPPER (irm https://toolkit.omvihub.in | iex)
+    # Root Install Script Handler
     location = /install.ps1 {
-        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
-        proxy_pass https://raw.githubusercontent.com;
-        proxy_set_header Host raw.githubusercontent.com;
-        proxy_ssl_server_name on;
-        default_type text/plain;
-        add_header Content-Type "text/plain; charset=utf-8";
-        add_header Cache-Control "no-cache, no-store, must-revalidate";
-    }
-    location = /get { rewrite ^ /install.ps1 last; }
-
-    # 2. DIRECT SHORTCUT: Hardware Inventory Scanner (irm https://toolkit.omvihub.in/inventory | iex)
-    location ~* ^/(inventory|inventory\.ps1|scan)$ {
-        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
-        proxy_pass https://raw.githubusercontent.com;
-        proxy_set_header Host raw.githubusercontent.com;
-        proxy_ssl_server_name on;
-        proxy_set_header Accept-Encoding ""; # Prevent gzip compression so sub_filter works
-        sub_filter 'DEFAULT_TOOL_PLACEHOLDER' 'inventory';
-        sub_filter_once on;
+        proxy_pass https://raw.githubusercontent.com/IAmHeroForFun/WindowsAdminScript/master/install.ps1;
         default_type text/plain;
         add_header Content-Type "text/plain; charset=utf-8";
         add_header Cache-Control "no-cache, no-store, must-revalidate";
     }
 
-    # 3. DIRECT SHORTCUT: Printer Diagnostic Suite (irm https://toolkit.omvihub.in/printer | iex)
-    location ~* ^/(printer|print|spooler)$ {
-        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
-        proxy_pass https://raw.githubusercontent.com;
-        proxy_set_header Host raw.githubusercontent.com;
-        proxy_ssl_server_name on;
-        proxy_set_header Accept-Encoding "";
-        sub_filter 'DEFAULT_TOOL_PLACEHOLDER' 'printer';
-        sub_filter_once on;
-        default_type text/plain;
-        add_header Content-Type "text/plain; charset=utf-8";
-        add_header Cache-Control "no-cache, no-store, must-revalidate";
-    }
-
-    # 4. DIRECT SHORTCUT: Windows 11 Debloater Suite (irm https://toolkit.omvihub.in/debloat | iex)
-    location ~* ^/(debloat|debloater|optimize)$ {
-        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
-        proxy_pass https://raw.githubusercontent.com;
-        proxy_set_header Host raw.githubusercontent.com;
-        proxy_ssl_server_name on;
-        proxy_set_header Accept-Encoding "";
-        sub_filter 'DEFAULT_TOOL_PLACEHOLDER' 'debloat';
-        sub_filter_once on;
-        default_type text/plain;
-        add_header Content-Type "text/plain; charset=utf-8";
-        add_header Cache-Control "no-cache, no-store, must-revalidate";
-    }
-
-    # 5. DIRECT SHORTCUT: Network Security Auditor Suite (irm https://toolkit.omvihub.in/netaudit | iex)
-    location ~* ^/(netaudit|ports|socket|netstat)$ {
-        rewrite ^ /IAmHeroForFun/WindowsAdminScript/master/install.ps1 break;
-        proxy_pass https://raw.githubusercontent.com;
-        proxy_set_header Host raw.githubusercontent.com;
-        proxy_ssl_server_name on;
-        proxy_set_header Accept-Encoding "";
-        sub_filter 'DEFAULT_TOOL_PLACEHOLDER' 'netaudit';
-        sub_filter_once on;
-        default_type text/plain;
-        add_header Content-Type "text/plain; charset=utf-8";
-        add_header Cache-Control "no-cache, no-store, must-revalidate";
-    }
-
-    # 6. MASSGRAVE ROUTING TRICK:
-    # If root (/) is requested by PowerShell or curl/wget -> serve install.ps1 via live proxy!
-    # If root (/) is requested by a Web Browser -> redirect to GitHub repo!
+    # Massgrave Root Router (PowerShell gets install script, Browser gets GitHub repo)
     location = / {
         if ($http_user_agent ~* "PowerShell|curl|wget|WindowsPowerShell") {
             rewrite ^/$ /install.ps1 last;
@@ -186,10 +107,20 @@ server {
         return 301 https://github.com/IAmHeroForFun/WindowsAdminScript;
     }
 }
+
+server {
+    if ($host = toolkit.omvihub.in) {
+        return 301 https://$host$request_uri;
+    }
+
+    listen 80;
+    listen [::]:80;
+    server_name toolkit.omvihub.in;
+    return 404;
+}
 ```
 
-### 5. Test and Reload Nginx
-Test your configuration for syntax errors and restart Nginx:
+### 4. Test & Reload Nginx
 ```bash
 sudo nginx -t
 sudo systemctl reload nginx
@@ -197,55 +128,12 @@ sudo systemctl reload nginx
 
 ---
 
-## 🚀 Step 3: Global Execution Test & Multi-Tool Shortcuts!
+## 🚀 Step 3: Global Execution
 
-You are now ready to test! On any Windows 10, Windows 11, or Windows Server machine anywhere in the world, open PowerShell as Administrator and run any of your global one-liners:
+On any Windows 7–11 or Windows Server machine worldwide, open PowerShell and run:
 
-### 🌟 1. Master IT Toolkit Console (All 7 Modules)
 ```powershell
 irm https://toolkit.omvihub.in | iex
-# or: irm https://toolkit.omvihub.in/install.ps1 | iex
 ```
 
-### 💻 2. Hardware Inventory Scanner (Direct Launch)
-```powershell
-irm https://toolkit.omvihub.in/inventory | iex
-# or: irm https://toolkit.omvihub.in/inventory.ps1 | iex
-```
-
-### 🖨️ 3. Printer Diagnostic Suite (Direct Launch)
-```powershell
-irm https://toolkit.omvihub.in/printer | iex
-# or: irm https://toolkit.omvihub.in/printer.ps1 | iex
-```
-
-### 🚀 4. Windows 11 Debloat Suite (Direct Launch)
-```powershell
-irm https://toolkit.omvihub.in/debloat | iex
-# or: irm https://toolkit.omvihub.in/debloat.ps1 | iex
-```
-
-### 🌐 5. Network Security & Port Exposure Auditor (Direct Launch)
-```powershell
-irm https://toolkit.omvihub.in/netaudit | iex
-# or: irm https://toolkit.omvihub.in/netaudit.ps1 | iex
-```
-
-> **🎉 Pro Tip**: Because Nginx is configured as a Live GitHub Proxy, whenever you push changes to your GitHub repo, ALL of these shortcuts update globally in real-time without ever touching your AWS server!
-
----
-
-## 🛠️ Troubleshooting SSL/TLS Errors
-
-If a client system throws an SSL/TLS error such as `Could not create SSL/TLS secure channel` when running `irm`:
-
-### 1. Pre-enforce TLS 1.2 in PowerShell
-```powershell
-[Net.ServicePointManager]::SecurityProtocol = 3072; irm https://toolkit.omvihub.in | iex
-```
-
-### 2. Bypass Certificate Validation (Corporate Proxies)
-```powershell
-[System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}; [Net.ServicePointManager]::SecurityProtocol = 3072; irm https://toolkit.omvihub.in | iex
-```
-
+The bootstrapper runs automatically, elevates if needed, downloads the suite, launches the master menu with all 15 tools, and cleanly exits when done.
