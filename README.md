@@ -204,16 +204,19 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   - Hard purge of stuck, orphaned print spool jobs, clearing dead spooler files (`.SHD` and `.SPL`).
   - Terminates hung driver isolation processes (`PrintIsolationHost.exe`) and cleanly restarts `Spooler`.
   - Audits network printer ports, testing TCP port 9100 and ping latency to identify offline physical printers.
+  - Fleet inventory scan with Windows Protected Print (WPP) assessment and driver model (Type 3 vs Type 4) classification.
+  - Multi-layer shared printer UNC target diagnostic (`\\HOST\Printer` testing DNS, TCP 445 SMB, TCP 135 RPC, and SMB share namespace).
+  - Inspects `Microsoft-Windows-PrintService/Admin` event logs and decodes Win32 error codes (`0x11b`, `0x709`, `0xbc4`, `0x7c`, Error 5).
   - Enables Print Driver Isolation to prevent buggy vendor drivers from crashing the spooler service.
   - Removes stale, orphaned printer ports and uninstalled printer queues.
   - Creates Standard TCP/IP network printer ports and queues via command line.
-- **Output**: `C:\SysMaster\reports\printer_fleet_<ComputerName>.csv`
+- **Output**: `C:\SysMaster\reports\printer_inventory.csv` and `printer_path_test_<Timestamp>.txt`
 
 #### 11. Windows 10/11 Network Folder & SMB Sharing Fixer
 - **Primary Coordinator**: `network_sharing_fixer/fix_sharing.ps1`
 - **Sub-modules**:
   - `Fix-SMB-Shares.ps1`: Remediates insecure guest authentication and SMB signing.
-  - `Fix-Shared-Printers.ps1`: Remediates RPC errors `0x0000011b`, `0x00000bc4`, and Point & Print restrictions.
+  - `Fix-Shared-Printers.ps1`: Remediates RPC errors `0x0000011b`, `0x00000bc4`, and Point & Print restrictions with safe temporary relaxation.
   - `Reset-Network-Sharing-Firewall.ps1`: Unblocks File/Printer Sharing and WSD Discovery rules.
 - **Launcher**: `network_sharing_fixer/Run-As-Administrator.bat`
 - **Documentation**: [Guide 10: SMB & USB Printer Sharing](guides/10_SMB_SHARE_USB_PRINTER_REPAIR.md)
@@ -221,8 +224,10 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   - Sets `AllowInsecureGuestAuth = 1` and `RequireSecuritySignature = 0` to restore connectivity to legacy NAS appliances.
   - Configures `DisableStrictNameChecking = 1` and `DnsOnWire = 1` to enable connecting to file shares via DNS CNAME aliases.
   - Enables Network Discovery background services: `fdPHost`, `FDResPub`, `SSDPSRV`, `lmhosts`.
+  - Safe Temporary Point & Print Relaxation: Connects shared printers without admin blocks and **automatically restores original security posture** in `finally`.
   - Fixes Windows 10/11 USB shared printer connection failure `0x0000011b` (`RpcAuthnLevelPrivacyEnabled = 0`).
-  - Bypasses Point and Print driver restrictions (`RestrictDriverInstallationToAdministrators = 0`).
+  - Configures modern Windows 11 / Server 2022+ RPC protocol policies (`RpcUseNamedPipeProtocol = 1`, `RpcProtocols = 7`).
+  - Active Directory Domain GPO lock guard to prevent silent domain policy reverts.
   - Bypasses KB5089549 vulnerable printer driver blocklist (`VulnerableDriverBlocklistEnable = 0`).
 - **Output**: `C:\SysMaster\reports\SharingFixReport.txt` and `SharingFix.log`
 

@@ -1,0 +1,30 @@
+# External & Reference Projects
+Windows-Printer-Sharing-Fix-main/
+
+# Generated Reports & Inventories (Preserved locally, excluded from git)
+inventory.csv
+reports/
+Reports/
+logs/
+Logs/
+backups/
+installed_software/
+
+# Temporary Files, Dumps & Registry Backups
+*.log
+*.tmp
+*.bak
+*.old
+*.reg
+*.dmp
+
+# Windows / OS Artifacts
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE & Editor Configurations
+.vscode/
+.idea/
+*.suo
+*.user

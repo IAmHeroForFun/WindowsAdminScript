@@ -29,6 +29,82 @@ if (-not (Test-Path $ReportDir)) {
     New-Item -ItemType Directory -Path $ReportDir -Force | Out-Null
 }
 
+function Test-FastTcpPort {
+    param(
+        [string]$HostName,
+        [int]$Port,
+        [int]$TimeoutMs = 2500
+    )
+    try {
+        $client = New-Object System.Net.Sockets.TcpClient
+        $iar = $client.BeginConnect($HostName, $Port, $null, $null)
+        $wh = $iar.AsyncWaitHandle
+        if (-not $wh.WaitOne($TimeoutMs, $false)) {
+            $client.Close()
+            return $false
+        }
+        $client.EndConnect($iar)
+        $client.Close()
+        return $true
+    } catch {
+        return $false
+    }
+}
+
+function Get-WindowsProtectedPrintState {
+    $wppState = @{
+        Supported = $false
+        Enabled   = $false
+        Details   = "Not supported / Disabled"
+    }
+    try {
+        $wppKey = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Print\Features\WPP"
+        if (Test-Path $wppKey) {
+            $wppState.Supported = $true
+            $val = (Get-ItemProperty -Path $wppKey -Name "Enabled" -ErrorAction SilentlyContinue).Enabled
+            if ($val -eq 1) {
+                $wppState.Enabled = $true
+                $wppState.Details = "ENABLED (Legacy v3 third-party drivers blocked)"
+            } else {
+                $wppState.Details = "SUPPORTED (Currently Disabled)"
+            }
+        }
+        $wppPolicyKey = "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\ProtectedPrint"
+        if (Test-Path $wppPolicyKey) {
+            $pVal = (Get-ItemProperty -Path $wppPolicyKey -Name "Enabled" -ErrorAction SilentlyContinue).Enabled
+            if ($pVal -eq 1) {
+                $wppState.Enabled = $true
+                $wppState.Details = "ENABLED via Group Policy (Legacy v3 third-party drivers blocked)"
+            }
+        }
+    } catch {}
+    return $wppState
+}
+
+function Get-DriverModelClassification {
+    param([string]$DriverName)
+    $res = @{
+        Model    = "Unknown"
+        Provider = "Unknown"
+    }
+    if (-not $DriverName) { return $res }
+    try {
+        $drv = Get-PrinterDriver -Name $DriverName -ErrorAction SilentlyContinue
+        if ($drv) {
+            if ($drv.MajorVersion -eq 4) { $res.Model = "Type 4 (V4)" }
+            elseif ($drv.MajorVersion -eq 3) { $res.Model = "Type 3 (V3)" }
+            else { $res.Model = "Type $($drv.MajorVersion)" }
+            
+            if ($drv.Manufacturer -match "Microsoft" -or $drv.Provider -match "Microsoft") {
+                $res.Provider = "Microsoft Class"
+            } else {
+                $res.Provider = "Third-Party"
+            }
+        }
+    } catch {}
+    return $res
+}
+
 function Show-Header {
     Clear-Host
     Write-Host "==========================================================================" -ForegroundColor Yellow
@@ -41,16 +117,18 @@ function Show-Header {
 while ($true) {
     Show-Header
     Write-Host "  [1] Diagnose Spooler & Force Purge Stuck Queue (Error Fix)" -ForegroundColor Cyan
-    Write-Host "  [2] Run Printer Fleet Inventory Scan (Export to CSV)" -ForegroundColor Cyan
+    Write-Host "  [2] Run Printer Fleet Inventory Scan (Export to CSV & WPP Check)" -ForegroundColor Cyan
     Write-Host "  [3] Diagnose Network Printer Port Latency & Connectivity (Ping/TCP)" -ForegroundColor Cyan
     Write-Host "  [4] Configure Print Driver Isolation (Prevent Spooler Crashes)" -ForegroundColor Cyan
     Write-Host "  [5] Purge Stale/Orphaned Ports & Offline Printers (Cleanup)" -ForegroundColor Cyan
     Write-Host "  [6] Add Standard TCP/IP Network Printer Port & Queue" -ForegroundColor Cyan
+    Write-Host "  [7] Diagnose Shared Printer Target Path (\\HOST\Printer - DNS/SMB/RPC)" -ForegroundColor Cyan
+    Write-Host "  [8] Analyze PrintService Event Logs & Decode Win32 Error Codes" -ForegroundColor Cyan
     Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "  [Q] Return to Master Menu" -ForegroundColor DarkRed
     Write-Host "==========================================================================" -ForegroundColor Yellow
     
-    $Choice = Read-Host "Select a printer administration tool [1-6, Q]"
+    $Choice = Read-Host "Select a printer administration tool [1-8, Q]"
     
     switch ($Choice) {
         "1" {
@@ -110,17 +188,40 @@ while ($true) {
         
         "2" {
             Show-Header
-            Write-Host "Scanning Printer Fleet Inventory..." -ForegroundColor Cyan
+            Write-Host "Scanning Printer Fleet Inventory & Security Posture..." -ForegroundColor Cyan
+            
+            # 1. Windows Protected Print (WPP) Assessment
+            $Wpp = Get-WindowsProtectedPrintState
+            Write-Host "`nWindows Protected Print (WPP): $($Wpp.Details)" -ForegroundColor (if ($Wpp.Enabled) { "Yellow" } else { "Green" })
+            if ($Wpp.Enabled) {
+                Write-Host "  [!] Notice: When WPP is enabled, Windows blocks third-party v3 print drivers." -ForegroundColor DarkYellow
+            }
             
             $Printers = Get-Printer
             if ($Printers) {
                 Write-Host "`nFound $($Printers.Count) printers configured on this system." -ForegroundColor Green
-                $Printers | Format-Table Name, Type, PortName, DriverName, Shared, Published -AutoSize | Out-String | Write-Host -ForegroundColor DarkCyan
+                
+                # Enrich with driver model & provider
+                $EnrichedPrinters = foreach ($P in $Printers) {
+                    $class = Get-DriverModelClassification $P.DriverName
+                    [PSCustomObject]@{
+                        Name           = $P.Name
+                        DriverModel    = $class.Model
+                        DriverProvider = $class.Provider
+                        PortName       = $P.PortName
+                        DriverName     = $P.DriverName
+                        Shared         = $P.Shared
+                        Published      = $P.Published
+                        JobCount       = $P.JobCount
+                    }
+                }
+                
+                $EnrichedPrinters | Format-Table Name, DriverModel, DriverProvider, PortName, Shared -AutoSize | Out-String | Write-Host -ForegroundColor DarkCyan
                 
                 $CsvPath = Join-Path $ReportDir "printer_inventory.csv"
                 Write-Host "[+] Exporting detailed list to CSV: $CsvPath" -ForegroundColor Cyan
                 
-                $Printers | Select-Object Name, ComputerName, Type, PortName, DriverName, PrintProcessor, JobCount, Shared, Published | Export-Csv -Path $CsvPath -NoTypeInformation -Force
+                $EnrichedPrinters | Export-Csv -Path $CsvPath -NoTypeInformation -Force
                 
                 if (Test-Path $CsvPath) {
                     Write-Host "`n[VERIFICATION] CSV Inventory successfully written to [printer_inventory.csv](file://$($CsvPath.Replace('\','/')))" -ForegroundColor Green
@@ -512,6 +613,188 @@ while ($true) {
             Write-Host "`nPress Enter to return to Printer Menu..." -ForegroundColor DarkGray; [void](Read-Host)
         }
         
+        "7" {
+            Show-Header
+            Write-Host "Diagnose Shared Printer Target Path (\\HOST\Printer)..." -ForegroundColor Cyan
+            Write-Host "Tests multi-layer reachability: DNS -> TCP 445 (SMB) -> TCP 135 (RPC) -> Namespace -> Local bind." -ForegroundColor DarkGray
+            Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
+            
+            $TargetUnc = (Read-Host "`nEnter shared printer path (e.g. \\PRINTSVR\OfficeLaser)").Trim()
+            if ($TargetUnc -match '^\\\\([^\\]+)\\([^\\]+)$') {
+                $TargetHost = $Matches[1]
+                $TargetShare = $Matches[2]
+                
+                $ReportLines = [System.Collections.ArrayList]@()
+                $ReportLines.Add("==========================================================================") | Out-Null
+                $ReportLines.Add("       SHARED PRINTER TARGET PATH DIAGNOSTIC REPORT") | Out-Null
+                $ReportLines.Add("==========================================================================") | Out-Null
+                $ReportLines.Add("Target UNC Path : $TargetUnc") | Out-Null
+                $ReportLines.Add("Target Host     : $TargetHost") | Out-Null
+                $ReportLines.Add("Target Share    : $TargetShare") | Out-Null
+                $ReportLines.Add("Timestamp       : $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')") | Out-Null
+                $ReportLines.Add("--------------------------------------------------------------------------") | Out-Null
+                
+                Write-Host "`n[1/5] Testing Host Name Resolution (DNS / NetBIOS)..." -ForegroundColor Cyan
+                $HostIp = $null
+                try {
+                    $addrs = [System.Net.Dns]::GetHostAddresses($TargetHost)
+                    if ($addrs.Count -gt 0) {
+                        $HostIp = $addrs[0].IPAddressToString
+                        Write-Host "  -> [OK] Resolved $TargetHost to IP: $HostIp" -ForegroundColor Green
+                        $ReportLines.Add("  [PASS] Host Resolution: $HostIp") | Out-Null
+                    } else {
+                        Write-Host "  -> [FAIL] Host name could not be resolved." -ForegroundColor Red
+                        $ReportLines.Add("  [FAIL] Host Resolution: Failed") | Out-Null
+                    }
+                } catch {
+                    Write-Host "  -> [FAIL] Host resolution error: $($_.Exception.Message)" -ForegroundColor Red
+                    $ReportLines.Add("  [FAIL] Host Resolution: $($_.Exception.Message)") | Out-Null
+                }
+                
+                Write-Host "`n[2/5] Testing Port 445 (SMB File & Printer Sharing)..." -ForegroundColor Cyan
+                $SmbReachable = Test-FastTcpPort $TargetHost 445 2500
+                if ($SmbReachable) {
+                    Write-Host "  -> [OK] TCP Port 445 (SMB) is OPEN and reachable." -ForegroundColor Green
+                    $ReportLines.Add("  [PASS] TCP 445 (SMB): Open") | Out-Null
+                } else {
+                    Write-Host "  -> [FAIL] TCP Port 445 is CLOSED or filtered by firewall." -ForegroundColor Red
+                    $ReportLines.Add("  [FAIL] TCP 445 (SMB): Unreachable") | Out-Null
+                }
+                
+                Write-Host "`n[3/5] Testing Port 135 (RPC Endpoint Mapper)..." -ForegroundColor Cyan
+                $RpcReachable = Test-FastTcpPort $TargetHost 135 2500
+                if ($RpcReachable) {
+                    Write-Host "  -> [OK] TCP Port 135 (RPC Mapper) is OPEN and reachable." -ForegroundColor Green
+                    $ReportLines.Add("  [PASS] TCP 135 (RPC Mapper): Open") | Out-Null
+                } else {
+                    Write-Host "  -> [WARN] TCP Port 135 is CLOSED or filtered. Print Spooler RPC calls may fail." -ForegroundColor Yellow
+                    $ReportLines.Add("  [WARN] TCP 135 (RPC Mapper): Unreachable") | Out-Null
+                }
+                
+                # Check for explicit RPC TCP Port policy
+                $RpcTcpPortKey = "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\RPC"
+                if (Test-Path $RpcTcpPortKey) {
+                    $prop = (Get-ItemProperty -Path $RpcTcpPortKey -Name "RpcTcpPort" -ErrorAction SilentlyContinue).RpcTcpPort
+                    if ($prop -and [int]$prop -gt 0) {
+                        Write-Host "`n[*] Configured Print RPC Static TCP Port detected: $prop" -ForegroundColor Cyan
+                        $CustomRpcReachable = Test-FastTcpPort $TargetHost [int]$prop 2500
+                        if ($CustomRpcReachable) {
+                            Write-Host "  -> [OK] Static RPC Port $prop is OPEN and reachable." -ForegroundColor Green
+                            $ReportLines.Add("  [PASS] Static RPC Port $prop: Open") | Out-Null
+                        } else {
+                            Write-Host "  -> [FAIL] Static RPC Port $prop is NOT reachable." -ForegroundColor Red
+                            $ReportLines.Add("  [FAIL] Static RPC Port $prop: Unreachable") | Out-Null
+                        }
+                    }
+                }
+                
+                Write-Host "`n[4/5] Testing SMB Share Namespace Access (\\$TargetHost\)..." -ForegroundColor Cyan
+                $NamespaceOk = Test-Path -LiteralPath "\\$TargetHost\" -ErrorAction SilentlyContinue
+                if ($NamespaceOk) {
+                    Write-Host "  -> [OK] Share namespace accessible. Target host accepts SMB file/print shares." -ForegroundColor Green
+                    $ReportLines.Add("  [PASS] Share Namespace (\\$TargetHost\): Accessible") | Out-Null
+                } else {
+                    Write-Host "  -> [WARN] Share namespace is not accessible (credentials, guest policy, or share permissions may restrict access)." -ForegroundColor Yellow
+                    $ReportLines.Add("  [WARN] Share Namespace (\\$TargetHost\): Inaccessible") | Out-Null
+                }
+                
+                Write-Host "`n[5/5] Checking Local Printer Connection Status..." -ForegroundColor Cyan
+                $InstalledLocally = $false
+                try {
+                    $existing = Get-Printer | Where-Object { $_.Name -eq $TargetUnc }
+                    if ($existing) {
+                        $InstalledLocally = $true
+                        Write-Host "  -> [INFO] Printer '$TargetUnc' is ALREADY installed locally (Driver: $($existing.DriverName))." -ForegroundColor Green
+                        $ReportLines.Add("  [INFO] Local Installation: Already connected ($($existing.DriverName))") | Out-Null
+                    } else {
+                        Write-Host "  -> [INFO] Printer '$TargetUnc' is not currently installed on this client." -ForegroundColor DarkCyan
+                        $ReportLines.Add("  [INFO] Local Installation: Not connected") | Out-Null
+                    }
+                } catch {
+                    Write-Host "  -> Unable to query local printer list." -ForegroundColor Yellow
+                }
+                
+                # Summary Assessment
+                Write-Host "`n--------------------------------------------------------------------------" -ForegroundColor DarkGray
+                Write-Host "Triage Assessment:" -ForegroundColor Yellow
+                if (-not $HostIp) {
+                    Write-Host "  -> Root Cause: DNS/Name resolution failure. Ensure host name is correct or add to hosts/DNS." -ForegroundColor Red
+                } elseif (-not $SmbReachable) {
+                    Write-Host "  -> Root Cause: Network firewall blocking SMB (Port 445) or host is offline." -ForegroundColor Red
+                } elseif (-not $NamespaceOk) {
+                    Write-Host "  -> Root Cause: SMB reachable but share access denied. Check guest auth, password restrictions, or credentials." -ForegroundColor Yellow
+                } elseif (-not $RpcReachable) {
+                    Write-Host "  -> Caution: Port 135 blocked. Printer sharing may require RPC over Named Pipes fallback." -ForegroundColor Yellow
+                } else {
+                    Write-Host "  -> Network Path is Healthy! Ready to bind printer queue." -ForegroundColor Green
+                }
+                
+                # Save Report
+                $DiagReportPath = Join-Path $ReportDir "printer_path_test_$(Get-Date -Format 'yyyyMMdd_HHmmss').txt"
+                $ReportLines.Add("--------------------------------------------------------------------------") | Out-Null
+                $ReportLines | Out-File -FilePath $DiagReportPath -Encoding UTF8 -Force
+                Write-Host "`nDetailed report saved to: [printer_path_test](file://$($DiagReportPath.Replace('\','/')))" -ForegroundColor Green
+            } else {
+                Write-Host "`nInvalid printer UNC path format. Must be formatted like \\HOST\PrinterName." -ForegroundColor Red
+            }
+            Write-Host "`nPress Enter to return to Printer Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        
+        "8" {
+            Show-Header
+            Write-Host "Analyzing PrintService Event Logs & Decoding Win32 Error Codes..." -ForegroundColor Cyan
+            Write-Host "Inspecting Microsoft-Windows-PrintService/Admin for connection & driver failures." -ForegroundColor DarkGray
+            Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
+            
+            try {
+                $Events = Get-WinEvent -FilterHashtable @{
+                    LogName = 'Microsoft-Windows-PrintService/Admin'
+                    Level   = 1, 2, 3
+                } -MaxEvents 25 -ErrorAction Stop
+                
+                if ($Events) {
+                    Write-Host "`nFound $($Events.Count) recent PrintService warning/error events:`n" -ForegroundColor Yellow
+                    
+                    foreach ($E in $Events) {
+                        $Msg = ($E.Message -replace '\s+', ' ').Trim()
+                        if ($Msg.Length -gt 130) { $Msg = $Msg.Substring(0, 130) + "..." }
+                        
+                        Write-Host "[$($E.TimeCreated.ToString('yyyy-MM-dd HH:mm:ss'))] Event ID: $($E.Id)" -ForegroundColor DarkCyan
+                        Write-Host "  Message: $Msg" -ForegroundColor Gray
+                        
+                        # Win32 Error Code Decoder
+                        if ($E.Id -eq 808 -or $Msg -match "error code|failed with error|0x[0-9a-fA-F]+") {
+                            Write-Host "  [DIAGNOSIS & REMEDIATION]:" -ForegroundColor Yellow
+                            if ($Msg -match "0x0000011b|0x11b") {
+                                Write-Host "   -> Error 0x0000011b (RPC Packet Privacy): Print Spooler requires encryption." -ForegroundColor Red
+                                Write-Host "   -> Solution: In Network Sharing Fixer, apply 'RpcAuthnLevelPrivacyEnabled = 0' or match RPC privacy on both host & client." -ForegroundColor Green
+                            } elseif ($Msg -match "0x00000709|0x709") {
+                                Write-Host "   -> Error 0x00000709 (Invalid Printer Name / RPC Binding): Client failed to bind to host RPC spooler." -ForegroundColor Red
+                                Write-Host "   -> Solution: Configure RPC over Named Pipes (RpcUseNamedPipeProtocol = 1) or verify CNAME alias policy." -ForegroundColor Green
+                            } elseif ($Msg -match "0x00000bc4|0xbc4") {
+                                Write-Host "   -> Error 0x00000bc4 (No Printers Were Found): Windows 11 default RPC over TCP blocked." -ForegroundColor Red
+                                Write-Host "   -> Solution: Enable RPC over Named Pipes fallback in Network Sharing Fixer." -ForegroundColor Green
+                            } elseif ($Msg -match "0x0000007c|0x7c") {
+                                Write-Host "   -> Error 0x0000007c (CopyFiles Spooler Policy Block): Blocked by Point & Print driver copy restriction." -ForegroundColor Red
+                                Write-Host "   -> Solution: Enable CopyFilesPolicy = 1 in Network Sharing Fixer." -ForegroundColor Green
+                            } elseif ($Msg -match "error 5\b|0x80070005|Access is denied") {
+                                Write-Host "   -> Error 5 / Access Denied: Blocked by Point and Print driver installation protection." -ForegroundColor Red
+                                Write-Host "   -> Solution: Use 'Temporary Point & Print Relaxation' in Network Sharing Fixer to connect without admin elevation." -ForegroundColor Green
+                            } else {
+                                Write-Host "   -> Check driver compatibility, Spooler service state, or firewall settings." -ForegroundColor DarkYellow
+                            }
+                        }
+                        Write-Host "--------------------------------------------------------------------------" -ForegroundColor DarkGray
+                    }
+                }
+            } catch {
+                Write-Host "`nNo recent PrintService/Admin events found or event log channel is disabled." -ForegroundColor Green
+                Write-Host "Details: $($_.Exception.Message)" -ForegroundColor DarkGray
+            }
+            
+            Write-Host "`nPress Enter to return to Printer Menu..." -ForegroundColor DarkGray; [void](Read-Host)
+        }
+        
         "Q" {
             return
         }
@@ -519,7 +802,7 @@ while ($true) {
             return
         }
         default {
-            Write-Host "`nInvalid choice. Please enter 1-6, or Q." -ForegroundColor Red
+            Write-Host "`nInvalid choice. Please enter 1-8, or Q." -ForegroundColor Red
             Start-Sleep -Seconds 1
         }
     }
