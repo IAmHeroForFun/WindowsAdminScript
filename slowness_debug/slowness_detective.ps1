@@ -79,6 +79,16 @@ $AvgCpu = if ($CpuSamples.Count -gt 0) { [Math]::Round(($CpuSamples | Measure-Ob
 Write-Host "   -> CPU Specs: $CPUName ($Cores Cores | ${MaxClock} MHz)" -ForegroundColor DarkCyan
 [void]$ReportLines.Add("CPU Model: $CPUName ($Cores Cores)")
 
+# Thermal & Power Throttling (0.79 GHz Clamp Check)
+$CurrentClock = if ($CPUProc) { @($CPUProc)[0].CurrentClockSpeed } else { $null }
+if ($CurrentClock -and $MaxClock -ne "N/A" -and [int]$MaxClock -ge 1800 -and [int]$CurrentClock -le 850) {
+    $Score -= 30
+    $ThrottleMsg = "[CRITICAL ALERT] CPU THERMAL/POWER THROTTLE DETECTED: Clamped at ${CurrentClock} MHz (0.79 GHz bug vs ${MaxClock} MHz max)! PROCHOT or power limit is severely choking the system."
+    Write-Host "   $ThrottleMsg" -ForegroundColor Red
+    [void]$IssuesFound.Add("CPU Clamped at ${CurrentClock} MHz (PROCHOT / Thermal Throttling)")
+    [void]$ReportLines.Add($ThrottleMsg)
+}
+
 if ($AvgCpu -lt 50) {
     $Msg = "[OK] CPU PULSE: Healthy ($AvgCpu% total utilization). No CPU bottlenecks detected."
     Write-Host "   $Msg" -ForegroundColor Green
@@ -103,6 +113,25 @@ foreach ($P in $TopCpu) {
     $PLine = "      * $($P.ProcessName.PadRight(25)) | CPU Time: $([Math]::Round($P.CPU, 1))s | RAM: $([Math]::Round($P.WorkingSet/1MB)) MB"
     Write-Host $PLine -ForegroundColor DarkGray
     [void]$ReportLines.Add($PLine)
+}
+
+# WmiPrvSE Process Trace
+$WmiHog = $TopCpu | Where-Object { $_.ProcessName -match "WmiPrvSE" }
+if ($WmiHog) {
+    Write-Host "   [!] WMI Provider Host (WmiPrvSE.exe) is consuming high CPU! Tracing client activity..." -ForegroundColor Yellow
+    try {
+        $WmiEvents = Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-WMI-Activity/Operational'; ID=5858} -MaxEvents 5 -ErrorAction SilentlyContinue
+        if ($WmiEvents) {
+            Write-Host "       Recent WMI Query Clients:" -ForegroundColor DarkYellow
+            foreach ($we in $WmiEvents) {
+                if ($we.Message -match "ClientProcessId = (\d+)") {
+                    $cpid = $Matches[1]
+                    $cpname = (Get-Process -Id $cpid -ErrorAction SilentlyContinue).ProcessName
+                    Write-Host "       -> Client PID $cpid ($cpname) triggered WMI event" -ForegroundColor DarkGray
+                }
+            }
+        }
+    } catch {}
 }
 Write-Host ""
 
@@ -183,6 +212,25 @@ if ($DiskFreePct -gt 15) {
     [void]$IssuesFound.Add("Low Drive C: Free Space (${DiskFreeGB} GB left)")
 }
 [void]$ReportLines.Add($Msg)
+
+# Storage Response Latency & Queue Depth Audit
+try {
+    $DiskPerf = @(Get-WmiHelper -Class "Win32_PerfFormattedData_PerfDisk_PhysicalDisk" | Where-Object { $_.Name -like "*C:*" -or $_.Name -match "_Total" })[0]
+    if ($DiskPerf) {
+        $LatencySec = [double]$DiskPerf.AvgDiskSecPerTransfer
+        $LatencyMs = [Math]::Round($LatencySec * 1000)
+        $QueueLen = [int]$DiskPerf.CurrentDiskQueueLength
+        if ($LatencyMs -gt 50 -or $QueueLen -gt 5) {
+            $Score -= 20
+            $LatMsg = "[WARN] STORAGE BOTTLENECK: High disk response latency (${LatencyMs}ms / Queue: $QueueLen)! Applications will freeze."
+            Write-Host "   $LatMsg" -ForegroundColor Yellow
+            [void]$IssuesFound.Add("High disk latency (${LatencyMs}ms)")
+            [void]$ReportLines.Add($LatMsg)
+        } else {
+            Write-Host "   -> Storage Latency: ${LatencyMs}ms (Queue Length: $QueueLen) - Healthy" -ForegroundColor DarkCyan
+        }
+    }
+} catch {}
 
 # Audit Temp Junk Files & Recycle Bin
 $UserTempFiles = @(Get-ChildItem -Path $env:TEMP -File -Recurse -ErrorAction SilentlyContinue)
@@ -460,7 +508,17 @@ if (Get-UserApproval "Execute Advanced System Disk Cleanup & Update Cache Purge?
         Write-Host "    -> Deleted $LogDeletedCount Windows log files." -ForegroundColor Green
     }
     
-    Write-Host "    [DONE] Advanced System Disk Cleanup completed." -ForegroundColor Green
+    # 5. Delivery Optimization cache
+        $DoPath = "C:\Windows\SoftwareDistribution\DeliveryOptimization"
+        if (Test-Path $DoPath) {
+            Write-Host "    [EXEC] Purging Delivery Optimization cache..." -ForegroundColor Green
+            try {
+                Get-ChildItem -Path "$DoPath\*" -Recurse -Force -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue | Out-Null
+                Write-Host "    -> Cleaned Delivery Optimization cache." -ForegroundColor Green
+            } catch {}
+        }
+        
+        Write-Host "    [DONE] Advanced System Disk Cleanup completed." -ForegroundColor Green
 } else {
     Write-Host "    [SKIP] Skipped advanced disk cleanup." -ForegroundColor DarkYellow
 }

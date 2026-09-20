@@ -17,6 +17,7 @@ Zero external dependencies — uses only native PowerShell and Windows built-in 
 | **R** | Interactive Remediation | Prompts Y/N per unsafe/caution port. Offers **[K]ill Process** or **[B]lock in Firewall** with system-process safety guards. |
 | **5** | Subnet IP & Port Scanner | Auto-detects local subnet, runs a parallel async ping sweep, then TCP-probes each live host for 10 common management ports (SSH, RDP, SMB, HTTP/S, WinRM, MSSQL, MySQL, Telnet). |
 | **6** | Latency & DNS Diagnostics | 10-packet ping audit (Gateway / LAN DNS / Google / Cloudflare / Quad9) with min/max/avg/loss table, DNS resolution speed benchmark across 5 resolvers, and a 6-hop traceroute. |
+| **7** | Network Remediation & Repair | 1-click universal network stack reset (Winsock, TCP/IP, ARP, DNS, DHCP) and local subnet duplicate IP address conflict detection (Event 4199 & ARP audit). |
 
 ---
 

@@ -672,6 +672,78 @@ Write-Host ""
 Write-Host "  [+] Diagnostics report saved to: $DiagTxtPath" -ForegroundColor Green
 
 # ===========================================================================
+# AUDIT PHASE 7: NETWORK REMEDIATION & REPAIR TOOLS
+# ===========================================================================
+Show-SectionHeader "AUDIT PHASE 7: NETWORK REMEDIATION & REPAIR TOOLS"
+Write-Host "  Available quick repair actions:" -ForegroundColor White
+Write-Host "    [R] Universal 1-Click Network Stack Reset (Winsock, TCP/IP, ARP, DNS, DHCP)" -ForegroundColor Cyan
+Write-Host "    [C] Detect Local Subnet Duplicate IP Conflicts (Event 4199 & ARP Audit)" -ForegroundColor Cyan
+Write-Host "    [S] Skip and proceed to summary" -ForegroundColor DarkGray
+Write-Host ""
+$RemChoice = (Read-Host "Select a remediation action [R, C, S]").Trim().ToUpperInvariant()
+
+if ($RemChoice -eq "R") {
+    Write-Host ""
+    Write-Host ">>> Reset entire Windows Network Stack (Winsock, TCP/IP, DNS, ARP)?" -ForegroundColor Yellow
+    $ConfirmReset = (Read-Host "Proceed? (Y/N)").Trim().ToUpperInvariant()
+    if ($ConfirmReset -eq "Y") {
+        Write-Host "`n  [+] Resetting Winsock catalog..." -ForegroundColor Cyan
+        cmd.exe /c "netsh winsock reset" | Out-Null
+        Write-Host "  [+] Resetting TCP/IP protocol stack..." -ForegroundColor Cyan
+        cmd.exe /c "netsh int ip reset" | Out-Null
+        Write-Host "  [+] Flushing and re-registering DNS resolver cache..." -ForegroundColor Cyan
+        cmd.exe /c "ipconfig /flushdns" | Out-Null
+        cmd.exe /c "ipconfig /registerdns" | Out-Null
+        Write-Host "  [+] Purging NetBIOS remote cache names..." -ForegroundColor Cyan
+        cmd.exe /c "nbtstat -R" | Out-Null
+        Write-Host "  [+] Refreshing DHCP leases..." -ForegroundColor Cyan
+        cmd.exe /c "ipconfig /release" | Out-Null
+        cmd.exe /c "ipconfig /renew" | Out-Null
+        Write-Host "  [OK] Network stack successfully refreshed!" -ForegroundColor Green
+    }
+} elseif ($RemChoice -eq "C") {
+    Write-Host "`n  [+] Auditing local network for IP address conflicts..." -ForegroundColor Cyan
+    $ConflictDetected = $false
+    
+    # 1. Check Event Log for Event ID 4199
+    try {
+        $EvtConflicts = Get-WinEvent -FilterHashtable @{LogName='System'; ID=4199} -MaxEvents 5 -ErrorAction SilentlyContinue
+        if ($EvtConflicts) {
+            $ConflictDetected = $true
+            Write-Host "  [!] IP Address Conflict detected in Windows System Event Log (Event ID 4199):" -ForegroundColor Red
+            foreach ($ev in $EvtConflicts) {
+                Write-Host "      -> Time: $($ev.TimeCreated) | $($ev.Message -replace '\s+', ' ')" -ForegroundColor DarkYellow
+            }
+        }
+    } catch {}
+    
+    # 2. Check ARP cache for duplicate MACs
+    try {
+        $ArpLines = cmd.exe /c "arp -a"
+        $MacMap = @{}
+        foreach ($line in $ArpLines) {
+            if ($line -match "^\s*([0-9\.]+)\s+([0-9a-fA-F\-]{17})\s+") {
+                $ip = $Matches[1]
+                $mac = $Matches[2].ToLowerInvariant()
+                if ($mac -ne "ff-ff-ff-ff-ff-ff" -and $mac -notmatch "^01-00-5e") {
+                    if ($MacMap.ContainsKey($mac)) {
+                        $ConflictDetected = $true
+                        Write-Host "  [!] Duplicate MAC entry found in ARP table: $mac is mapped to both $($MacMap[$mac]) and $ip!" -ForegroundColor Red
+                    } else {
+                        $MacMap[$mac] = $ip
+                    }
+                }
+            }
+        }
+    } catch {}
+    
+    if (-not $ConflictDetected) {
+        Write-Host "  [OK] No active IP address conflicts detected on local subnet." -ForegroundColor Green
+    }
+    Write-Host "`nPress Enter to continue..." -ForegroundColor DarkGray; [void](Read-Host)
+}
+
+# ===========================================================================
 # COMPLETION
 # ===========================================================================
 Write-Host ""

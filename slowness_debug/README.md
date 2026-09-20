@@ -1,22 +1,36 @@
 # 🕵️‍♂️ Sherlock Slow: PC Slowness Detective & Turbo Fixer
 
-A fun, interactive, and colorful performance profiling tool designed to explain *why* a Windows PC feels sluggish in plain English and offer an immediate, safe one-click turbo tune-up.
+A comprehensive, interactive performance profiling tool designed to diagnose *why* a Windows PC feels sluggish and provide targeted, safe one-click turbo tune-ups.
 
 ---
 
 ## 🏎️ What Sherlock Slow Investigates
 
-1. **CPU Health & High-Speed Police Check**: Samples real-time CPU load and identifies the top 3 processes hogging processing power.
-2. **Brain Capacity (RAM Audit)**: Calculates available vs. consumed physical RAM and alerts on memory overflows and memory-leaking applications.
-3. **Hard Drive Engine & Storage Closet**: Detects mechanical spinning hard drives (HDDs) vs. solid-state drives (SSDs) and checks if low C: drive free space (< 15%) is choking Windows.
-4. **Zombie Uptime Audit**: Measures how many days the PC has run without a clean reboot to spot ghost memory accumulation.
-5. **Backseat Drivers (Boot Applications)**: Enumerates auto-launching registry items slowing down startup times.
+1. **CPU Health, Throttling & Resource Hog Audit**:
+   - Samples real-time CPU utilization and identifies the top 5 processes hogging processing power.
+   - **PROCHOT Thermal / Power Throttling Detection**: Compares current CPU clock speed vs. maximum rating to catch the infamous **0.79 GHz clamp** (thermal or faulty sensor lock).
+   - **WMI Provider Host (`WmiPrvSE.exe`) Tracer**: Pinpoints rogue client processes submitting excessive WMI queries when WMI CPU usage spikes.
+2. **Memory & Pagefile Capacity (RAM Audit)**:
+   - Calculates available vs. consumed physical RAM and alerts on memory overflows and aggressive disk paging.
+3. **Hard Drive Engine & Storage Latency**:
+   - Detects mechanical spinning hard drives (HDDs) vs. high-speed NVMe/SATA SSDs.
+   - **Storage Response Latency & Queue Depth**: Audits average transfer latency (`AvgDiskSecPerTransfer`) to catch disk freezes (>50ms response times).
+   - Flags low C: drive free space (< 15%).
+4. **Zombie Uptime & Pending Reboot Audit**:
+   - Measures continuous uptime days and detects pending Windows Update reboots causing background maintenance overhead.
+5. **Backseat Drivers (Startup Applications)**:
+   - Enumerates auto-launching registry items slowing down boot times.
 
 ---
 
 ## 🚀 How to Use
 
-1. Double-click **`run_slowness_detective.bat`**.
-2. Sherlock Slow will inspect the system and output a fun colored report card with a **Speed Health Score (0–100)**.
-3. When prompted `Run Turbo Speed Boost? (Y/N)`, press **Y** or Enter to sweep user temporary files, flush internet DNS caches, and empty the Recycle Bin instantly!
-4. A permanent case file is automatically saved into the `reports/` subdirectory.
+### Local Run
+Double-click **`run_slowness_detective.bat`**.
+
+### Centralized Web Execution
+Via the master toolkit entrypoint:
+```powershell
+irm https://toolkit.omvihub.in | iex
+```
+Select `[5] Sherlock Slow PC Diagnostics Suite`.

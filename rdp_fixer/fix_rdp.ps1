@@ -89,14 +89,54 @@ if (Test-Path $EnableScript) {
     & $EnableScript
 }
 
-# 4. Configure RDP Port
+# 4. Fix Windows 11 UDP Session Freezes
+Log-Msg "Executing Windows 11 RDP UDP freeze & disconnect repair module..." "STAGE"
+$UdpScript = Join-Path $PSScriptRoot "Fix-RDP-UDP-Freeze.ps1"
+if (Test-Path $UdpScript) {
+    & $UdpScript
+}
+
+# 5. Fix Black Screen on RDP Connection (WDDM Display Driver Fallback)
+Log-Msg "Executing RDP black screen graphics driver repair module..." "STAGE"
+$BlackScreenScript = Join-Path $PSScriptRoot "Fix-RDP-BlackScreen.ps1"
+if (Test-Path $BlackScreenScript) {
+    & $BlackScreenScript
+}
+
+# 6. Configure RDP Port
 Log-Msg "Executing RDP Port inspection & configuration module..." "STAGE"
 $PortScript = Join-Path $PSScriptRoot "Configure-RDP-Port.ps1"
 if (Test-Path $PortScript) {
     & $PortScript
 }
 
-# 5. Generate Summary Report
+# 7. Optional Target Host Diagnostic Probe
+if (Get-UserApproval "Test network connectivity & RDP port reachability to a remote host?") {
+    $TargetHost = (Read-Host "Enter remote hostname or IP address (e.g. 192.168.1.50 or SERVER-01)").Trim()
+    $TargetPort = Read-Host "Enter target RDP port [Press Enter for 3389]"
+    if (-not $TargetPort -or $TargetPort -notmatch "^\d+$") { $TargetPort = 3389 } else { $TargetPort = [int]$TargetPort }
+    
+    if ($TargetHost) {
+        Log-Msg "Testing reachability to $TargetHost on port $TargetPort..."
+        try {
+            $client = New-Object System.Net.Sockets.TcpClient
+            $iar = $client.BeginConnect($TargetHost, $TargetPort, $null, $null)
+            $wh = $iar.AsyncWaitHandle
+            if ($wh.WaitOne(3000, $false)) {
+                $client.EndConnect($iar)
+                $client.Close()
+                Log-Msg "  [OK] TCP Port $TargetPort on $TargetHost is OPEN and reachable!" "SUCCESS"
+            } else {
+                $client.Close()
+                Log-Msg "  [FAIL] TCP Port $TargetPort on $TargetHost timed out (closed or firewall blocked)." "ERROR"
+            }
+        } catch {
+            Log-Msg "  [FAIL] Connection error to $TargetHost: $($_.Exception.Message)" "ERROR"
+        }
+    }
+}
+
+# 8. Generate Summary Report
 $StartTime.Stop()
 $ElapsedTime = $StartTime.Elapsed
 
@@ -124,6 +164,8 @@ $Report.Add("REPAIRS & CONFIGURATIONS:")
 $Report.Add("   - CredSSP Policy: Set AllowEncryptionOracle = 2 (Fixes RDP Error 0x800706BA / 0x80090308)")
 $Report.Add("   - Remote Desktop: Set fDenyTSConnections = 0 (RDP Service Enabled)")
 $Report.Add("   - Windows Firewall: Enabled Remote Desktop Firewall Group")
+$Report.Add("   - UDP Disconnect Fix: Set fClientDisableUDP = 1 & SelectTransport = 1 (TCP only)")
+$Report.Add("   - Black Screen Fix: Set fEnableWddmDriver = 0 (XDDM fallback)")
 $Report.Add("   - Terminal Services: TermService restarted successfully")
 $Report.Add("")
 $Report.Add("Log file location: $Global:LogFile")

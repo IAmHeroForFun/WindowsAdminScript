@@ -63,6 +63,17 @@ Log-Msg "   WINDOWS DEFENDER SIGNATURE RESET & EXCLUSION REPAIR SUITE" "STAGE"
 Log-Msg "==========================================================================" "STAGE"
 Log-Msg "Execution started on $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 
+# 0. Tamper Protection State Audit
+$TamperKey = "HKLM:\SOFTWARE\Microsoft\Windows Defender\Features"
+if (Test-Path $TamperKey) {
+    $tpVal = (Get-ItemProperty -Path $TamperKey -Name "TamperProtection" -ErrorAction SilentlyContinue).TamperProtection
+    if ($tpVal -eq 5) {
+        Log-Msg "  [NOTICE] Windows Defender Tamper Protection is ENABLED. Core registry modifications to Defender are locked by the kernel." "WARN"
+    } elseif ($tpVal -eq 0) {
+        Log-Msg "  [INFO] Windows Defender Tamper Protection is DISABLED." "INFO"
+    }
+}
+
 # 1. System Restore Point Creation
 if (Get-UserApproval "Create a Windows System Restore Point before proceeding?") {
     Log-Msg "Creating System Restore Point..."
@@ -75,28 +86,51 @@ if (Get-UserApproval "Create a Windows System Restore Point before proceeding?")
     }
 }
 
-# 2. Reset Defender Definitions
+# 2. Test Defender Cloud Protection Reachability
+Log-Msg "Executing Defender Cloud Protection connectivity check..." "STAGE"
+$CloudScript = Join-Path $PSScriptRoot "Test-Defender-Cloud-Connectivity.ps1"
+if (Test-Path $CloudScript) {
+    & $CloudScript
+}
+
+# 3. Reset Defender Definitions
 Log-Msg "Executing Defender signature definition reset module..." "STAGE"
 $ResetScript = Join-Path $PSScriptRoot "Reset-Defender-Definitions.ps1"
 if (Test-Path $ResetScript) {
     & $ResetScript
 }
 
-# 3. Manage Exclusions
+# 4. Manage Exclusions
 Log-Msg "Executing Defender exclusions management module..." "STAGE"
 $ExclScript = Join-Path $PSScriptRoot "Manage-Defender-Exclusions.ps1"
 if (Test-Path $ExclScript) {
     & $ExclScript
 }
 
-# 4. Repair WMI Security Center
+# 5. Audit Attack Surface Reduction (ASR) Rules
+if (Get-UserApproval "Audit active Attack Surface Reduction (ASR) rules?") {
+    Log-Msg "Auditing Attack Surface Reduction (ASR) protection posture..." "STAGE"
+    try {
+        $mp = Get-MpPreference -ErrorAction SilentlyContinue
+        if ($mp -and $mp.AttackSurfaceReductionRules_Ids) {
+            $RuleCount = $mp.AttackSurfaceReductionRules_Ids.Count
+            Log-Msg "  [OK] Found $RuleCount active Attack Surface Reduction (ASR) rules configured." "SUCCESS"
+        } else {
+            Log-Msg "  [INFO] No Attack Surface Reduction (ASR) rules currently configured on this machine." "INFO"
+        }
+    } catch {
+        Log-Msg "  [WARN] Unable to query MpPreference for ASR rules: $($_.Exception.Message)" "WARN"
+    }
+}
+
+# 6. Repair WMI Security Center
 Log-Msg "Executing Security Center WMI audit module..." "STAGE"
 $WmiScript = Join-Path $PSScriptRoot "Repair-Security-Center-WMI.ps1"
 if (Test-Path $WmiScript) {
     & $WmiScript
 }
 
-# 5. Generate Summary Report
+# 7. Generate Summary Report
 $StartTime.Stop()
 $ElapsedTime = $StartTime.Elapsed
 
@@ -112,8 +146,11 @@ $Report.Add("OS Version     : $((Get-WmiObject -Class Win32_OperatingSystem).Cap
 $Report.Add("==========================================================================")
 $Report.Add("")
 $Report.Add("MODULES EXECUTED:")
+$Report.Add("   - Tamper Protection Audit: Checked kernel tamper guard state")
+$Report.Add("   - Cloud Endpoint Probe: Tested reachability to wdcp.microsoft.com & SmartScreen")
 $Report.Add("   - Reset Defender Definitions: Flushed signatures via MpCmdRun and re-updated")
 $Report.Add("   - Exclusion Management: Audited & configured Defender folder/process exclusions")
+$Report.Add("   - Attack Surface Reduction: Audited configured ASR enterprise rules")
 $Report.Add("   - Security Center WMI: Audited root\SecurityCenter2 repository")
 $Report.Add("")
 $Report.Add("Log file location: $Global:LogFile")

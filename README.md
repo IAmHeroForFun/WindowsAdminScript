@@ -120,7 +120,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
     4. Benchmarks primary DNS server latency against Cloudflare (1.1.1.1) and Google (8.8.8.8).
     5. Audits Default Gateway latency and ARP spoofing indicators.
     6. Interactive Firewall remediation: prompts administrator to immediately block exposed vulnerable ports.
-- **Output**: `C:\SysMaster\reports\network_audit_<ComputerName>_<Timestamp>.txt`
+    7. Quick Network Remediation: 1-click universal network stack reset (Winsock, TCP/IP, ARP, DNS, DHCP) and local subnet duplicate IP address conflict detection (Event 4199 & ARP audit).
+- **Output**: `C:\SysMaster\reports\network_security_report_<ComputerName>.csv`, `subnet_scan_*.csv`, and `network_diagnostics_*.txt`
 
 ---
 
@@ -131,14 +132,15 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
 - **Launcher**: `slowness_debug/run_slowness_detective.bat`
 - **Documentation**: [Guide 05: Sherlock Slow PC Debugger](guides/05_SHERLOCK_SLOW_PC_DEBUGGER.md)
 - **Capabilities**:
-  - **7-Layer Bottleneck Profiler**:
-    1. Real-time CPU hogs (>20% utilization) and thermal throttling detection via `Win32_Processor`.
-    2. Memory pressure, paging file exhaustion, and leaking process identification.
-    3. Disk queue length, fragmentation status, and SMART drive failure warnings.
-    4. System uptime evaluation (flags machines running continuously for >7 days without reboot).
-    5. Startup programs analysis and background bloat score (0–100 health index).
-    6. Power plan audit (prompts to switch to High Performance / Ultimate Performance).
-    7. Granular interactive tune-up: User-approved temporary file purging, SSD TRIM optimization, and service tune-up.
+  - **Multi-Layer Bottleneck Profiler**:
+    1. Real-time CPU hogs and **PROCHOT Thermal / Power Throttling detection** (identifies if CPU clock is clamped at 0.79 GHz).
+    2. **WMI Provider Host (`WmiPrvSE.exe`) Tracer** (pinpoints rogue client processes triggering excessive WMI CPU spikes).
+    3. Memory pressure, paging file exhaustion, and leaking process identification.
+    4. **Storage Response Latency & Queue Depth Audit** (detects disk freezes >50ms response times on HDDs/SSDs).
+    5. System uptime evaluation (flags machines running continuously for >7 days without reboot) and pending update reboots.
+    6. Startup programs analysis and background bloat score (0–100 health index).
+    7. Power plan audit (prompts to switch to High Performance / Ultimate Performance).
+    8. Granular interactive tune-up: User-approved temporary file purging, Delivery Optimization cache cleaning, and Recycle Bin purge.
 - **Output**: `C:\SysMaster\reports\Sherlock_Report_<ComputerName>_<Timestamp>.txt`
 
 #### 6. Windows Search & Indexing Repair Suite
@@ -235,13 +237,18 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
 - **Primary Coordinator**: `rdp_fixer/fix_rdp.ps1`
 - **Sub-modules**:
   - `Fix-CredSSP-Oracle.ps1`: Configures CredSSP Encryption Oracle Remediation.
-  - `Enable-RDP-Service.ps1`: Enables RDP service and firewall rules.
+  - `Enable-RDP-Service.ps1`: Enables RDP service, NLA, and firewall rules.
+  - `Fix-RDP-UDP-Freeze.ps1`: Fixes Windows 11 RDP session freezes/disconnects by enforcing reliable TCP transport (`fClientDisableUDP = 1`).
+  - `Fix-RDP-BlackScreen.ps1`: Resolves black screens upon connection by forcing legacy XDDM display driver (`fEnableWddmDriver = 0`).
   - `Configure-RDP-Port.ps1`: Inspects and migrates default RDP listening port.
 - **Launcher**: `rdp_fixer/Run-As-Administrator.bat`
 - **Documentation**: [Guide 11: RDP & CredSSP Oracle Fixer](guides/11_RDP_AND_CREDSSP_ORACLE_FIXER.md)
 - **Capabilities**:
   - Remediates CredSSP Encryption Oracle Remediation error (`0x800706BA` / `0x80090308`) by setting `AllowEncryptionOracle = 2` (Mitigated mode).
   - Unblocks disabled Remote Desktop services by configuring `fDenyTSConnections = 0`.
+  - Fixes Windows 11 22H2/23H2 RDP UDP freezing and disconnect bugs (`fClientDisableUDP = 1`).
+  - Fixes black screen connection hangs caused by buggy GPU/WDDM drivers (`fEnableWddmDriver = 0`).
+  - Interactive pre-flight target reachability probe (tests remote IP/hostname and TCP port connectivity).
   - Automatically enables all inbound Windows Defender Firewall rules for Remote Desktop.
   - Allows inspecting and changing the default RDP port (`3389`) to any custom port, creating the required firewall rules automatically.
 - **Output**: `C:\SysMaster\reports\RdpFixReport.txt` and `RdpFix.log`
@@ -286,15 +293,14 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   - `Fix-MSSQL-Services-Protocols.ps1`: Starts SQL Browser service and enables TCP/IP protocol.
   - `Fix-SQL-Firewall-Ports.ps1`: Unblocks firewall rules for all major database ports.
 - **Launcher**: `sql_database_fixer/Run-As-Administrator.bat`
-- **Documentation**: [Guide 14: SQL Database Protocol Fixer](guides/14_SQL_DATABASE_PORT_PROTOCOL_FIXER.md)
+- **Documentation**: [Guide 14: SQL Database Port Protocol Fixer](guides/14_SQL_DATABASE_PORT_PROTOCOL_FIXER.md)
 - **Supported Databases & Ports**:
-  - Microsoft SQL Server (`1433 TCP`)
-  - SQL Server Browser Service (`1434 UDP`)
-  - MySQL / MariaDB (`3306 TCP`)
-  - PostgreSQL (`5432 TCP`)
-  - Oracle Database Listener (`1521 TCP`)
-  - MongoDB (`27017 TCP`)
-  - Redis Cache (`6379 TCP`)
+  - Microsoft SQL Server (`1433` TCP, `1434` UDP)
+  - MySQL / MariaDB (`3306` TCP)
+  - PostgreSQL (`5432` TCP)
+  - Oracle Database (`1521` TCP)
+  - MongoDB (`27017` TCP)
+  - Redis (`6379` TCP)
 - **Capabilities**:
   - Inspects MSSQL registry to ensure `TcpDynamicPorts` and `TcpPort` are enabled.
   - Unblocks inbound firewall rules for seamless remote database connectivity.
@@ -303,14 +309,18 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
 #### 16. Windows Defender Signature Reset & Exclusion Engine
 - **Primary Coordinator**: `antivirus_fixer/fix_antivirus.ps1`
 - **Sub-modules**:
+  - `Test-Defender-Cloud-Connectivity.ps1`: Tests reachability to Microsoft Defender Cloud Protection and SmartScreen endpoints.
   - `Reset-Defender-Definitions.ps1`: Flushes definition database via `MpCmdRun.exe` and downloads latest updates.
   - `Manage-Defender-Exclusions.ps1`: Interactive prompt to view, add, and audit folder/process exclusions.
   - `Repair-Security-Center-WMI.ps1`: Audits and repairs `root\SecurityCenter2` WMI repository.
 - **Launcher**: `antivirus_fixer/Run-As-Administrator.bat`
 - **Documentation**: [Guide 15: Windows Defender Exclusion Engine](guides/15_WINDOWS_DEFENDER_EXCLUSION_ENGINE.md)
 - **Capabilities**:
+  - Tamper Protection state audit (checks if kernel tamper locking is active before attempting modifications).
+  - Tests Defender Cloud Protection HTTPS connectivity (`wdcp.microsoft.com`, `smartscreen.microsoft.com`).
   - Flushes corrupted definition stores via `MpCmdRun.exe -RemoveDefinitions -All`.
   - Forces immediate signature update from Microsoft Security Intelligence.
+  - Audits configured Attack Surface Reduction (ASR) enterprise rules.
   - Audits registered antivirus products via WMI to detect conflicting third-party security engines.
 - **Output**: `C:\SysMaster\reports\AntivirusFixReport.txt` and `AntivirusFix.log`
 
