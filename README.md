@@ -6,7 +6,7 @@
 [![Zero Footprint](https://img.shields.io/badge/Self--Cleaning-Zero%20Footprint-success.svg)](#)
 [![Deployment](https://img.shields.io/badge/Cloud%20One--Liner-Active-brightgreen.svg)](#)
 
-A production-grade, enterprise administration, forensic diagnostic, and automation suite engineered for Windows and Windows Server environments. Designed for 100% cross-generational compatibility across desktop and server operating systems, it unifies **16 operational administration suites** under a minimalist, high-contrast, keyboard-driven console interface inspired by Microsoft Massgrave (MAS).
+A production-grade, enterprise administration, forensic diagnostic, and automation suite engineered for Windows and Windows Server environments. Designed for 100% cross-generational compatibility across desktop and server operating systems, it unifies **17 operational administration suites** under a minimalist, high-contrast, keyboard-driven console interface inspired by Microsoft Massgrave (MAS).
 
 ---
 
@@ -35,11 +35,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
 
 ---
 
-## 🧭 Master Console Interface (v2.6)
+## 🧭 Master Console Interface (v2.7)
 
 ```text
 ==========================================================================
- :: OmviHub Windows & Windows Server Master IT Toolkit (v2.6)
+ :: OmviHub Windows & Windows Server Master IT Toolkit (v2.7)
  :: Host: WORKSTATION-01 | OS: Microsoft Windows 11 Enterprise
  :: User: Administrator | Privileges: Elevated / Administrator
 ==========================================================================
@@ -49,24 +49,25 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   [2]  Local Network Subnet IP & Active Host Discovery (Ping Sweep)
   [3]  Agentless Remote Network PC Inventory (WMI / CIM)
   [4]  Network Security, Open Port Exposure & Socket Auditor (6-Phases)
+  [5]  Shared Folder & NTFS Permissions Auditor (SMB / ACLs / Risks)
 
  [SYSTEM TUNE-UP & DEBLOAT]
-  [5]  Sherlock Slow PC Performance Debugger & Turbo Tune-Up
-  [6]  Windows Search & Indexing Repair Suite (EDB, UWP & MAPI)
-  [7]  Windows 11 Enterprise Debloat & Privacy Optimizer
-  [8]  Windows Update, WSUS & Component Store (DISM/CBS) Repair Suite
+  [6]  Sherlock Slow PC Performance Debugger & Turbo Tune-Up
+  [7]  Windows Search & Indexing Repair Suite (EDB, UWP & MAPI)
+  [8]  Windows 11 Enterprise Debloat & Privacy Optimizer
+  [9]  Windows Update, WSUS & Component Store (DISM/CBS) Repair Suite
 
  [INFRASTRUCTURE & SERVER ADMIN]
-  [9]  Server Security & Configuration Audit (GPOs, Accounts, Shares)
-  [10] Local Print Spooler, Queue & Driver Manager
-  [11] Windows 10/11 Network Folder & SMB Sharing Fixer
-  [12] Remote Desktop (RDP) & CredSSP Connection Fixer
+  [10] Server Security & Configuration Audit (GPOs, Accounts, Shares)
+  [11] Local Print Spooler, Queue & Driver Manager
+  [12] Windows 10/11 Network Folder & SMB Sharing Fixer
+  [13] Remote Desktop (RDP) & CredSSP Connection Fixer
 
  [APPLICATION & DATABASE SUITES]
-  [13] MS Office General Diagnostic & Configuration Reset Suite
-  [14] Outlook PST / OST Recovery, SCANPST Locator & 100GB Expander
-  [15] SQL Database Port & Protocol Diagnostic Fixer (1433, 3306, 5432)
-  [16] Windows Defender Signature Reset & Exclusion Engine
+  [14] MS Office General Diagnostic & Configuration Reset Suite
+  [15] Outlook PST / OST Recovery, SCANPST Locator & 100GB Expander
+  [16] SQL Database Port & Protocol Diagnostic Fixer (1433, 3306, 5432)
+  [17] Windows Defender Signature Reset & Exclusion Engine
 --------------------------------------------------------------------------
   [Q]  Exit Toolkit
 ==========================================================================
@@ -74,7 +75,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
 
 ---
 
-## 🔍 Comprehensive Suite Catalog (All 16 Tools)
+## 🔍 Comprehensive Suite Catalog (All 17 Tools)
 
 ### 💻 Section 1: Audit & Inventory
 
@@ -123,11 +124,23 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
     7. Quick Network Remediation: 1-click universal network stack reset (Winsock, TCP/IP, ARP, DNS, DHCP) and local subnet duplicate IP address conflict detection (Event 4199 & ARP audit).
 - **Output**: `C:\SysMaster\reports\network_security_report_<ComputerName>.csv`, `subnet_scan_*.csv`, and `network_diagnostics_*.txt`
 
+#### 5. Windows Shared Folder & NTFS Permissions Auditor
+- **Primary Script**: `inventory/audit_folder_permissions.ps1`
+- **Launcher**: `inventory/run_folder_permissions.bat`
+- **Capabilities**:
+  - Standalone script designed for easy download and execution on any Windows Server (2008 R2 to 2025) or client workstation (Windows 7 to 11).
+  - **Dual-Layer Audit Engine**: Gathers both SMB Share-level permissions (`Get-SmbShareAccess` / `Win32_LogicalShareSecuritySetting`) and underlying NTFS filesystem ACLs (`Get-Acl`).
+  - **Flexible Scope Modes**: (1) Auto-discovers all active SMB shares (excluding admin shares `C$`, `ADMIN$`, `IPC$`), (2) Audits custom directory path, (3) Scans root directories across all local fixed drives.
+  - **Defensive Identity Translation**: Safely translates SIDs to user/group account names with fallback handling for orphaned or deleted domain accounts.
+  - **Heuristic Risk Detection**: Flags open `Everyone` access with modify/full rights, explicit `Deny` rules, and unresolved orphaned SIDs.
+  - **Sanitized Dual CSV Export**: Strips trailing newlines to prevent Excel column distortion, exporting to both consolidated `folder_permissions.csv` and timestamped `folder_permissions_<ComputerName>_<Timestamp>.csv`.
+- **Output**: `inventory\reports\folder_permissions.csv` and `inventory\reports\folder_permissions_<ComputerName>_<Timestamp>.csv`
+
 ---
 
 ### ⚡ Section 2: System Tune-Up & Debloat
 
-#### 5. Sherlock Slow PC Performance Debugger & Turbo Tune-Up
+#### 6. Sherlock Slow PC Performance Debugger & Turbo Tune-Up
 - **Primary Script**: `slowness_debug/slowness_detective.ps1`
 - **Launcher**: `slowness_debug/run_slowness_detective.bat`
 - **Documentation**: [Guide 05: Sherlock Slow PC Debugger](guides/05_SHERLOCK_SLOW_PC_DEBUGGER.md)
@@ -143,7 +156,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
     8. Granular interactive tune-up: User-approved temporary file purging, Delivery Optimization cache cleaning, and Recycle Bin purge.
 - **Output**: `C:\SysMaster\reports\Sherlock_Report_<ComputerName>_<Timestamp>.txt`
 
-#### 6. Windows Search & Indexing Repair Suite
+#### 7. Windows Search & Indexing Repair Suite
 - **Primary Script**: `search_fixer/fix_search.ps1`
 - **Outlook Module**: `search_fixer/Fix-Outlook-Search.ps1`
 - **Launcher**: `search_fixer/run_search_fixer.bat`
@@ -155,7 +168,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   - Disables Bing web search lag to prioritize immediate local file results.
   - Fixes Outlook MAPI search policies (`EnableSearchIndexMapi = 1`) and registers `.pst`/`.ost` persistent IFilter handlers.
 
-#### 7. Windows 11 Enterprise Debloat & Privacy Optimizer
+#### 8. Windows 11 Enterprise Debloat & Privacy Optimizer
 - **Primary Script**: `win11_debloater/debloat.ps1`
 - **Launcher**: `win11_debloater/run_debloater.bat`
 - **Documentation**: [Guide 07: Windows 11 Debloater](guides/07_WINDOWS_11_DEBLOATER_OPTIMIZER.md)
@@ -165,7 +178,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   - Cleans Windows 11 Taskbar by hiding Widgets, Chat (Teams), and Cortana icons.
   - Disables OneDrive auto-start and background sync telemetry with admin confirmation.
 
-#### 8. Windows Update, WSUS & Component Store Repair Suite
+#### 9. Windows Update, WSUS & Component Store Repair Suite
 - **Primary Coordinator**: `update_fixer/fix_windows_update.ps1`
 - **Sub-modules**:
   - `update_fixer/Reset-Update-Components.ps1`: Stops services, flushes caches, resets BITS queue, re-registers COM DLLs.
@@ -186,7 +199,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
 
 ### 🏢 Section 3: Infrastructure & Server Administration
 
-#### 9. Server Security & Configuration Audit
+#### 10. Server Security & Configuration Audit
 - **Primary Script**: `server_audit/audit_server.ps1`
 - **Launcher**: `server_audit/run_server_audit.bat`
 - **Documentation**: [Guide 08: Server Forensic Security Audit](guides/08_SERVER_FORENSIC_SECURITY_AUDIT.md)
@@ -198,7 +211,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   - Audits Windows Server Backup (`wbadmin`) and VSS shadow storage allocations.
 - **Output**: `server_audit_report_<PC>_<Timestamp>.txt`, `server_users_<PC>.csv`, `server_shares_<PC>.csv`
 
-#### 10. Local Print Spooler, Queue & Driver Manager
+#### 11. Local Print Spooler, Queue & Driver Manager
 - **Primary Script**: `printer_manager/manage_printers.ps1`
 - **Launcher**: `printer_manager/run_printer_manager.bat`
 - **Documentation**: [Guide 09: Print Spooler Manager](guides/09_PRINTER_SPOOLER_DRIVER_MANAGER.md)
@@ -214,7 +227,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   - Creates Standard TCP/IP network printer ports and queues via command line.
 - **Output**: `C:\SysMaster\reports\printer_inventory.csv` and `printer_path_test_<Timestamp>.txt`
 
-#### 11. Windows 10/11 Network Folder & SMB Sharing Fixer
+#### 12. Windows 10/11 Network Folder & SMB Sharing Fixer
 - **Primary Coordinator**: `network_sharing_fixer/fix_sharing.ps1`
 - **Sub-modules**:
   - `Fix-SMB-Shares.ps1`: Remediates insecure guest authentication and SMB signing.
@@ -233,7 +246,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   - Bypasses KB5089549 vulnerable printer driver blocklist (`VulnerableDriverBlocklistEnable = 0`).
 - **Output**: `C:\SysMaster\reports\SharingFixReport.txt` and `SharingFix.log`
 
-#### 12. Remote Desktop (RDP) & CredSSP Connection Fixer
+#### 13. Remote Desktop (RDP) & CredSSP Connection Fixer
 - **Primary Coordinator**: `rdp_fixer/fix_rdp.ps1`
 - **Sub-modules**:
   - `Fix-CredSSP-Oracle.ps1`: Configures CredSSP Encryption Oracle Remediation.
@@ -257,7 +270,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
 
 ### 💻 Section 4: Application & Database Suites
 
-#### 13. MS Office General Diagnostic & Configuration Reset Suite
+#### 14. MS Office General Diagnostic & Configuration Reset Suite
 - **Primary Coordinator**: `office_fixer/Repair-Office.ps1`
 - **Sub-modules**:
   - `Install-Dependencies.ps1`: Checks .NET Framework and Visual C++ runtimes.
@@ -276,7 +289,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   - Automates system image repair (`DISM /RestoreHealth` and `SFC /scannow`).
 - **Output**: `C:\SysMaster\reports\RepairReport.txt` and `Repair.log`
 
-#### 14. Outlook PST / OST Recovery, SCANPST Locator & 100GB Expander
+#### 15. Outlook PST / OST Recovery, SCANPST Locator & 100GB Expander
 - **Primary Script**: `office_fixer/Repair-PST.ps1`
 - **Documentation**: [Guide 13: Outlook PST Recovery & Expander](guides/13_OUTLOOK_PST_RECOVERY_EXPANDER.md)
 - **Capabilities**:
@@ -286,7 +299,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   - Removes read-only file attributes and resets NTFS permissions on locked data files.
 - **Output**: `C:\SysMaster\reports\PST_Repair_Report.txt` and `PST_Repair.log`
 
-#### 15. SQL Database Port & Protocol Diagnostic Fixer
+#### 16. SQL Database Port & Protocol Diagnostic Fixer
 - **Primary Coordinator**: `sql_database_fixer/fix_sql.ps1`
 - **Sub-modules**:
   - `Audit-SQL-Connectivity.ps1`: Tests local port bindings across 6 database engines.
@@ -306,7 +319,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
   - Unblocks inbound firewall rules for seamless remote database connectivity.
 - **Output**: `C:\SysMaster\reports\SqlFixReport.txt` and `SqlFix.log`
 
-#### 16. Windows Defender Signature Reset & Exclusion Engine
+#### 17. Windows Defender Signature Reset & Exclusion Engine
 - **Primary Coordinator**: `antivirus_fixer/fix_antivirus.ps1`
 - **Sub-modules**:
   - `Test-Defender-Cloud-Connectivity.ps1`: Tests reachability to Microsoft Defender Cloud Protection and SmartScreen endpoints.
@@ -326,7 +339,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
 
 ---
 
-## 📂 Complete Repository File Tree (All 77 Files)
+## 📂 Complete Repository File Tree (All 79 Files)
 
 ```text
 WindowsAdminScript/
@@ -336,16 +349,18 @@ WindowsAdminScript/
 ├── toolkit.conf                                       # High-performance Nginx reverse proxy configuration
 ├── install.ps1                                        # Universal cloud web bootstrapper (irm | iex)
 ├── Windows_IT_Toolkit.bat                             # Master interactive double-click batch launcher
-├── windows_it_toolkit.ps1                             # Central Massgrave console coordinator (v2.6)
+├── windows_it_toolkit.ps1                             # Central Massgrave console coordinator (v2.7)
 │
 ├── inventory/                                         # 💻 Section 1: Hardware & Software Inventory
 │   ├── README.md                                      # Inventory suite documentation
 │   ├── get_inventory.ps1                              # Tool 1: Local hardware/software scan logic
 │   ├── scan_network.ps1                               # Tool 2: Local subnet ping sweep logic
 │   ├── remote_inventory.ps1                           # Tool 3: Agentless remote WMI inventory logic
+│   ├── audit_folder_permissions.ps1                   # Tool 5: Shared folder & NTFS permissions audit logic
 │   ├── run_inventory.bat                              # Standalone local inventory batch launcher
 │   ├── run_network_scan.bat                           # Standalone subnet scan batch launcher
-│   └── run_remote_inventory.bat                       # Standalone remote inventory batch launcher
+│   ├── run_remote_inventory.bat                       # Standalone remote inventory batch launcher
+│   └── run_folder_permissions.bat                     # Standalone folder permissions batch launcher
 │
 ├── network_auditor/                                   # 🌐 Section 1: Network Security & Port Auditor
 │   ├── README.md                                      # Network auditor documentation
@@ -354,23 +369,23 @@ WindowsAdminScript/
 │
 ├── slowness_debug/                                    # 🕵️‍♂️ Section 2: Sherlock Slow PC Debugger
 │   ├── README.md                                      # Sherlock slow debugger documentation
-│   ├── slowness_detective.ps1                         # Tool 5: 7-layer PC performance profiler
+│   ├── slowness_detective.ps1                         # Tool 6: 7-layer PC performance profiler
 │   └── run_slowness_detective.bat                     # Standalone slowness detective launcher
 │
 ├── search_fixer/                                      # 🔍 Section 2: Windows & Outlook Search Repair
 │   ├── README.md                                      # Search repair documentation
-│   ├── fix_search.ps1                                 # Tool 6: Windows.edb purge & UWP package repair
+│   ├── fix_search.ps1                                 # Tool 7: Windows.edb purge & UWP package repair
 │   ├── Fix-Outlook-Search.ps1                         # Outlook MAPI search & IFilter handler repair
 │   └── run_search_fixer.bat                           # Standalone search fixer batch launcher
 │
 ├── win11_debloater/                                   # 🚀 Section 2: Windows 11 Debloat & Privacy
 │   ├── README.md                                      # Debloater suite documentation
-│   ├── debloat.ps1                                    # Tool 7: Bloatware uninstaller & privacy tweaks
+│   ├── debloat.ps1                                    # Tool 8: Bloatware uninstaller & privacy tweaks
 │   └── run_debloater.bat                              # Standalone debloater batch launcher
 │
 ├── update_fixer/                                      # 🔄 Section 2: Windows Update & Component Fixer
 │   ├── README.md                                      # Update fixer suite documentation
-│   ├── fix_windows_update.ps1                         # Tool 8: Main coordinator with pre-flight check
+│   ├── fix_windows_update.ps1                         # Tool 9: Main coordinator with pre-flight check
 │   ├── Reset-Update-Components.ps1                    # SoftwareDistribution & catroot2 cache reset
 │   ├── Clear-Pending-Reboot.ps1                       # Stuck CBS & WindowsUpdate reboot flag clear
 │   ├── Reset-WSUS-Policies.ps1                        # Corporate WSUS bypass & CDN toggle
@@ -379,17 +394,17 @@ WindowsAdminScript/
 │
 ├── server_audit/                                      # 🏛️ Section 3: Server Forensic Security Auditor
 │   ├── README.md                                      # Server audit documentation
-│   ├── audit_server.ps1                               # Tool 9: Users, GPOs, shares, FSMO & NTP audit
+│   ├── audit_server.ps1                               # Tool 10: Users, GPOs, shares, FSMO & NTP audit
 │   └── run_server_audit.bat                           # Standalone server audit batch launcher
 │
 ├── printer_manager/                                   # 🖨️ Section 3: Print Spooler & Driver Manager
 │   ├── README.md                                      # Printer manager documentation
-│   ├── manage_printers.ps1                            # Tool 10: Spool purge, latency & driver isolation
+│   ├── manage_printers.ps1                            # Tool 11: Spool purge, latency & driver isolation
 │   └── run_printer_manager.bat                        # Standalone printer manager batch launcher
 │
 ├── network_sharing_fixer/                             # 📂 Section 3: SMB & USB Printer Sharing Repair
 │   ├── README.md                                      # Sharing repair documentation
-│   ├── fix_sharing.ps1                                # Tool 11: Main SMB and printer sharing coordinator
+│   ├── fix_sharing.ps1                                # Tool 12: Main SMB and printer sharing coordinator
 │   ├── Fix-SMB-Shares.ps1                             # Guest auth, SMB signing & CNAME fixes
 │   ├── Fix-Shared-Printers.ps1                        # RPC 0x0000011b, Point & Print, driver bypass
 │   ├── Reset-Network-Sharing-Firewall.ps1             # Firewall rules for sharing & WSD discovery
@@ -397,7 +412,7 @@ WindowsAdminScript/
 │
 ├── rdp_fixer/                                         # 🔑 Section 3: Remote Desktop & CredSSP Repair
 │   ├── README.md                                      # RDP fixer documentation
-│   ├── fix_rdp.ps1                                    # Tool 12: Main RDP coordinator
+│   ├── fix_rdp.ps1                                    # Tool 13: Main RDP coordinator
 │   ├── Fix-CredSSP-Oracle.ps1                         # CredSSP encryption remediation (0x800706BA)
 │   ├── Enable-RDP-Service.ps1                         # Unblocks RDP service and firewall rules
 │   ├── Configure-RDP-Port.ps1                         # Custom RDP port manager
@@ -405,8 +420,8 @@ WindowsAdminScript/
 │
 ├── office_fixer/                                      # 📑 Section 4: MS Office & PST Recovery Suite
 │   ├── README.md                                      # Office suite documentation
-│   ├── Repair-Office.ps1                              # Tool 13: Office diagnostic, reset & repair
-│   ├── Repair-PST.ps1                                 # Tool 14: SCANPST locator & 100GB limit expander
+│   ├── Repair-Office.ps1                              # Tool 14: Office diagnostic, reset & repair
+│   ├── Repair-PST.ps1                                 # Tool 15: SCANPST locator & 100GB limit expander
 │   ├── Check-Services.ps1                             # Office licensing and service audit
 │   ├── Fix-Permissions.ps1                            # Registry & folder ACL repair
 │   ├── Reset-Office.ps1                               # First-run opt-in, cache & GPU acceleration
@@ -417,7 +432,7 @@ WindowsAdminScript/
 │
 ├── sql_database_fixer/                                # 🗄️ Section 4: SQL Database Protocol Fixer
 │   ├── README.md                                      # SQL database fixer documentation
-│   ├── fix_sql.ps1                                    # Tool 15: Main database fixer coordinator
+│   ├── fix_sql.ps1                                    # Tool 16: Main database fixer coordinator
 │   ├── Audit-SQL-Connectivity.ps1                     # Port connectivity tester across 6 DB engines
 │   ├── Fix-MSSQL-Services-Protocols.ps1               # SQL Browser & TCP/IP protocol enable
 │   ├── Fix-SQL-Firewall-Ports.ps1                     # Unblocks 1433, 1434, 3306, 5432, 1521, 27017
@@ -425,7 +440,7 @@ WindowsAdminScript/
 │
 ├── antivirus_fixer/                                   # 🛡️ Section 4: Windows Defender Reset Suite
 │   ├── README.md                                      # Defender suite documentation
-│   ├── fix_antivirus.ps1                              # Tool 16: Main Defender coordinator
+│   ├── fix_antivirus.ps1                              # Tool 17: Main Defender coordinator
 │   ├── Reset-Defender-Definitions.ps1                 # MpCmdRun.exe definition flush & update
 │   ├── Manage-Defender-Exclusions.ps1                 # Folder and process exclusion manager
 │   ├── Repair-Security-Center-WMI.ps1                 # root\SecurityCenter2 WMI repository audit
@@ -499,7 +514,7 @@ sequenceDiagram
     Nginx-->>Admin: Streams bootstrapper payload in-memory
     Admin->>Client: install.ps1 executes
     Note over Client: Evaluates UAC; prompts elevation if needed<br/>Enforces TLS 1.2/1.3 security protocols<br/>Downloads repo archive to C:\SysMaster<br/>Preserves historical reports & CSV data<br/>Unblocks modules & launches windows_it_toolkit.ps1
-    Admin->>Client: Executes administrative suites (1-16)
+    Admin->>Client: Executes administrative suites (1-17)
     Note over Client: Writes all outputs to C:\SysMaster\reports\
     Admin->>Client: Exits via [Q]
     Note over Client: Cleans up temporary scripts (.ps1, .bat, .md)<br/>Retains 100% of generated reports!
