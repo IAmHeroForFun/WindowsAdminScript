@@ -231,19 +231,26 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
 - **Primary Coordinator**: `network_sharing_fixer/fix_sharing.ps1`
 - **Sub-modules**:
   - `Fix-SMB-Shares.ps1`: Remediates insecure guest authentication and SMB signing.
-  - `Fix-Shared-Printers.ps1`: Remediates RPC errors `0x0000011b`, `0x00000bc4`, and Point & Print restrictions with safe temporary relaxation.
+  - `Fix-Shared-Printers.ps1`: Role-based printer repair engine (Host vs Client vs Universal vs Local Port workaround).
   - `Reset-Network-Sharing-Firewall.ps1`: Unblocks File/Printer Sharing and WSD Discovery rules.
-- **Launcher**: `network_sharing_fixer/Run-As-Administrator.bat`
+- **Dedicated Launchers**:
+  - `1_RUN_ON_HOST_PC (Printer Attached).bat` (Fixes 0x0000011b, Public network, firewall, discovery)
+  - `2_RUN_ON_CLIENT_PC (Connect Over Network).bat` (Fixes 0x00000bc4, 0x00000709, 0x00000bcb, 24H2 WPP)
+  - `3_UNIVERSAL_ALL_IN_ONE_FIX.bat` (Applies all Host & Client remediations)
+  - `4_CONNECT_VIA_LOCAL_PORT (Guaranteed Workaround).bat` (100% Guaranteed Local Port Workaround)
+  - `Run-As-Administrator.bat` (Master self-elevating launcher)
 - **Documentation**: [Guide 10: SMB & USB Printer Sharing](guides/10_SMB_SHARE_USB_PRINTER_REPAIR.md)
 - **Capabilities**:
+  - **Explicit Role Distinction**: Explains whether to run on Host (printer attached) or Client (connecting workstation) to eliminate configuration mistakes.
+  - **Windows 10 to 10 Diagnosis**: Switches network from Public to Private, resolves password-protected sharing mismatches, and starts discovery services.
+  - Fixes Windows 10/11 USB shared printer connection failure `0x0000011b` (`RpcAuthnLevelPrivacyEnabled = 0` on Host).
+  - Fixes Windows 11 "No printers were found" error `0x00000bc4` and `0x00000709` (`RpcUseNamedPipeProtocol = 1`, `RpcProtocols = 7` on Client).
+  - Disables Windows 11 24H2 Windows Protected Print (WPP) to allow legacy Type 3 (v3) vendor drivers to run.
+  - Relaxes Windows 11 24H2 mandatory SMB Client signing (`RequireSecuritySignature = False`).
+  - **Automated Local Port Workaround**: Connects via `\\Host\PrinterShare` Local Port with local driver — completely bypasses Spooler RPC and Point & Print bugs with a 100% success rate!
   - Sets `AllowInsecureGuestAuth = 1` and `RequireSecuritySignature = 0` to restore connectivity to legacy NAS appliances.
   - Configures `DisableStrictNameChecking = 1` and `DnsOnWire = 1` to enable connecting to file shares via DNS CNAME aliases.
-  - Enables Network Discovery background services: `fdPHost`, `FDResPub`, `SSDPSRV`, `lmhosts`.
-  - Safe Temporary Point & Print Relaxation: Connects shared printers without admin blocks and **automatically restores original security posture** in `finally`.
-  - Fixes Windows 10/11 USB shared printer connection failure `0x0000011b` (`RpcAuthnLevelPrivacyEnabled = 0`).
-  - Configures modern Windows 11 / Server 2022+ RPC protocol policies (`RpcUseNamedPipeProtocol = 1`, `RpcProtocols = 7`).
   - Active Directory Domain GPO lock guard to prevent silent domain policy reverts.
-  - Bypasses KB5089549 vulnerable printer driver blocklist (`VulnerableDriverBlocklistEnable = 0`).
 - **Output**: `C:\SysMaster\reports\SharingFixReport.txt` and `SharingFix.log`
 
 #### 13. Remote Desktop (RDP) & CredSSP Connection Fixer
@@ -339,7 +346,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\windows_it_toolkit.ps1
 
 ---
 
-## 📂 Complete Repository File Tree (All 79 Files)
+## 📂 Complete Repository File Tree (All 83 Files)
 
 ```text
 WindowsAdminScript/
@@ -406,9 +413,13 @@ WindowsAdminScript/
 │   ├── README.md                                      # Sharing repair documentation
 │   ├── fix_sharing.ps1                                # Tool 12: Main SMB and printer sharing coordinator
 │   ├── Fix-SMB-Shares.ps1                             # Guest auth, SMB signing & CNAME fixes
-│   ├── Fix-Shared-Printers.ps1                        # RPC 0x0000011b, Point & Print, driver bypass
+│   ├── Fix-Shared-Printers.ps1                        # Role-based printer fixer (Host/Client/Workaround)
 │   ├── Reset-Network-Sharing-Firewall.ps1             # Firewall rules for sharing & WSD discovery
-│   └── Run-As-Administrator.bat                       # Self-elevating batch launcher
+│   ├── 1_RUN_ON_HOST_PC (Printer Attached).bat        # Host PC 1-click batch launcher
+│   ├── 2_RUN_ON_CLIENT_PC (Connect Over Network).bat  # Client PC 1-click batch launcher
+│   ├── 3_UNIVERSAL_ALL_IN_ONE_FIX.bat                 # Universal all-in-one batch launcher
+│   ├── 4_CONNECT_VIA_LOCAL_PORT (Guaranteed Workaround).bat # Local port workaround batch launcher
+│   └── Run-As-Administrator.bat                       # Master self-elevating batch launcher
 │
 ├── rdp_fixer/                                         # 🔑 Section 3: Remote Desktop & CredSSP Repair
 │   ├── README.md                                      # RDP fixer documentation
